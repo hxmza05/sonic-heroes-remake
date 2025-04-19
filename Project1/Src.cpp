@@ -293,7 +293,7 @@ int main()
 
         else if (gameState)
         {
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && checkCollision(lvl, player_x - 64 , player_y) && player_x > 0)
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && checkCollision(lvl, player_x , player_y + 64) && player_x > 0)
              {
                  ////////////////////////////////////
                  // i have to change this afterwards
@@ -307,7 +307,7 @@ int main()
                  }
 
              }
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && checkCollision(lvl,player_x + 64 ,player_y))
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && checkCollision(lvl,player_x + 64 ,player_y + 64))
              {
 
                  player_x += 15;
@@ -345,13 +345,19 @@ void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocity
 {
     offset_y = player_y;
     offset_y += velocityY;
+    char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
+    char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) ];
+    char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+   /* char checkPlayerFromMiddleLeft = lvl[((int)(offset_y + hit_box_factor_y + Pheight) - 10 )/ cell_size][((int)(player_x + hit_box_factor_x) / cell_size) + ((int)((offset_x + offset_x) / 2) / cell_size)];
+    char checkPlayerFromMiddleRight = lvl[((int)(offset_y + hit_box_factor_y + Pheight) - 10 )/ cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) + ((int)((offset_x + offset_x) / 2) / cell_size)];
+    char checkPlayerFromMiddleMid = lvl[((int)(offset_y + hit_box_factor_y + Pheight) - 10) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size) + ((int)((offset_x + offset_x) / 2) / cell_size)];*/
+    //bool checkCombinedLeft = checkPlayerFromMiddleLeft != 'w' && checkPlayerFromMiddleLeft != 'q' && checkPlayerFromMiddleLeft != 'e';
+    //bool checkCombinedRight = checkPlayerFromMiddleRight != 'w' && checkPlayerFromMiddleRight!= 'q' && checkPlayerFromMiddleRight != 'e';
+    //bool checkCombinedMiddle = checkPlayerFromMiddleMid != 'w' && checkPlayerFromMiddleMid != 'q' && checkPlayerFromMiddleMid != 'e';
 
 
-    char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size) + ((int)((offset_x + offset_x)/2)/cell_size)];
-    char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) + ((int)((offset_x + offset_x) / 2) / cell_size)];
-    char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size) + ((int)((offset_x + offset_x) / 2) / cell_size)];
 
-    if (bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q')
+    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0)
     {
         onGround = true;
     }
