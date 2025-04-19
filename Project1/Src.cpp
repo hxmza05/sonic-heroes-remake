@@ -12,7 +12,7 @@ int screen_x = 1200;
 int screen_y = 900;
 
 // prototypes
-void player_gravity(char** lvl, float& offset_y,float&, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth);
+void player_gravity(char** lvl, float& offset_y,float&, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth,bool &spacePressed);
 
 void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, float player_y);
 
@@ -24,6 +24,7 @@ void display_level(RenderWindow& window, const int height, const int width, char
 ///////////////////////////////////////////////////////////////////////////////////
 void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord);
 void designlvl1(char**);
+bool checkCollision(char** lvl,int player_x,int player_y);
 int main()
 {
 
@@ -101,13 +102,14 @@ int main()
 
 
     ////////////////////////////////////////////////////////
-    float player_x = 100;
-    float player_y = 100;
+    float player_x = 150;
+    float player_y = 150;
 
     float max_speed = 15;
 
     float velocityX = 0;
     float velocityY = 0;
+    bool spacePressed = false;
 
     float jumpStrength = -20; // Initial jump velocity
     float gravity = 1;        // Gravity acceleration
@@ -291,7 +293,7 @@ int main()
 
         else if (gameState)
         {
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && checkCollision(lvl, player_x - 64 , player_y) && player_x > 0)
              {
                  ////////////////////////////////////
                  // i have to change this afterwards
@@ -305,7 +307,7 @@ int main()
                  }
 
              }
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && checkCollision(lvl,player_x + 64 ,player_y))
              {
 
                  player_x += 15;
@@ -316,7 +318,15 @@ int main()
                      offset_x += 15;
                  }
              }
-            player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, player_x, player_y, cell_size, Pheight, Pwidth);
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressed )
+             {
+                 
+                 velocityY = -19.6;
+                 onGround = false;
+                 spacePressed = true;
+                
+             }
+            player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, player_x, player_y, cell_size, Pheight, Pwidth,spacePressed);
             display_level(window, height, width, lvl, wallSprite1, wall2Sprite,wall3Sprite, cell_size, offset_x);
             draw_player(window, LstillSprite, player_x - offset_x, player_y);
          /*   draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
@@ -331,36 +341,35 @@ int main()
 }
 
 // functions
-void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth)
+void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth,bool& spacePressed)
 {
     offset_y = player_y;
-
     offset_y += velocityY;
 
-    char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size) + (int)(offset_x/cell_size)];
-    char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) + (int)(offset_x / cell_size)];
-    char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size) + (int)(offset_x / cell_size)];
 
-    if (bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w')
+    char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size) + ((int)((offset_x + offset_x)/2)/cell_size)];
+    char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) + ((int)((offset_x + offset_x) / 2) / cell_size)];
+    char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size) + ((int)((offset_x + offset_x) / 2) / cell_size)];
+
+    if (bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q')
     {
         onGround = true;
     }
     else
     {
-        player_y = offset_y;
+            player_y = offset_y;
         onGround = false;
     }
-
     if (!onGround)
     {
         velocityY += gravity;
         if (velocityY >= terminal_Velocity)
             velocityY = terminal_Velocity;
     }
-
     else
     {
         velocityY = 0;
+        spacePressed = false;
     }
 }
 void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord)
@@ -404,6 +413,7 @@ void display_level(RenderWindow& window, const int height, const int width, char
 }
 void designlvl1(char** lvl)
 {
+  
     for (int i = 0; i < 14; i++)
     {
         for (int j = 0; j < 110; j++)
@@ -415,14 +425,19 @@ void designlvl1(char** lvl)
     {
         if (rand() % 12 != 0) 
         {
-            lvl[12][i] = 'w';
-            lvl[11][i] = 'w';
+            if(rand() & 1)
+                lvl[12][i] = 'w';
+            else 
+            lvl[12][i] = 'e';
+            if (rand() & 1)
+                lvl[11][i] = 'q';
+            else lvl[11][i] = 'e';
         }
     }
-    for (int i = 0; i < 110; i += 15)
+    for (int i = 0; i < 110; i += 20)
     {
-        lvl[0][i] = 'q';
-        lvl[1][i] = 'q';
+        lvl[2][i] = 'q';
+        lvl[3][i] = 'q';
     }
     for (int i = 5; i < 105; i += 10)
     {
@@ -448,7 +463,19 @@ void designlvl1(char** lvl)
         if (rand() % 2 == 0)
             lvl[5][i] = 'b';
     }
+    for (int i = 0;i < 110;i++)
+    {
+        lvl[1][i] = 'q';
+        lvl[0][i] = 'q';
+    }
 }
+bool checkCollision(char** lvl, int player_x, int player_y)
+{
+    /*if (player_x % 64 == 0)
+        player_x -= 32;*/
+    return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q');
+}
+
 
 
 
