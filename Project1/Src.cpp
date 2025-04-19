@@ -12,63 +12,18 @@ int screen_x = 1200;
 int screen_y = 900;
 
 // prototypes
-void player_gravity(char** lvl, float& offset_y, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth);
+void player_gravity(char** lvl, float& offset_y,float&, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth);
 
 void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, float player_y);
 
-void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite& wallSprite1, const int cell_size);
-void player_gravity(char** lvl, float& offset_y, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth)
-{
-    offset_y = player_y;
-
-    offset_y += velocityY;
-
-    char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][(int)(player_x + hit_box_factor_x) / cell_size];
-    char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][(int)(player_x + hit_box_factor_x + Pwidth) / cell_size];
-    char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][(int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size];
-
-    if (bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w')
-    {
-        onGround = true;
-    }
-    else
-    {
-        player_y = offset_y;
-        onGround = false;
-    }
-
-    if (!onGround)
-    {
-        velocityY += gravity;
-        if (velocityY >= terminal_Velocity)
-            velocityY = terminal_Velocity;
-    }
-
-    else
-    {
-        velocityY = 0;
-    }
-}
-void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, float player_y)
-{
-
-    LstillSprite.setPosition(player_x, player_y);
-    window.draw(LstillSprite);
-}
-void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite& wallSprite1, const int cell_size)
-{
-    for (int i = 0; i < height; i += 1)
-    {
-        for (int j = 0; j < width; j += 1)
-        {
-            if (lvl[i][j] == 'w')
-            {
-                wallSprite1.setPosition(j * cell_size, i * cell_size);
-                window.draw(wallSprite1);
-            }
-        }
-    }
-}
+void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite& wallSprite1, Sprite& wallSprite2, Sprite& wallSprite3, const int cell_size,int off_x);
+///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+//////////////This is from where our own defined fucntions start from//////////////
+///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord);
+void designlvl1(char**);
 int main()
 {
 
@@ -102,6 +57,17 @@ int main()
     wallTex1.loadFromFile("Data/brick1.png");
     Sprite wallSprite1(wallTex1);
 
+
+    Texture wall2;
+    wall2.loadFromFile("Data/brick2.png");
+    Sprite wall2Sprite(wall2);
+
+    Texture wall3;
+    wall3.loadFromFile("Data/brick3.png");
+    Sprite wall3Sprite(wall3);
+
+    //////////////////////////////////////////
+
     Music lvlMus;
 
     lvlMus.openFromFile("Data/labrynth.ogg");
@@ -114,10 +80,25 @@ int main()
     {
         lvl[i] = new char[width] {'\0'};
     }
+    designlvl1(lvl);
+    ///////////////////////////////////////
+    //////  using virtual bufferZone///////
+    ///////////////////////////////////////
+    int buffer_start = 4 * 64;
+    int buffer_end = 13 * 64;
+    Texture buffer;
+    buffer.loadFromFile("C:/Users/PMLS/Desktop/oop project/Skeleton-final/Data/bufferSprite.png");
+    Sprite bufferSpriteStart(buffer);
+    Sprite bufferSpriteEnd(buffer);
 
-    lvl[11][1] = 'w';
-    lvl[11][2] = 'w';
-    lvl[11][3] = 'w';
+
+
+
+
+
+
+
+
 
     ////////////////////////////////////////////////////////
     float player_x = 100;
@@ -316,24 +297,31 @@ int main()
                  // i have to change this afterwards
                  ///////////////////////////////////
                  player_x -= 15;
+                 if (buffer_start > 4 * 64  && player_x <= buffer_start)
+                 {
+                     buffer_start = player_x;
+                     buffer_end = buffer_start + 576;
+                     offset_x -= 15;
+                 }
+
              }
              if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
              {
 
                  player_x += 15;
+                 if (buffer_end < 106 * 64 && player_x >= buffer_end)
+                 {
+                     buffer_end = player_x;
+                     buffer_start = buffer_end - 576;
+                     offset_x += 15;
+                 }
              }
-             //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-             //{
+            player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, player_x, player_y, cell_size, Pheight, Pwidth);
+            display_level(window, height, width, lvl, wallSprite1, wall2Sprite,wall3Sprite, cell_size, offset_x);
+            draw_player(window, LstillSprite, player_x - offset_x, player_y);
+         /*   draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
+            draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
 
-             //    player_x -= 15;
-             //}if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-             //{
-
-             //    player_x -= 15;
-             //}
-            player_gravity(lvl, offset_y, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, player_x, player_y, cell_size, Pheight, Pwidth);
-            display_level(window, height, width, lvl, wallSprite1, cell_size);
-            draw_player(window, LstillSprite, player_x, player_y);
         }
        
         window.display();
@@ -343,4 +331,124 @@ int main()
 }
 
 // functions
+void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth)
+{
+    offset_y = player_y;
+
+    offset_y += velocityY;
+
+    char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size) + (int)(offset_x/cell_size)];
+    char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) + (int)(offset_x / cell_size)];
+    char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size) + (int)(offset_x / cell_size)];
+
+    if (bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w')
+    {
+        onGround = true;
+    }
+    else
+    {
+        player_y = offset_y;
+        onGround = false;
+    }
+
+    if (!onGround)
+    {
+        velocityY += gravity;
+        if (velocityY >= terminal_Velocity)
+            velocityY = terminal_Velocity;
+    }
+
+    else
+    {
+        velocityY = 0;
+    }
+}
+void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord)
+{
+    bufferSprite.setPosition(buffer_coord,500);
+    window.draw(bufferSprite);
+
+}
+
+void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, float player_y)
+{
+
+    LstillSprite.setPosition(player_x, player_y);
+    window.draw(LstillSprite);
+}
+void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite& wallSprite1, Sprite& wallSprite2, Sprite& wallSprite3, const int cell_size,int offset_x)
+{
+    for (int i = 0; i < height; i += 1)
+    {
+        for (int j = 0; j < width; j += 1)
+        {
+            if (lvl[i][j] == 's')
+                continue;
+            else if (lvl[i][j] == 'w')
+            {
+                wallSprite1.setPosition(j * cell_size - offset_x, i * cell_size);
+                window.draw(wallSprite1);
+            }
+            else if (lvl[i][j] == 'q')
+            {
+                wallSprite2.setPosition(j * cell_size - offset_x, i * cell_size);
+                window.draw(wallSprite2);
+            }
+            else if (lvl[i][j] == 'e')
+            {
+                wallSprite3.setPosition(j * cell_size - offset_x, i * cell_size);
+                window.draw(wallSprite3);
+            }
+        }
+    }
+}
+void designlvl1(char** lvl)
+{
+    for (int i = 0; i < 14; i++)
+    {
+        for (int j = 0; j < 110; j++)
+        {
+            lvl[i][j] = 's';
+        }
+    }
+    for (int i = 0; i < 110; i++)
+    {
+        if (rand() % 12 != 0) 
+        {
+            lvl[12][i] = 'w';
+            lvl[11][i] = 'w';
+        }
+    }
+    for (int i = 0; i < 110; i += 15)
+    {
+        lvl[0][i] = 'q';
+        lvl[1][i] = 'q';
+    }
+    for (int i = 5; i < 105; i += 10)
+    {
+        int height = 7 + rand() % 3; 
+        for (int j = 0; j < 5; j++)
+        {
+            lvl[height][i + j] = (j % 2 == 0) ? 'e' : 'q'; 
+        }
+    }
+    for (int i = 20; i < 110; i += 25)
+    {
+        for (int j = 10; j < 12; j++)
+        {
+            lvl[j][i] = 'e';
+        }
+        for (int j = 8; j < 10; j++)
+        {
+            lvl[j][i] = 'w';
+        }
+    }
+    for (int i = 0; i < 110; i += 13)
+    {
+        if (rand() % 2 == 0)
+            lvl[5][i] = 'b';
+    }
+}
+
+
 
