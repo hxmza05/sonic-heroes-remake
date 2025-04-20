@@ -7,6 +7,7 @@
 #include"player.h"
 #include"Motobug.h"
 
+
 using namespace sf;
 using namespace std;
 
@@ -337,6 +338,7 @@ int main()
 			Motobug enemy;
 			enemy.movement(sonic.getx(), sonic.gety());
 			enemy.draw(window);
+
 
 
 

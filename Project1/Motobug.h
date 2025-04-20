@@ -1,5 +1,6 @@
 #pragma once
 #include "Src.cpp"
+#include <SFML/Graphics.hpp>
 
 class Motobug {
 
