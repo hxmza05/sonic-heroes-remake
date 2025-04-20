@@ -1,11 +1,20 @@
 #pragma once
-class player
+class Player
 {
-	int x;
-	int y;
+	float x;
+	float y;
 public:
-	player(int _x = ,)
+	Player(float _x = 150, float _y = 150)
 	{
-
+		x = _x;
+		y = _y;
+	}
+	float& getx()
+	{
+		return x;
+	}
+	float& gety()
+	{
+		return y;
 	}
 };

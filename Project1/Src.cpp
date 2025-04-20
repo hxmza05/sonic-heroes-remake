@@ -1,10 +1,10 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <cmath>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
-
+#include"player.h"
 using namespace sf;
 using namespace std;
 
@@ -67,6 +67,8 @@ int main()
     wall3.loadFromFile("Data/brick3.png");
     Sprite wall3Sprite(wall3);
 
+    //sf::FloatRect wall1bounds = wall2Sprite.getGlobalBounds();
+    //cout << "Width pf the 1st wall : " << wall1bounds.width << "----" << " Heifht = " << wall1bounds.height << "\n";
     //////////////////////////////////////////
 
     Music lvlMus;
@@ -102,14 +104,17 @@ int main()
 
 
     ////////////////////////////////////////////////////////
+    Player sonic;
     float player_x = 150;
     float player_y = 150;
+    bool hasCollided = false;
 
     float max_speed = 15;
 
     float velocityX = 0;
     float velocityY = 0;
-    bool spacePressed = false;
+    bool spacePressed = false;// our own defined
+    bool collisionDetectedOffGround = false;
 
     float jumpStrength = -20; // Initial jump velocity
     float gravity = 1;        // Gravity acceleration
@@ -193,86 +198,61 @@ int main()
 
             window.close();
         }
-
         window.clear();
-
         if (menuState)
         {
-
             if (Keyboard::isKeyPressed(Keyboard::Up))
             {
-
                 if (arrowUp == false)
                 {
-
                     selectedOption--;
-
                     if (selectedOption < 0)
                     {
 
                         selectedOption = totalMenuOptions - 1;
                     }
-
                     arrowUp = true;
                 }
             }
-
             else
             {
-
                 arrowUp = false;
             }
-
             if (Keyboard::isKeyPressed(Keyboard::Down))
             {
-
                 if (arrowDown == false)
                 {
-
                     selectedOption++;
-
                     if (selectedOption >= totalMenuOptions)
                     {
 
                         selectedOption = 0;
                     }
-
                     arrowDown = true;
                 }
             }
-
             else
             {
-
                 arrowDown = false;
             }
-
             if (Keyboard::isKeyPressed(Keyboard::Enter))
             {
-
                 if (enter == false)
                 {
-
                     if (selectedOption == 0)
                     {
-
                         menuState = false;
                         gameState = true;
                     }
-
                     else if (selectedOption == totalMenuOptions - 1)
                     {
-
                         window.close();
                     }
-
                     enter = true;
                 }
             }
-
             else
             {
-
                 enter = false;
             }
 
@@ -293,29 +273,51 @@ int main()
 
         else if (gameState)
         {
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && checkCollision(lvl, player_x , player_y + 64) && checkCollision(lvl, player_x, player_y) && player_x > 0)
+            if (onGround)
+                collisionDetectedOffGround = false;//resetting the bool if player hits the platform
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) )
              {
-                 ////////////////////////////////////
-                 // i have to change this afterwards
-                 ///////////////////////////////////
-                 player_x -= 15;
-                 if (buffer_start > 4 * 64  && player_x <= buffer_start)
+                ///////////////////////////////////////
+                // i have to change this afterwards////
+                ///////////////////////////////////////
+             
+                /////dont check when collision is detetced off the ground till the player is off the ground/////
+                 if (checkCollision(lvl, sonic.getx(), sonic.gety() + Pheight) && checkCollision(lvl, sonic.getx(), sonic.gety()) && player_x > 0)
                  {
-                     buffer_start = player_x;
-                     buffer_end = buffer_start + 576;
-                     offset_x -= 15;
+                     sonic.getx() -= 15;
+                     if (buffer_start > 4 * 64 && sonic.getx() <= buffer_start)
+                     {
+                         buffer_start = sonic.getx();
+                         buffer_end = buffer_start + 576;
+                         offset_x -= 15;
+                     }
                  }
-
-             }
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && checkCollision(lvl, player_x + 64, player_y ) &&checkCollision(lvl,player_x + 64 ,player_y + 64))
-             {
-
-                 player_x += 15;
-                 if (buffer_end < 106 * 64 && player_x >= buffer_end)
+                 else
                  {
-                     buffer_end = player_x;
-                     buffer_start = buffer_end - 576;
-                     offset_x += 15;
+                     if(velocityY <= 0 )
+                        velocityY = 15;
+                     if (sonic.getx() <= 0 && !onGround)
+                     {
+                         collisionDetectedOffGround = true;
+                     }
+                 }
+             }
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) )
+             {
+                 if (checkCollision(lvl, sonic.getx() + Pwidth, sonic.gety()) && checkCollision(lvl, sonic.getx() + Pwidth, sonic.gety() + 64))
+                 {
+                     sonic.getx() += 15;
+                     if (buffer_end < 106 * 64 && sonic.getx() >= buffer_end)
+                     {
+                         buffer_end = sonic.getx();
+                         buffer_start = buffer_end - 576;
+                         offset_x += 15;
+                     }
+                 }
+                 else
+                 {
+                     if(velocityY >= 0)
+                     velocityY = 15;
                  }
              }
              if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressed )
@@ -326,17 +328,15 @@ int main()
                  spacePressed = true;
                 
              }
-            player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, player_x, player_y, cell_size, Pheight, Pwidth,spacePressed);
+            player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
             display_level(window, height, width, lvl, wallSprite1, wall2Sprite,wall3Sprite, cell_size, offset_x);
-            draw_player(window, LstillSprite, player_x - offset_x, player_y);
-         /*   draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
+            draw_player(window, LstillSprite, sonic.getx() - offset_x, sonic.gety());
+          /*  draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
             draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
 
         }
-       
         window.display();
     }
-
     return 0;
 }
 
@@ -348,18 +348,19 @@ void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocity
     char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
     char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) ];
     char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
-    char checkPlayerFromMiddleLeft = lvl[((int)(offset_y + hit_box_factor_y + Pheight) - 32 )/ cell_size][((int)(player_x + hit_box_factor_x) / cell_size) + ((int)((offset_x + offset_x) / 2) / cell_size)];
-    char checkPlayerFromMiddleRight = lvl[((int)(offset_y + hit_box_factor_y + Pheight) - 32 )/ cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) + ((int)((offset_x + offset_x) / 2) / cell_size)];
-    char checkPlayerFromMiddleMid = lvl[((int)(offset_y + hit_box_factor_y + Pheight) - 32) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size) + ((int)((offset_x + offset_x) / 2) / cell_size)];
-    bool checkCombinedLeft = checkPlayerFromMiddleLeft != 'w' && checkPlayerFromMiddleLeft != 'q' && checkPlayerFromMiddleLeft != 'e';
-    bool checkCombinedRight = checkPlayerFromMiddleRight != 'w' && checkPlayerFromMiddleRight!= 'q' && checkPlayerFromMiddleRight != 'e';
-    bool checkCombinedMiddle = checkPlayerFromMiddleMid != 'w' && checkPlayerFromMiddleMid != 'q' && checkPlayerFromMiddleMid != 'e';
 
-
-
-    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0)
+    char middleLeft = lvl[((int)(offset_y + hit_box_factor_y + Pheight + 63)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
+    char middle = lvl[((int)(offset_y + hit_box_factor_y + Pheight + 63)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
+    char middleRight = lvl[((int)(offset_y + hit_box_factor_y + Pheight + 63)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+    bool forLeft = middleLeft == 'w' || middleLeft == 'q' || middleLeft == 'e';
+    bool forMiddle = middle == 'w' || middle == 'q' || middle == 'e';
+    bool forRight = middleRight == 'w' || middleRight == 'q' || middleRight == 'e';
+    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0 && (forLeft || forMiddle || forRight ))
     {
         onGround = true;
+        /*player_y = ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size) * cell_size - hit_box_factor_y - Pheight;*/
+        velocityY = 0;
+        spacePressed = false;
     }
     else
     {
@@ -477,8 +478,6 @@ void designlvl1(char** lvl)
 }
 bool checkCollision(char** lvl, int player_x, int player_y)
 {
-    /*if (player_x % 64 == 0)
-        player_x -= 32;*/
     return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q');
 }
 
