@@ -5,6 +5,9 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 #include"player.h"
+#include"Motobug.h"
+
+
 using namespace sf;
 using namespace std;
 
@@ -90,7 +93,7 @@ int main()
     int buffer_start = 4 * 64;
     int buffer_end = 13 * 64;
     Texture buffer;
-    buffer.loadFromFile("C:/Users/PMLS/Desktop/oop project/Skeleton-final/Data/bufferSprite.png");
+    buffer.loadFromFile("Data/bufferSprite.png");
     Sprite bufferSpriteStart(buffer);
     Sprite bufferSpriteEnd(buffer);
 
@@ -331,6 +334,15 @@ int main()
             player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
             display_level(window, height, width, lvl, wallSprite1, wall2Sprite,wall3Sprite, cell_size, offset_x);
             draw_player(window, LstillSprite, sonic.getx() - offset_x, sonic.gety());
+
+			Motobug enemy;
+			enemy.movement(sonic.getx(), sonic.gety());
+			enemy.draw(window);
+
+
+
+
+
           /*  draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
             draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
 
