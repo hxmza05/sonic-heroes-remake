@@ -88,7 +88,7 @@ int main()
     int buffer_start = 4 * 64;
     int buffer_end = 13 * 64;
     Texture buffer;
-    buffer.loadFromFile("C:/Users/PMLS/Desktop/oop project/Skeleton-final/Data/bufferSprite.png");
+    buffer.loadFromFile("Data/bufferSprite.png");
     Sprite bufferSpriteStart(buffer);
     Sprite bufferSpriteEnd(buffer);
 
