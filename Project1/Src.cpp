@@ -6,7 +6,7 @@
 #include <SFML/Window.hpp>
 #include"player.h"
 #include"Motobug.h"
-
+#include"Enemy.h"
 
 using namespace sf;
 using namespace std;
@@ -182,6 +182,9 @@ int main()
     bool arrowDown = false;
     bool enter = false;
 
+    Motobug enemy;
+
+
     ////////////////////////////////////////////////////////
 
     Event event;
@@ -335,7 +338,6 @@ int main()
             display_level(window, height, width, lvl, wallSprite1, wall2Sprite,wall3Sprite, cell_size, offset_x);
             draw_player(window, LstillSprite, sonic.getx() - offset_x, sonic.gety());
 
-			Motobug enemy;
 			enemy.movement(sonic.getx(), sonic.gety());
 			enemy.draw(window);
 
