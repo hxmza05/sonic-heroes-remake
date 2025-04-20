@@ -355,7 +355,7 @@ void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocity
     bool forLeft = middleLeft == 'w' || middleLeft == 'q' || middleLeft == 'e';
     bool forMiddle = middle == 'w' || middle == 'q' || middle == 'e';
     bool forRight = middleRight == 'w' || middleRight == 'q' || middleRight == 'e';
-    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0 && (forLeft || forMiddle || forRight ))
+    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0 )
     {
         onGround = true;
         /*player_y = ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size) * cell_size - hit_box_factor_y - Pheight;*/
