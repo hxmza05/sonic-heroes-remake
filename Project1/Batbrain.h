@@ -5,30 +5,30 @@ using namespace sf;
 using namespace std;
 
 
-class Motobug {
+class Batbrain {
 
 private:
 
-	float x, y;
+	float x, y, speed;
 	int hp;
 	Texture texture;
 	Sprite sprite;
-	bool BugisAlive;
-
+	bool BatisAlive;
 
 public:
 
-	Motobug() {
+	Batbrain() {
 
-		this->hp = 2;
-		BugisAlive = true;
-		this->x = 250;
-		this->y = 450;
-		texture.loadFromFile("Sprites/motobug.png");
+		this->hp = 3;
+		this->speed = 1.5;
+		BatisAlive = true;
+		this->x = 800;
+		this->y = 200;
+		texture.loadFromFile("Sprites/batbrain.png");
 		sprite.setTexture(texture);
-		sprite.setTextureRect(IntRect(0, 0, 102, 72));
+		sprite.setTextureRect(IntRect(0, 0, 97, 95));
 		sprite.setPosition(x, y);
-		sprite.setScale(0.75f, 0.5f);
+		sprite.setScale(0.75f, 0.75f);
 
 	}
 
@@ -49,20 +49,14 @@ public:
 
 	bool alive() {
 
-		return BugisAlive;
+		return BatisAlive;
 	}
 
 	void movement(float player_x, float player_y) {
 
-		if (player_x > x) {
+		player_x > x ? x += speed : x -= speed;
 
-			x += 2.0f;
-		}
-
-		else if (player_x < x) {
-
-			x -= 2.0f;
-		}
+		player_y > y ? y += speed : y -= speed;
 
 		sprite.setPosition(x, y);
 
@@ -70,7 +64,7 @@ public:
 
 	void draw(RenderWindow& window) {
 
-		if (BugisAlive) {
+		if (BatisAlive) {
 
 			window.draw(sprite);
 		}
@@ -79,6 +73,6 @@ public:
 
 			sprite.setPosition(999, 999);
 		}
-		
+
 	}
 };

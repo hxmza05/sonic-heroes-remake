@@ -4,8 +4,17 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
+
+//////////////////////////////
+
 #include"player.h"
 #include"Motobug.h"
+#include"Crabmeat.h"
+#include"Beebot.h"
+#include"Batbrain.h"
+#include"Eggstinger.h"
+
+//////////////////////////////
 
 
 using namespace sf;
@@ -182,7 +191,20 @@ int main()
     bool arrowDown = false;
     bool enter = false;
 
+
     ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
+    ////////////////DECLARING ENEMIES///////////////////////
+    ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
+
+
+    Motobug bug;
+    Crabmeat crab;
+    Beebot beebot;
+    Batbrain bat;
+    Eggstinger stinger;
 
     Event event;
     while (window.isOpen())
@@ -335,13 +357,21 @@ int main()
             display_level(window, height, width, lvl, wallSprite1, wall2Sprite,wall3Sprite, cell_size, offset_x);
             draw_player(window, LstillSprite, sonic.getx() - offset_x, sonic.gety());
 
-			Motobug enemy;
-			enemy.movement(sonic.getx(), sonic.gety());
-			enemy.draw(window);
+            // change these according to the movement logic of motobug, for now it moves with player
+            bug.movement(sonic.getx(), sonic.gety());
+            bug.draw(window);
 
+            crab.movement();
+            crab.draw(window);
 
+            beebot.movement();
+            beebot.draw(window);
 
+			bat.movement(sonic.getx(), sonic.gety());
+            bat.draw(window);
 
+            stinger.movement(sonic.getx(), sonic.gety());
+            stinger.draw(window);
 
           /*  draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
             draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
@@ -367,7 +397,7 @@ void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocity
     bool forLeft = middleLeft == 'w' || middleLeft == 'q' || middleLeft == 'e';
     bool forMiddle = middle == 'w' || middle == 'q' || middle == 'e';
     bool forRight = middleRight == 'w' || middleRight == 'q' || middleRight == 'e';
-    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0 && (forLeft || forMiddle || forRight ))
+    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0 )
     {
         onGround = true;
         /*player_y = ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size) * cell_size - hit_box_factor_y - Pheight;*/
