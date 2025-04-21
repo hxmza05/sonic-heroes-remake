@@ -5,31 +5,32 @@ using namespace sf;
 using namespace std;
 
 
-class Motobug 
-{
+class Crabmeat {
 
 private:
 
-	float x, y;
+	float x, y, speed;
 	int hp;
 	Texture texture;
 	Sprite sprite;
-	bool BugisAlive;
-
+	bool CrabisAlive;
+	bool moving;
 
 public:
 
-	Motobug() {
+	Crabmeat() {
 
-		this->hp = 2;
-		BugisAlive = true;
+		this->hp = 4;
+		this->speed = 2.0;
+		CrabisAlive = true;
+		moving = true;
 		this->x = 250;
-		this->y = 450;
-		texture.loadFromFile("Sprites/motobug.png");
+		this->y = 650;
+		texture.loadFromFile("Sprites/crabmeat.png");
 		sprite.setTexture(texture);
-		sprite.setTextureRect(IntRect(0, 0, 102, 72));
+		sprite.setTextureRect(IntRect(0, 0, 120, 88));
 		sprite.setPosition(x, y);
-		sprite.setScale(0.75f, 0.5f);
+		sprite.setScale(0.5f, 0.5f);
 
 	}
 
@@ -50,20 +51,19 @@ public:
 
 	bool alive() {
 
-		return BugisAlive;
+		return CrabisAlive;
 	}
 
-	void movement(float player_x, float player_y) {
+	void movement() {
 
-		if (player_x > x) {
 
-			x += 2.0f;
-		}
+		moving ? x += speed : x -= speed;
 
-		else if (player_x < x) {
+		if(x>1200)
+			moving = false;
 
-			x -= 2.0f;
-		}
+		if (x < 0)
+			moving = true;
 
 		sprite.setPosition(x, y);
 
@@ -71,7 +71,7 @@ public:
 
 	void draw(RenderWindow& window) {
 
-		if (BugisAlive) {
+		if (CrabisAlive) {
 
 			window.draw(sprite);
 		}
@@ -80,6 +80,6 @@ public:
 
 			sprite.setPosition(999, 999);
 		}
-		
+
 	}
 };

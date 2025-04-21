@@ -32,5 +32,17 @@
     <ClInclude Include="Motobug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Crabmeat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Beebot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Batbrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Eggstinger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

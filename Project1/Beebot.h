@@ -1,35 +1,37 @@
 #pragma once
 #include <iostream>
+#include<cmath>
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
 
 
-class Motobug 
-{
+class Beebot {
 
 private:
 
-	float x, y;
+	float x, y, speed;
+	float increase;
 	int hp;
 	Texture texture;
 	Sprite sprite;
-	bool BugisAlive;
-
+	bool BeeisAlive;
 
 public:
 
-	Motobug() {
+	Beebot() {
 
-		this->hp = 2;
-		BugisAlive = true;
-		this->x = 250;
-		this->y = 450;
-		texture.loadFromFile("Sprites/motobug.png");
+		this->hp = 5;
+		this->increase = 0;
+		this->speed = 4.0;
+		BeeisAlive = true;
+		this->x = 300;
+		this->y = 300;
+		texture.loadFromFile("Sprites/beebot.png");
 		sprite.setTexture(texture);
-		sprite.setTextureRect(IntRect(0, 0, 102, 72));
+		sprite.setTextureRect(IntRect(0, 0, 118, 50));
 		sprite.setPosition(x, y);
-		sprite.setScale(0.75f, 0.5f);
+		sprite.setScale(0.75f, 0.75f);
 
 	}
 
@@ -50,20 +52,15 @@ public:
 
 	bool alive() {
 
-		return BugisAlive;
+		return BeeisAlive;
 	}
 
-	void movement(float player_x, float player_y) {
+	void movement() {
 
-		if (player_x > x) {
+		increase += 0.1;
 
-			x += 2.0f;
-		}
-
-		else if (player_x < x) {
-
-			x -= 2.0f;
-		}
+		x += speed;
+		y = 300 + 30 * sin(increase);
 
 		sprite.setPosition(x, y);
 
@@ -71,7 +68,7 @@ public:
 
 	void draw(RenderWindow& window) {
 
-		if (BugisAlive) {
+		if (BeeisAlive) {
 
 			window.draw(sprite);
 		}
@@ -80,6 +77,6 @@ public:
 
 			sprite.setPosition(999, 999);
 		}
-		
+
 	}
 };
