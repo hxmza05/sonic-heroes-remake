@@ -310,7 +310,7 @@ int main()
                 ///////////////////////////////////////
              
                 /////dont check when collision is detetced off the ground till the player is off the ground/////
-                 if (checkCollision(lvl, sonic.getx(), sonic.gety() + Pheight) && checkCollision(lvl, sonic.getx(), sonic.gety()) && player_x > 0)
+                 if (checkCollision(lvl, sonic.getx() - 15, sonic.gety()) && checkCollision(lvl, sonic.getx() - 15, sonic.gety() + Pheight - 1) && checkCollision(lvl, sonic.getx() - 15, sonic.gety() + Pheight / 2) && player_x > 0)
                  {
                      sonic.getx() -= 15;
                      if (buffer_start > 4 * 64 && sonic.getx() <= buffer_start)
@@ -332,7 +332,7 @@ int main()
              }
              if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) )
              {
-                 if (checkCollision(lvl, sonic.getx() + Pwidth, sonic.gety()) && checkCollision(lvl, sonic.getx() + Pwidth, sonic.gety() + 64))
+                 if (checkCollision(lvl, sonic.getx() + Pwidth + 15 - 1, sonic.gety()) && checkCollision(lvl, sonic.getx() + Pwidth + 15 - 1, sonic.gety() + Pheight - 1) && checkCollision(lvl, sonic.getx() + Pwidth + 15 - 1, sonic.gety() + Pheight / 2))
                  {
                      sonic.getx() += 15;
                      if (buffer_end < 106 * 64 && sonic.getx() >= buffer_end)
@@ -396,13 +396,13 @@ void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocity
     char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) ];
     char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
 
-    char middleLeft = lvl[((int)(offset_y + hit_box_factor_y + Pheight + 63)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
-    char middle = lvl[((int)(offset_y + hit_box_factor_y + Pheight + 63)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
-    char middleRight = lvl[((int)(offset_y + hit_box_factor_y + Pheight + 63)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
-    bool forLeft = middleLeft == 'w' || middleLeft == 'q' || middleLeft == 'e';
-    bool forMiddle = middle == 'w' || middle == 'q' || middle == 'e';
-    bool forRight = middleRight == 'w' || middleRight == 'q' || middleRight == 'e';
-    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0)
+    char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 35)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
+    char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 35)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
+    char topRight = lvl[((int)(offset_y + hit_box_factor_y + 35)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+    bool forLeft = topLeft != 'w' && topLeft != 'q' && topLeft != 'e';
+    bool forMiddle = topMiddle != 'w' && topMiddle != 'q' && topMiddle != 'e';
+    bool forRight = topRight != 'w' && topRight != 'q' && topRight != 'e';
+    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0 &&(forLeft || forMiddle || forRight))
     {
         onGround = true;
         /*player_y = ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size) * cell_size - hit_box_factor_y - Pheight;*/

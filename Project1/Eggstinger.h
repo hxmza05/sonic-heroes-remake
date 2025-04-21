@@ -30,6 +30,7 @@ public:
 		this->right = true;
 		this->x = 400;
 		this->y = 100;
+		clock.restart();
 		texture.loadFromFile("Sprites/eggstinger.png");
 		sprite.setTexture(texture);
 		sprite.setTextureRect(IntRect(0, 0, 150, 122));
@@ -59,6 +60,11 @@ public:
 	}
 
 	void movement(float player_x, float player_y) {
+
+		if (clock.getElapsedTime().asSeconds() >= 3.0f) {
+
+			clock.restart();
+		}
 
 		right ? x += speed : x -= speed;
 
