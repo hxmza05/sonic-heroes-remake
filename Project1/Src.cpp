@@ -29,13 +29,14 @@ void player_gravity(char** lvl, float& offset_y,float&, float& velocityY, bool& 
 
 void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, float player_y);
 
-void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite& wallSprite1, Sprite& wallSprite2, Sprite& wallSprite3, const int cell_size,int off_x);
+void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite walls[], const int cell_size,int off_x);
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 //////////////This is from where our own defined fucntions start from//////////////
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord);
+void draw_bg(RenderWindow& window, Sprite&, int);
 void designlvl1(char**);
 bool checkCollision(char** lvl,int player_x,int player_y);
 int main()
@@ -67,6 +68,22 @@ int main()
     //////////////////////////////////
     //////wall realted variables//////
     //////////////////////////////////
+
+    ///////////////////////////
+    //bacgrnd/////////////////
+    //////////////////////////
+    Texture backGround;
+    backGround.loadFromFile("Data/bg1.png");
+    Sprite backGroundSprite(backGround);
+
+    sf::Vector2u textureSize = backGround.getSize(); // original size of the image
+    sf::Vector2u windowSize = window.getSize(); // size of your SFML window
+
+    // Scale the sprite
+    backGroundSprite.setScale((float)windowSize.x / textureSize.x,(float)windowSize.y / textureSize.y
+  );
+
+
     Texture wallTex1;
     wallTex1.loadFromFile("Data/brick1.png");
     Sprite wallSprite1(wallTex1);
@@ -79,6 +96,14 @@ int main()
     Texture wall3;
     wall3.loadFromFile("Data/brick3.png");
     Sprite wall3Sprite(wall3);
+
+
+    Texture spikesTexture;
+    spikesTexture.loadFromFile("Data/spike.png");
+    Sprite spikes(spikesTexture);
+
+    Sprite walls[4] = { wallSprite1,wall2Sprite,wall3Sprite,spikes };
+
 
     //sf::FloatRect wall1bounds = wall2Sprite.getGlobalBounds();
     //cout << "Width pf the 1st wall : " << wall1bounds.width << "----" << " Heifht = " << wall1bounds.height << "\n";
@@ -357,8 +382,9 @@ int main()
                 
              }
             player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
-            display_level(window, height, width, lvl, wallSprite1, wall2Sprite,wall3Sprite, cell_size, offset_x);
+            display_level(window, height, width, lvl, walls, cell_size, offset_x);
             draw_player(window, LstillSprite, sonic.getx() - offset_x, sonic.gety());
+            //draw_bg(window, backGroundSprite, offset_x);
 
 			enemy.movement(sonic.getx(), sonic.gety());
 			enemy.draw(window);
@@ -396,9 +422,9 @@ void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocity
     char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) ];
     char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
 
-    char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 35)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
-    char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 35)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
-    char topRight = lvl[((int)(offset_y + hit_box_factor_y + 35)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+    char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
+    char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
+    char topRight = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
     bool forLeft = topLeft != 'w' && topLeft != 'q' && topLeft != 'e';
     bool forMiddle = topMiddle != 'w' && topMiddle != 'q' && topMiddle != 'e';
     bool forRight = topRight != 'w' && topRight != 'q' && topRight != 'e';
@@ -426,11 +452,17 @@ void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocity
         spacePressed = false;
     }
 }
+
 void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord)
 {
     bufferSprite.setPosition(buffer_coord,500);
     window.draw(bufferSprite);
 
+}
+void draw_bg(RenderWindow& window, Sprite& bgSprite, int offset_x)
+{
+    bgSprite.setPosition(-offset_x, 0);
+    window.draw(bgSprite);
 }
 
 void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, float player_y)
@@ -439,7 +471,7 @@ void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, flo
     LstillSprite.setPosition(player_x, player_y);
     window.draw(LstillSprite);
 }
-void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite& wallSprite1, Sprite& wallSprite2, Sprite& wallSprite3, const int cell_size,int offset_x)
+void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite walls[], const int cell_size, int offset_x)
 {
     for (int i = 0; i < height; i += 1)
     {
@@ -449,80 +481,86 @@ void display_level(RenderWindow& window, const int height, const int width, char
                 continue;
             else if (lvl[i][j] == 'w')
             {
-                wallSprite1.setPosition(j * cell_size - offset_x, i * cell_size);
-                window.draw(wallSprite1);
+                walls[0].setPosition(j * cell_size - offset_x, i * cell_size);
+                window.draw(walls[0]);
             }
             else if (lvl[i][j] == 'q')
             {
-                wallSprite2.setPosition(j * cell_size - offset_x, i * cell_size);
-                window.draw(wallSprite2);
+                walls[1].setPosition(j * cell_size - offset_x, i * cell_size);
+                window.draw(walls[1]);
             }
             else if (lvl[i][j] == 'e')
             {
-                wallSprite3.setPosition(j * cell_size - offset_x, i * cell_size);
-                window.draw(wallSprite3);
+                walls[2].setPosition(j * cell_size - offset_x, i * cell_size);
+                window.draw(walls[2]);
+            }
+            else if (lvl[i][j] == 'p')
+            {
+                walls[3].setPosition(j * cell_size - offset_x, i * cell_size);
+                window.draw(walls[3]);
             }
         }
     }
 }
 void designlvl1(char** lvl)
 {
-  
+    // Fill entire level with sky
     for (int i = 0; i < 14; i++)
-    {
         for (int j = 0; j < 110; j++)
-        {
             lvl[i][j] = 's';
-        }
+
+    // Top ceiling rows
+    for (int j = 0; j < 110; j++) {
+        lvl[0][j] = 'q';
+        lvl[1][j] = 'q';
     }
-    for (int i = 0; i < 110; i++)
-    {
-        if (rand() % 12 != 0) 
-        {
-            if(rand() & 1)
-                lvl[12][i] = 'w';
-            else 
-            lvl[12][i] = 'e';
-            if (rand() & 1)
-                lvl[11][i] = 'q';
-            else lvl[11][i] = 'e';
-        }
+
+    // Bottom ground rows with pits
+    for (int j = 0; j < 110; j++) {
+        // Leave some pits
+        if ((j >= 15 && j < 18) || (j >= 40 && j < 43) || (j >= 80 && j < 84))
+            continue;
+        lvl[12][j] = 'w';
+        lvl[13][j] = 'w';
     }
-    for (int i = 0; i < 110; i += 20)
-    {
-        lvl[2][i] = 'q';
-        lvl[3][i] = 'q';
+
+    // Add vertical ceiling drops every 20 tiles
+    for (int j = 10; j < 110; j += 20) {
+        lvl[2][j] = 'q';
+        lvl[3][j] = 'q';
     }
-    for (int i = 5; i < 105; i += 10)
-    {
-        int height = 7 + rand() % 3; 
-        for (int j = 0; j < 5; j++)
-        {
-            lvl[height][i + j] = (j % 2 == 0) ? 'e' : 'q'; 
-        }
-    }
-    for (int i = 20; i < 110; i += 25)
-    {
-        for (int j = 10; j < 12; j++)
-        {
-            lvl[j][i] = 'e';
-        }
-        for (int j = 8; j < 10; j++)
-        {
-            lvl[j][i] = 'w';
-        }
-    }
-    for (int i = 0; i < 110; i += 13)
-    {
-        if (rand() % 2 == 0)
-            lvl[5][i] = 'b';
-    }
-    for (int i = 0;i < 110;i++)
-    {
-        lvl[1][i] = 'q';
-        lvl[0][i] = 'q';
-    }
+
+    // Add structured platforms with increasing/decreasing height
+    for (int j = 5; j < 15; j++)
+        lvl[8][j] = (j % 2 == 0) ? 'e' : 'q';  // Low platform
+
+    for (int j = 25; j < 30; j++)
+        lvl[6][j] = (j % 2 == 0) ? 'q' : 'e';  // Medium
+
+    for (int j = 45; j < 50; j++)
+        lvl[5][j] = (j % 2 == 0) ? 'e' : 'q';  // Higher
+
+    for (int j = 66; j < 72; j++)
+        lvl[6][j] = (j % 2 == 0) ? 'q' : 'e';  // Medium again
+
+    for (int j = 90; j < 96; j++)
+        lvl[8][j] = (j % 2 == 0) ? 'e' : 'q';  // Low again
+
+    // Spikes on ground
+    lvl[11][14] = 'p';
+    lvl[11][19] = 'p';
+    lvl[11][42] = 'p';
+    lvl[11][86] = 'p';
+
+    // Spikes on platforms
+    lvl[7][6] = 'p';
+    lvl[5][27] = 'p';
+    lvl[4][47] = 'p';
+    lvl[7][92] = 'p';
 }
+
+
+
 bool checkCollision(char** lvl, int player_x, int player_y)
 {
     return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q');
