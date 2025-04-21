@@ -7,6 +7,7 @@
 
 //////////////////////////////
 
+
 #include"player.h"
 #include"Motobug.h"
 #include"Crabmeat.h"
@@ -36,7 +37,9 @@ void display_level(RenderWindow& window, const int height, const int width, char
 ///////////////////////////////////////////////////////////////////////////////////
 void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord);
 void designlvl1(char**);
-bool checkCollision(char** lvl,int player_x,int player_y);
+bool checkCollision(char** lvl,int player_x,int player_y, int width, int height);
+bool checkforWall(char wall);
+
 int main()
 {
 
@@ -307,7 +310,7 @@ int main()
                 ///////////////////////////////////////
              
                 /////dont check when collision is detetced off the ground till the player is off the ground/////
-                 if (checkCollision(lvl, sonic.getx(), sonic.gety() + Pheight) && checkCollision(lvl, sonic.getx(), sonic.gety()) && player_x > 0)
+                 if (!checkCollision(lvl, sonic.getx() - 15, sonic.gety(), Pwidth, Pheight))
                  {
                      sonic.getx() -= 15;
                      if (buffer_start > 4 * 64 && sonic.getx() <= buffer_start)
@@ -329,7 +332,7 @@ int main()
              }
              if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) )
              {
-                 if (checkCollision(lvl, sonic.getx() + Pwidth, sonic.gety()) && checkCollision(lvl, sonic.getx() + Pwidth, sonic.gety() + 64))
+                 if (!checkCollision(lvl, sonic.getx() + 15, sonic.gety(), Pwidth, Pheight))
                  {
                      sonic.getx() += 15;
                      if (buffer_end < 106 * 64 && sonic.getx() >= buffer_end)
@@ -387,6 +390,19 @@ void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocity
 {
     offset_y = player_y;
     offset_y += velocityY;
+
+    if (velocityY < 0) 
+    {   
+		// y coordinate of head and x coordinate of left and right edghe of head
+        char wallLeftAbove = lvl[(int)(offset_y + hit_box_factor_y) / cell_size][(int)(player_x + hit_box_factor_x) / cell_size];
+        char wallRightAbove = lvl[(int)(offset_y + hit_box_factor_y) / cell_size][(int)(player_x + hit_box_factor_x + Pwidth - 1) / cell_size];
+
+        if (wallLeftAbove == 'w' || wallLeftAbove == 'q' || wallLeftAbove == 'e' || wallRightAbove == 'w' || wallRightAbove == 'q' || wallRightAbove == 'e')
+        {
+            velocityY = 0; 
+        }
+    }
+
     char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
     char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) ];
     char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
@@ -397,10 +413,10 @@ void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocity
     bool forLeft = middleLeft == 'w' || middleLeft == 'q' || middleLeft == 'e';
     bool forMiddle = middle == 'w' || middle == 'q' || middle == 'e';
     bool forRight = middleRight == 'w' || middleRight == 'q' || middleRight == 'e';
-    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0 )
+    if ((checkforWall(bottom_left_down) || checkforWall(bottom_mid_down) || checkforWall(bottom_right_down)) && velocityY > 0)
     {
         onGround = true;
-        /*player_y = ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size) * cell_size - hit_box_factor_y - Pheight;*/
+        player_y = ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size) * cell_size - hit_box_factor_y - Pheight;
         velocityY = 0;
         spacePressed = false;
     }
@@ -518,9 +534,16 @@ void designlvl1(char** lvl)
         lvl[0][i] = 'q';
     }
 }
-bool checkCollision(char** lvl, int player_x, int player_y)
+bool checkforWall(char wall) 
+{   
+    //helper to check for wall in velocity
+	return wall == 'w' || wall == 'q' || wall == 'e';
+}
+bool checkCollision(char** lvl, int player_x, int player_y, int width, int height)
 {
-    return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q');
+	// top left, top right, bottom left, bottom right
+	// top x left top y left and so on
+    return checkforWall(lvl[(int)player_y / 64][(int)player_x / 64]) || checkforWall(lvl[(int)player_y / 64][(int)(player_x + width - 1) / 64]) || checkforWall(lvl[(int)(player_y + height - 1) / 64][(int)player_x / 64]) || checkforWall(lvl[(int)(player_y + height - 1) / 64][(int)(player_x + width - 1) / 64]);
 }
 
 
