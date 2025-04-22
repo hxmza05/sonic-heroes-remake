@@ -44,5 +44,11 @@
     <ClInclude Include="Eggstinger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Display.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

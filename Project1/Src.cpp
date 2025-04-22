@@ -14,6 +14,7 @@
 #include"Beebot.h"
 #include"Batbrain.h"
 #include"Eggstinger.h"
+#include"Menu.h"
 
 //////////////////////////////
 
@@ -173,7 +174,7 @@ int main()
     /// for knockBack parabolic Trajecotry///
     //////////////////////////////////////
     float tempTerminalVelocityY = 15;
-    float tempVelocityY = -9.8;
+    float tempVelocityY = -7;
     float tempGravity = 0.6;
     Texture LstillTex;
     LstillTex.loadFromFile("Data/0left_still.png");
@@ -208,33 +209,7 @@ int main()
 
     ////////////////////////////////////////////////////////
 
-    const int totalMenuOptions = 6;
-    const char* menuOptions[totalMenuOptions] = { "New Game", "Options", "Continue", "Leader Board", "Credits", "Exit" };
-    int alignmentofTEXT[totalMenuOptions] = { 169, 117, 137, 205, 107, 54 }; // these are the pixels of text written in the above array
-    int selectedOption = 0;
-
-    Font font;
-    font.loadFromFile("Fonts/arial.ttf");
-    Text text[totalMenuOptions];
-
-    Text title("Sonic Classic Heroes", font, 64);
-    title.setFillColor(Color::Yellow);
-    title.setPosition(352.5f, 80);
-
-    for (int i = 0; i < totalMenuOptions; i++)
-    {
-
-        Text temp(menuOptions[i], font, 42);
-        temp.setPosition(float(screen_x / 2) - float(alignmentofTEXT[i] / 2), float(screen_y / 3.6) + float(i * screen_y / 12));
-        text[i] = temp;
-    }
-
-    bool gameState = false;
-    bool menuState = true;
-    bool arrowUp = false;
-    bool arrowDown = false;
-    bool enter = false;
-
+    Menu menu(screen_x, screen_y);
 
 
     ////////////////////////////////////////////////////////
@@ -303,83 +278,18 @@ int main()
 
         if (Keyboard::isKeyPressed(Keyboard::Escape))
         {
-
             window.close();
         }
+
         window.clear();
-        if (menuState)
+
+        if (!menu.isGameStateActive())
         {
-            if (Keyboard::isKeyPressed(Keyboard::Up))
-            {
-                if (arrowUp == false)
-                {
-                    selectedOption--;
-                    if (selectedOption < 0)
-                    {
-
-                        selectedOption = totalMenuOptions - 1;
-                    }
-                    arrowUp = true;
-                }
-            }
-            else
-            {
-                arrowUp = false;
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Down))
-            {
-                if (arrowDown == false)
-                {
-                    selectedOption++;
-                    if (selectedOption >= totalMenuOptions)
-                    {
-
-                        selectedOption = 0;
-                    }
-                    arrowDown = true;
-                }
-            }
-            else
-            {
-                arrowDown = false;
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Enter))
-            {
-                if (enter == false)
-                {
-                    if (selectedOption == 0)
-                    {
-                        menuState = false;
-                        gameState = true;
-                    }
-                    else if (selectedOption == totalMenuOptions - 1)
-                    {
-                        window.close();
-                    }
-                    enter = true;
-                }
-            }
-            else
-            {
-                enter = false;
-            }
-
-            for (int i = 0; i < totalMenuOptions; i++)
-            {
-
-                text[i].setFillColor(i == selectedOption ? Color::Blue : Color::White);
-            }
-
-            window.draw(title);
-
-            for (int i = 0; i < totalMenuOptions; i++)
-            {
-
-                window.draw(text[i]);
-            }
+            menu.update(window);
+            menu.draw(window);
         }
 
-        else if (gameState)
+        else if (menu.isGameStateActive())
         {
 
             /*for (int i = 0; i < repeatCount; i++) {
@@ -453,7 +363,7 @@ int main()
              cout << "HASKNOCKEDBACK = " << hasKnockedBack << endl;
              if (hasKnockedBack)
             {
-                sonic.getx() -= 8;
+                sonic.getx() -= 6;
                 sonic.gety() += tempVelocityY;
                 tempVelocityY += tempGravity;
                 if (tempVelocityY >= 0)
@@ -464,7 +374,7 @@ int main()
              if (onGround)
              {
                  hasKnockedBack = false;
-                 tempVelocityY = -9.8;
+                 tempVelocityY = -7;
              }
             if(!hasKnockedBack)
                 player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
