@@ -41,6 +41,7 @@ void designlvl1(char**);
 bool checkCollision(char** lvl,int player_x,int player_y);
 bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY);
 void playerVirtualGravity(char** lvl, float& offset_y, float&, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth, bool& spacePressed);
+void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char** lvl);
 
 int main()
 {
@@ -238,14 +239,54 @@ int main()
 
 
     Motobug bug;
-    Crabmeat crab;
     Beebot beebot;
     Batbrain bat;
     Eggstinger stinger;
 
 
+    /////////////////////////////////
+    ////////////Crab Meat////////////
+    /////////////////////////////////
+
+    const int crabCoordinates = 100;
+    int CrabStart[crabCoordinates];
+    int CrabEnd[crabCoordinates];
+    int CrabWalls[crabCoordinates];
+	int indexCrab = 0;
+
+    Crabmeat crabs[10];
+    int crabIndex = 0;
+    int crabCount = 1;
 
 
+    getCrabCoordinates(CrabStart, CrabEnd, CrabWalls, height, width, crabCoordinates, indexCrab, lvl);
+
+    for (int i = 0; i < indexCrab; i++) {
+
+        if (crabIndex < 10) {
+         
+            float patrolStart = CrabStart[i] * 64;
+            float patrolEnd = CrabEnd[i] * 64;
+            float crabX = (patrolStart + patrolEnd) / 2.0f;
+            float crabY = (CrabWalls[i] + 1) * 64 - 44.0f;
+
+            crabs[crabIndex].setPositionAndPatrol(crabX, crabY, patrolStart, patrolEnd);
+
+            cout << "Placed Crab " << crabIndex << ": " << crabX << ", " << crabY << endl;
+
+            crabIndex++;
+
+        }
+    }
+
+    cout << "Detected " << indexCrab << " crab platform ranges." << endl;
+
+
+    crabCount = crabIndex;
+
+
+
+    /////////////////////////////////
     ///////////////////////////////////
     /////////////time stuff//////////////
     ///////////////////////////////////
@@ -422,13 +463,18 @@ int main()
             if(!hasKnockedBack)
                 player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
             display_level(window, height, width, lvl, walls, cell_size, offset_x);
+
+
             draw_player(window, LstillSprite, sonic.getx() - offset_x, sonic.gety());
             //draw_bg(window, backGroundSprite, offset_x);
 
             // change these according to the movement logic of motobug, for now it moves with player
-             
-            crab.movement();
-            crab.draw(window);
+            
+            for (int i = 0; i < crabCount; i++) {
+                crabs[i].movement();
+                crabs[i].draw(window, offset_x);
+            }
+
 
             /*
             bug.movement(sonic.getx(), sonic.gety());
@@ -600,6 +646,7 @@ void designlvl1(char** lvl)
         for (int j = 0; j < 110; j++)
             lvl[i][j] = 's';
 
+  
     for (int j = 0; j < 110; j++) 
     {
         lvl[0][j] = 'q';
@@ -646,12 +693,52 @@ void designlvl1(char** lvl)
     lvl[11][86] = 'p';
     lvl[5][27] = 'p';
     lvl[4][47] = 'p';
-    lvl[7][92] = 'p';
+    lvl[7][92] = 'p'; 
 }
 bool checkCollision(char** lvl, int player_x, int player_y)
 {
     return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q');
 }
 
+void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char**lvl) {
+
+    for (int i = 5; i < heigth - 1; i++) {
+
+        int j = 0;
+
+        while (j < width - 1) {
+
+            if (lvl[i][j] == 's' && (lvl[i + 1][j] == 'w' || lvl[i + 1][j] == 'e' || lvl[i + 1][j] == 'q')) {
+
+                int start = j;
+
+                while (j < width && lvl[i][j] == 's' && (lvl[i + 1][j] == 'w' || lvl[i + 1][j] == 'e' || lvl[i + 1][j] == 'q'))
+                    j++;
+
+                int end = j - 1;
 
 
+                if (end - start + 1 >= 4 && indexCrab < crabCoordinates) {
+
+                    CrabStart[indexCrab] = start;
+                    CrabEnd[indexCrab] = end;
+                    CrabWalls[indexCrab] = i;
+                    indexCrab++;
+                }
+
+                cout << "Found platform from tile " << start << " to " << end << " at row " << i << endl;
+
+            }
+
+            else {
+
+                j++;
+            }
+
+
+        }
+
+    }
+
+
+}

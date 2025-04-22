@@ -15,6 +15,7 @@ private:
 	Sprite sprite;
 	bool CrabisAlive;
 	bool moving;
+	float crabStart, crabEnd;
 
 public:
 
@@ -24,8 +25,10 @@ public:
 		this->speed = 2.0;
 		CrabisAlive = true;
 		moving = true;
-		this->x = 250;
-		this->y = 650;
+		this->x = 0;
+		this->y = 0;
+		crabStart = 0;
+		crabEnd = 0;
 		texture.loadFromFile("Sprites/crabmeat.png");
 		sprite.setTexture(texture);
 		sprite.setTextureRect(IntRect(0, 0, 120, 88));
@@ -56,23 +59,34 @@ public:
 
 	void movement() {
 
-
 		moving ? x += speed : x -= speed;
 
-		if(x>1200)
+		if(x>= crabEnd)
 			moving = false;
 
-		if (x < 0)
+		if (x <= crabStart)
 			moving = true;
 
 		sprite.setPosition(x, y);
 
 	}
 
-	void draw(RenderWindow& window) {
+	void setPositionAndPatrol(float startX, float startY, float crabStart, float crabEnd) {
+
+		x = startX;
+		y = startY;
+
+		this->crabStart = crabStart;
+		this->crabEnd = crabEnd;
+		sprite.setPosition(x, y);
+
+	}
+
+	void draw(RenderWindow& window, float offset_x) {
 
 		if (CrabisAlive) {
 
+			sprite.setPosition(x - offset_x, y);
 			window.draw(sprite);
 		}
 
@@ -81,5 +95,13 @@ public:
 			sprite.setPosition(999, 999);
 		}
 
+	}
+
+	float getSpriteHeight() {
+		return sprite.getGlobalBounds().height;
+	}
+
+	Sprite& getSprite() {
+		return sprite;
 	}
 };
