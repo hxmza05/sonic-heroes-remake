@@ -29,15 +29,19 @@ void player_gravity(char** lvl, float& offset_y,float&, float& velocityY, bool& 
 
 void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, float player_y);
 
-void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite& wallSprite1, Sprite& wallSprite2, Sprite& wallSprite3, const int cell_size,int off_x);
+void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite walls[], const int cell_size,int off_x);
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 //////////////This is from where our own defined fucntions start from//////////////
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord);
+void draw_bg(RenderWindow& window, Sprite&, int);
 void designlvl1(char**);
 bool checkCollision(char** lvl,int player_x,int player_y);
+bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY);
+void playerVirtualGravity(char** lvl, float& offset_y, float&, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth, bool& spacePressed);
+
 int main()
 {
 
@@ -67,6 +71,21 @@ int main()
     //////////////////////////////////
     //////wall realted variables//////
     //////////////////////////////////
+
+    ///////////////////////////
+    //bacgrnd/////////////////
+    //////////////////////////
+    Texture backGround;
+    backGround.loadFromFile("Data/bg1.png");
+    Sprite backGroundSprite(backGround);
+
+    sf::Vector2u textureSize = backGround.getSize(); // original size of the image
+    sf::Vector2u windowSize = window.getSize(); // size of your SFML window
+
+    // Scale the sprite
+    backGroundSprite.setScale((float)windowSize.x / textureSize.x,(float)windowSize.y / textureSize.y);
+
+    
     Texture wallTex1;
     wallTex1.loadFromFile("Data/brick1.png");
     Sprite wallSprite1(wallTex1);
@@ -80,9 +99,17 @@ int main()
     wall3.loadFromFile("Data/brick3.png");
     Sprite wall3Sprite(wall3);
 
+
+    Texture spikesTexture;
+    spikesTexture.loadFromFile("Data/spike.png");
+    Sprite spikes(spikesTexture);
+
+    Sprite walls[4] = {wallSprite1,wall2Sprite,wall3Sprite,spikes};
+
+    /////////////////////////////////////////////////////////////
     //sf::FloatRect wall1bounds = wall2Sprite.getGlobalBounds();
     //cout << "Width pf the 1st wall : " << wall1bounds.width << "----" << " Heifht = " << wall1bounds.height << "\n";
-    //////////////////////////////////////////
+    ///////////////////////////////////////////
 
     Music lvlMus;
 
@@ -121,6 +148,7 @@ int main()
     float player_x = 150;
     float player_y = 150;
     bool hasCollided = false;
+    bool hasKnockedBack = false;
 
     float max_speed = 15;
 
@@ -132,6 +160,13 @@ int main()
     float jumpStrength = -20; // Initial jump velocity
     float gravity = 1;        // Gravity acceleration
 
+
+    ///////////////////////////////////////////
+    /// for knockBack parabolic Trajecotry///
+    //////////////////////////////////////
+    float tempTerminalVelocityY = 15;
+    float tempVelocityY = -9.8;
+    float tempGravity = 0.6;
     Texture LstillTex;
     LstillTex.loadFromFile("Data/0left_still.png");
     Sprite LstillSprite(LstillTex);
@@ -208,6 +243,14 @@ int main()
     Batbrain bat;
     Eggstinger stinger;
 
+
+
+
+    ///////////////////////////////////
+    /////////////time stuff//////////////
+    ///////////////////////////////////
+    float timeChange = 1 ;
+    float knockedBacktime = 0;
     Event event;
     while (window.isOpen())
     {
@@ -301,8 +344,11 @@ int main()
         else if (gameState)
         {
             if (onGround)
+            {
                 collisionDetectedOffGround = false;//resetting the bool if player hits the platform
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) )
+                hasKnockedBack = false;
+            }
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !hasKnockedBack)
              {
                 ///////////////////////////////////////
                 // i have to change this afterwards////
@@ -329,7 +375,7 @@ int main()
                      }
                  }
              }
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) )
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&!hasKnockedBack)
              {
                  if (checkCollision(lvl, sonic.getx() + Pwidth + 15 - 1, sonic.gety()) && checkCollision(lvl, sonic.getx() + Pwidth + 15 - 1, sonic.gety() + Pheight - 1) && checkCollision(lvl, sonic.getx() + Pwidth + 15 - 1, sonic.gety() + Pheight / 2))
                  {
@@ -347,7 +393,7 @@ int main()
                      velocityY = 15;
                  }
              }
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressed )
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressed && !hasKnockedBack)
              {
                  
                  velocityY = -19.6;
@@ -355,9 +401,29 @@ int main()
                  spacePressed = true;
                 
              }
-            player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
-            display_level(window, height, width, lvl, wallSprite1, wall2Sprite,wall3Sprite, cell_size, offset_x);
+            if(!hasKnockedBack)
+                hasKnockedBack = collisionCheckWithSpikes(lvl,offset_y,hit_box_factor_y,hit_box_factor_x,Pheight,Pwidth,sonic.getx(), sonic.gety(), cell_size, velocityY);
+             cout << "HASKNOCKEDBACK = " << hasKnockedBack << endl;
+             if (hasKnockedBack)
+            {
+                sonic.getx() -= 8;
+                sonic.gety() += tempVelocityY;
+                tempVelocityY += tempGravity;
+                if (tempVelocityY >= 0)
+                {
+                    playerVirtualGravity(lvl, offset_y, offset_x, tempVelocityY, onGround, tempGravity, tempTerminalVelocityY, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
+                }
+            }
+             if (onGround)
+             {
+                 hasKnockedBack = false;
+                 tempVelocityY = -9.8;
+             }
+            if(!hasKnockedBack)
+                player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
+            display_level(window, height, width, lvl, walls, cell_size, offset_x);
             draw_player(window, LstillSprite, sonic.getx() - offset_x, sonic.gety());
+            //draw_bg(window, backGroundSprite, offset_x);
 
             // change these according to the movement logic of motobug, for now it moves with player
              
@@ -396,12 +462,14 @@ void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocity
     char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) ];
     char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
 
-    char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 35)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
-    char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 35)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
-    char topRight = lvl[((int)(offset_y + hit_box_factor_y + 35)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
-    bool forLeft = topLeft != 'w' && topLeft != 'q' && topLeft != 'e';
-    bool forMiddle = topMiddle != 'w' && topMiddle != 'q' && topMiddle != 'e';
-    bool forRight = topRight != 'w' && topRight != 'q' && topRight != 'e';
+    char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
+    char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
+    char topRight = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+    bool forLeft = topLeft == 's';
+    bool forMiddle = topMiddle == 's';
+    bool forRight = topRight == 's';
+
+
     if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0 &&(forLeft || forMiddle || forRight))
     {
         onGround = true;
@@ -426,10 +494,68 @@ void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocity
         spacePressed = false;
     }
 }
+void playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth, bool& spacePressed)
+{
+    offset_y = player_y;
+    offset_y += velocityY;
+    char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
+    char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
+    char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+
+    char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
+    char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
+    char topRight = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+    bool forLeft = topLeft == 's';
+    bool forMiddle = topMiddle == 's';
+    bool forRight = topRight == 's';
+
+
+    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w' || bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e' || bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0 && (forLeft || forMiddle || forRight))
+    {
+        onGround = true;
+        /*player_y = ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size) * cell_size - hit_box_factor_y - Pheight;*/
+        velocityY = 0;
+        spacePressed = false;
+    }
+    else
+    {
+        player_y = offset_y;
+        velocityY += gravity;
+        onGround = false;
+    }
+}
+bool collisionCheckWithSpikes(char ** lvl,int offset_y,int hit_box_factor_y,int hit_box_factor_x,int Pheight,int Pwidth,int player_x,int player_y, int cell_size,int velocityY)
+{
+    offset_y = player_y;
+    offset_y += velocityY;
+    char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
+    char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
+    char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+
+    char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
+    char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
+    char topRight = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+    bool forLeft = topLeft != 'w' && topLeft != 'q' && topLeft != 'e';
+    bool forMiddle = topMiddle != 'w' && topMiddle != 'q' && topMiddle != 'e';
+    bool forRight = topRight != 'w' && topRight != 'q' && topRight != 'e';
+
+    cout << "Left : " << bottom_left_down << " ---- Mid : " << bottom_mid_down << " -------" << "Right : " << bottom_right_down << "----";
+
+    return ((bottom_left_down == 'p' || bottom_mid_down == 'p' || bottom_right_down == 'p') && velocityY > 0 && (forLeft || forMiddle || forRight));
+}
+void knockBack(int& velocityY, int& player_x, int& player_y, bool& hasknockedBack)
+{
+    //hasknockedBack = collisionCheckWithSpikes()
+}
 void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord)
 {
     bufferSprite.setPosition(buffer_coord,500);
     window.draw(bufferSprite);
+}
+void draw_bg(RenderWindow& window, Sprite& bgSprite, int offset_x)
+{
+    bgSprite.setPosition(-offset_x, 0);
+    window.draw(bgSprite);
 }
 
 void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, float player_y)
@@ -437,7 +563,7 @@ void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, flo
     LstillSprite.setPosition(player_x, player_y);
     window.draw(LstillSprite);
 }
-void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite& wallSprite1, Sprite& wallSprite2, Sprite& wallSprite3, const int cell_size,int offset_x)
+void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite walls[], const int cell_size, int offset_x)
 {
     for (int i = 0; i < height; i += 1)
     {
@@ -447,79 +573,80 @@ void display_level(RenderWindow& window, const int height, const int width, char
                 continue;
             else if (lvl[i][j] == 'w')
             {
-                wallSprite1.setPosition(j * cell_size - offset_x, i * cell_size);
-                window.draw(wallSprite1);
+                walls[0].setPosition(j * cell_size - offset_x, i * cell_size);
+                window.draw(walls[0]);
             }
             else if (lvl[i][j] == 'q')
             {
-                wallSprite2.setPosition(j * cell_size - offset_x, i * cell_size);
-                window.draw(wallSprite2);
+                walls[1].setPosition(j * cell_size - offset_x, i * cell_size);
+                window.draw(walls[1]);
             }
             else if (lvl[i][j] == 'e')
             {
-                wallSprite3.setPosition(j * cell_size - offset_x, i * cell_size);
-                window.draw(wallSprite3);
+                walls[2].setPosition(j * cell_size - offset_x, i * cell_size);
+                window.draw(walls[2]);
+            }
+            else if (lvl[i][j] == 'p')
+            {
+                walls[3].setPosition(j * cell_size - offset_x, i * cell_size);
+                window.draw(walls[3]);
             }
         }
     }
 }
 void designlvl1(char** lvl)
 {
-  
     for (int i = 0; i < 14; i++)
-    {
         for (int j = 0; j < 110; j++)
-        {
             lvl[i][j] = 's';
-        }
-    }
-    for (int i = 0; i < 110; i++)
+
+    for (int j = 0; j < 110; j++) 
     {
-        if (rand() % 12 != 0) 
-        {
-            if(rand() & 1)
-                lvl[12][i] = 'w';
-            else 
-            lvl[12][i] = 'e';
-            if (rand() & 1)
-                lvl[11][i] = 'q';
-            else lvl[11][i] = 'e';
-        }
+        lvl[0][j] = 'q';
+        lvl[1][j] = 'q';
     }
-    for (int i = 0; i < 110; i += 20)
+
+    for (int j = 0; j < 110; j++) 
     {
-        lvl[2][i] = 'q';
-        lvl[3][i] = 'q';
+        if ((j >= 15 && j < 18) || (j >= 40 && j < 43) || (j >= 80 && j < 84))
+            continue;
+        lvl[12][j] = 'w';
+        lvl[13][j] = 'w';
     }
-    for (int i = 5; i < 105; i += 10)
-    {
-        int height = 7 + rand() % 3; 
-        for (int j = 0; j < 5; j++)
-        {
-            lvl[height][i + j] = (j % 2 == 0) ? 'e' : 'q'; 
-        }
+
+    for (int j = 10; j < 110; j += 20) {
+        lvl[2][j] = 'q';
+        lvl[3][j] = 'q';
     }
-    for (int i = 20; i < 110; i += 25)
-    {
-        for (int j = 10; j < 12; j++)
-        {
-            lvl[j][i] = 'e';
-        }
-        for (int j = 8; j < 10; j++)
-        {
-            lvl[j][i] = 'w';
-        }
-    }
-    for (int i = 0; i < 110; i += 13)
-    {
-        if (rand() % 2 == 0)
-            lvl[5][i] = 'b';
-    }
-    for (int i = 0;i < 110;i++)
-    {
-        lvl[1][i] = 'q';
-        lvl[0][i] = 'q';
-    }
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    ////////////////// Change this Manually //////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    for (int j = 3; j < 12; j++)
+        lvl[9][j] = (j % 2 == 0) ? 'e' : 'q';  // Low platform
+
+    for (int j = 25; j < 30; j++)
+        lvl[6][j] = (j % 2 == 0) ? 'q' : 'e';  // Medium
+
+    for (int j = 45; j < 50; j++)
+        lvl[5][j] = (j % 2 == 0) ? 'e' : 'q';  // Higher
+
+    for (int j = 66; j < 72; j++)
+        lvl[6][j] = (j % 2 == 0) ? 'q' : 'e';  // Medium again
+
+    for (int j = 90; j < 96; j++)
+        lvl[8][j] = (j % 2 == 0) ? 'e' : 'q';  // Low again
+
+
+    lvl[8][6] = 'p';
+    lvl[11][20] = 'p';
+    lvl[11][14] = 'p';
+    lvl[11][42] = 'p';
+    lvl[11][86] = 'p';
+    lvl[5][27] = 'p';
+    lvl[4][47] = 'p';
+    lvl[7][92] = 'p';
 }
 bool checkCollision(char** lvl, int player_x, int player_y)
 {
