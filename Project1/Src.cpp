@@ -103,7 +103,7 @@ int main()
     int buffer_start = 4 * 64;
     int buffer_end = 13 * 64;
     Texture buffer;
-    buffer.loadFromFile("Data/bufferSprite.png");
+    buffer.loadFromFile("Data/bufferSprite.jpg");
     Sprite bufferSpriteStart(buffer);
     Sprite bufferSpriteEnd(buffer);
 
@@ -192,7 +192,6 @@ int main()
     bool arrowDown = false;
     bool enter = false;
 
-    Motobug enemy;
 
 
     ////////////////////////////////////////////////////////
@@ -360,14 +359,14 @@ int main()
             display_level(window, height, width, lvl, wallSprite1, wall2Sprite,wall3Sprite, cell_size, offset_x);
             draw_player(window, LstillSprite, sonic.getx() - offset_x, sonic.gety());
 
-			enemy.movement(sonic.getx(), sonic.gety());
-			enemy.draw(window);
             // change these according to the movement logic of motobug, for now it moves with player
-            bug.movement(sonic.getx(), sonic.gety());
-            bug.draw(window);
-
+             
             crab.movement();
             crab.draw(window);
+
+            /*
+            bug.movement(sonic.getx(), sonic.gety());
+            bug.draw(window);
 
             beebot.movement();
             beebot.draw(window);
@@ -377,9 +376,10 @@ int main()
 
             stinger.movement(sonic.getx(), sonic.gety());
             stinger.draw(window);
+            */
 
-          /*  draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
-            draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
+           /*draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
+           draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
 
         }
         window.display();
@@ -430,12 +430,10 @@ void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord)
 {
     bufferSprite.setPosition(buffer_coord,500);
     window.draw(bufferSprite);
-
 }
 
 void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, float player_y)
 {
-
     LstillSprite.setPosition(player_x, player_y);
     window.draw(LstillSprite);
 }
@@ -527,7 +525,6 @@ bool checkCollision(char** lvl, int player_x, int player_y)
 {
     return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q');
 }
-
 
 
 
