@@ -80,11 +80,20 @@ int main()
     backGround.loadFromFile("Data/bg1.png");
     Sprite backGroundSprite(backGround);
 
-    sf::Vector2u textureSize = backGround.getSize(); // original size of the image
-    sf::Vector2u windowSize = window.getSize(); // size of your SFML window
+    const int bgTextureWidth = 1600;
+    const int bgTextureHeight = 900;
+    const int bgWidth = 1200;  
+    int levelWidthPixels = 110 * 64;  // if 110 tiles wide, each 64px
+
+    backGroundSprite.setColor(sf::Color(255, 255, 255, 180));  
+    backGroundSprite.setScale((float)screen_x / bgTextureWidth, (float)screen_y / bgTextureHeight);
+
+    int repeatCount = levelWidthPixels / bgWidth + 1;
+
+
+
 
     // Scale the sprite
-    backGroundSprite.setScale((float)windowSize.x / textureSize.x,(float)windowSize.y / textureSize.y);
 
     
     Texture wallTex1;
@@ -258,7 +267,6 @@ int main()
     int crabIndex = 0;
     int crabCount = 1;
 
-
     getCrabCoordinates(CrabStart, CrabEnd, CrabWalls, height, width, crabCoordinates, indexCrab, lvl);
 
     for (int i = 0; i < indexCrab; i++) {
@@ -266,20 +274,23 @@ int main()
         if (crabIndex < 10) {
          
             float patrolStart = CrabStart[i] * 64;
-            float patrolEnd = CrabEnd[i] * 64;
+            float crabmeatEnd = CrabEnd[i] * 64;
+            float crabmeatmaxEnd = patrolStart + 12 * 64;  
+            float patrolEnd = (crabmeatEnd > crabmeatmaxEnd) ? crabmeatmaxEnd : crabmeatEnd;
+
             float crabX = (patrolStart + patrolEnd) / 2.0f;
             float crabY = (CrabWalls[i] + 1) * 64 - 44.0f;
 
             crabs[crabIndex].setPositionAndPatrol(crabX, crabY, patrolStart, patrolEnd);
 
-            cout << "Placed Crab " << crabIndex << ": " << crabX << ", " << crabY << endl;
+            cout << "plcd crabb " << crabIndex << ": " << crabX << ", " << crabY << endl;
 
             crabIndex++;
 
         }
     }
 
-    cout << "Detected " << indexCrab << " crab platform ranges." << endl;
+    cout << "detec " << indexCrab << " crab platform rangrs" << endl;
 
 
     crabCount = crabIndex;
@@ -384,6 +395,15 @@ int main()
 
         else if (gameState)
         {
+
+            for (int i = 0; i < repeatCount; i++) {
+
+                backGroundSprite.setPosition(i * bgWidth - float(offset_x*0.5f), 0);  
+                window.draw(backGroundSprite);
+
+            }
+
+
             if (onGround)
             {
                 collisionDetectedOffGround = false;//resetting the bool if player hits the platform
@@ -466,13 +486,14 @@ int main()
 
 
             draw_player(window, LstillSprite, sonic.getx() - offset_x, sonic.gety());
-            //draw_bg(window, backGroundSprite, offset_x);
 
             // change these according to the movement logic of motobug, for now it moves with player
             
             for (int i = 0; i < crabCount; i++) {
+
                 crabs[i].movement();
                 crabs[i].draw(window, offset_x);
+
             }
 
 
@@ -716,7 +737,6 @@ void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const i
                     j++;
 
                 int end = j - 1;
-
 
                 if (end - start + 1 >= 4 && indexCrab < crabCoordinates) {
 
