@@ -77,7 +77,7 @@ int main()
     //bacgrnd/////////////////
     //////////////////////////
     Texture backGround;
-    backGround.loadFromFile("Data/bg1.png");
+    backGround.loadFromFile("Data/lvl_layout.png");
     Sprite backGroundSprite(backGround);
 
     const int bgTextureWidth = 1600;
@@ -85,15 +85,16 @@ int main()
     const int bgWidth = 1200;  
     int levelWidthPixels = 110 * 64;  // if 110 tiles wide, each 64px
 
-    backGroundSprite.setColor(sf::Color(255, 255, 255, 180));  
-    backGroundSprite.setScale((float)screen_x / bgTextureWidth, (float)screen_y / bgTextureHeight);
+    sf::Vector2u textureSize = backGround.getSize();
+    sf::Vector2u windowSize = window.getSize();
+
+    //backGroundSprite.setColor(sf::Color(255, 255, 255, 180));  
+    //backGroundSprite.setScale((float)screen_x / bgTextureWidth, (float)screen_y / bgTextureHeight);
 
     int repeatCount = levelWidthPixels / bgWidth + 1;
 
 
-
-
-    // Scale the sprite
+    backGroundSprite.setScale(1,(float)windowSize.y / textureSize.y);
 
     
     Texture wallTex1;
@@ -143,12 +144,6 @@ int main()
     buffer.loadFromFile("Data/bufferSprite.jpg");
     Sprite bufferSpriteStart(buffer);
     Sprite bufferSpriteEnd(buffer);
-
-
-
-
-
-
 
 
 
@@ -396,12 +391,12 @@ int main()
         else if (gameState)
         {
 
-            for (int i = 0; i < repeatCount; i++) {
+            /*for (int i = 0; i < repeatCount; i++) {
 
                 backGroundSprite.setPosition(i * bgWidth - float(offset_x*0.5f), 0);  
                 window.draw(backGroundSprite);
 
-            }
+            }*/
 
 
             if (onGround)
@@ -482,6 +477,8 @@ int main()
              }
             if(!hasKnockedBack)
                 player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
+            draw_bg(window, backGroundSprite, offset_x);
+
             display_level(window, height, width, lvl, walls, cell_size, offset_x);
 
 
