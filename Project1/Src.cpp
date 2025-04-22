@@ -7,6 +7,7 @@
 
 //////////////////////////////
 
+
 #include"player.h"
 #include"Motobug.h"
 #include"Enemy.h"
@@ -42,6 +43,9 @@ bool checkCollision(char** lvl,int player_x,int player_y);
 bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY);
 void playerVirtualGravity(char** lvl, float& offset_y, float&, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth, bool& spacePressed);
 void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char** lvl);
+void placeSpikesUnderPlatforms(char** lvl, int height, int width);
+void draw_crabs(RenderWindow& window, Sprite& crab, Crabmeat crabs[], int& crabCount, int offset_x);
+void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[], int& indexCrab, int& crabIndex, int& crabCount, Sprite& sprite);
 
 int main()
 {
@@ -263,32 +267,7 @@ int main()
     int crabCount = 1;
 
     getCrabCoordinates(CrabStart, CrabEnd, CrabWalls, height, width, crabCoordinates, indexCrab, lvl);
-
-    for (int i = 0; i < indexCrab; i++) {
-
-        if (crabIndex < 10) {
-         
-            float patrolStart = CrabStart[i] * 64;
-            float crabmeatEnd = CrabEnd[i] * 64;
-            float crabmeatmaxEnd = patrolStart + 12 * 64;  
-            float patrolEnd = (crabmeatEnd > crabmeatmaxEnd) ? crabmeatmaxEnd : crabmeatEnd;
-
-            float crabX = (patrolStart + patrolEnd) / 2.0f;
-            float crabY = (CrabWalls[i] + 1) * 64 - 44.0f;
-
-            crabs[crabIndex].setPositionAndPatrol(crabX, crabY, patrolStart, patrolEnd);
-
-            cout << "plcd crabb " << crabIndex << ": " << crabX << ", " << crabY << endl;
-
-            crabIndex++;
-
-        }
-    }
-
-    cout << "detec " << indexCrab << " crab platform rangrs" << endl;
-
-
-    crabCount = crabIndex;
+    move_crabs(crabs, CrabStart, CrabEnd, CrabWalls, indexCrab, crabIndex, crabCount, crabs->getSprite());
 
 
 
@@ -298,6 +277,19 @@ int main()
     ///////////////////////////////////
     float timeChange = 1 ;
     float knockedBacktime = 0;
+
+
+
+
+
+    /////////////////////////////////
+    ////////////Spikes///////////////
+    /////////////////////////////////
+
+    placeSpikesUnderPlatforms(lvl, height, width);
+
+
+
     Event event;
     while (window.isOpen())
     {
@@ -477,21 +469,16 @@ int main()
              }
             if(!hasKnockedBack)
                 player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
+
             draw_bg(window, backGroundSprite, offset_x);
 
             display_level(window, height, width, lvl, walls, cell_size, offset_x);
-
 
             draw_player(window, LstillSprite, sonic.getx() - offset_x, sonic.gety());
 
             // change these according to the movement logic of motobug, for now it moves with player
             
-            for (int i = 0; i < crabCount; i++) {
-
-                crabs[i].movement();
-                crabs[i].draw(window, offset_x);
-
-            }
+            draw_crabs( window, crabs->getSprite(), crabs, crabCount, offset_x);
 
 
             /*
@@ -627,6 +614,15 @@ void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, flo
     LstillSprite.setPosition(player_x, player_y);
     window.draw(LstillSprite);
 }
+void draw_crabs(RenderWindow& window, Sprite& crab, Crabmeat crabs[], int& crabCount, int offset_x) 
+{
+    for (int i = 0; i < crabCount; i++) {
+
+        crabs[i].movement();
+        crabs[i].draw(window, offset_x);
+
+    }
+}
 void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite walls[], const int cell_size, int offset_x)
 {
     for (int i = 0; i < height; i += 1)
@@ -715,7 +711,7 @@ void designlvl1(char** lvl)
 }
 bool checkCollision(char** lvl, int player_x, int player_y)
 {
-    return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q');
+    return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q' || lvl[player_y / 64][player_x / 64] == 'p');
 }
 
 void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char**lvl) {
@@ -758,4 +754,50 @@ void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const i
     }
 
 
+}
+
+void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[], int& indexCrab, int& crabIndex, int& crabCount , Sprite& sprite) {
+
+    for (int i = 0; i < indexCrab; i++) {
+
+        if (crabIndex < 10) {
+
+            float patrolStart = CrabStart[i] * 64;
+            float crabmeatEnd = CrabEnd[i] * 64;
+            float crabmeatmaxEnd = patrolStart + 12 * 64;
+            float patrolEnd = (crabmeatEnd > crabmeatmaxEnd) ? crabmeatmaxEnd : crabmeatEnd;
+
+            float crabX = (patrolStart + patrolEnd) / 2.0f;
+            float crabY = (CrabWalls[i] + 1) * 64 - 44.0f;
+
+            crabs[crabIndex].setPositionAndPatrol(crabX, crabY, patrolStart, patrolEnd);
+
+            cout << "plcd crabb " << crabIndex << ": " << crabX << ", " << crabY << endl;
+
+            crabIndex++;
+
+        }
+    }
+
+    cout << "detec " << indexCrab << " crab platform rangrs" << endl;
+
+
+    crabCount = crabIndex;
+
+}
+void placeSpikesUnderPlatforms(char** lvl, int height, int width) {
+
+    for (int i = 1; i < height ; i++) {
+
+        for (int j = 0; j < width; j++) {
+
+            if ((lvl[i][j] == 'w' || lvl[i][j] == 'q' || lvl[i][j] == 'e') && lvl[i - 1][j] == 's' && lvl[i + 1][j] == 's') {
+
+                if (rand() % 100 < 10) {
+
+                    lvl[i + 1][j] = 'p';
+                }
+            }
+        }
+    }
 }
