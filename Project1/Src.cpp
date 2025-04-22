@@ -76,14 +76,14 @@ int main()
     //bacgrnd/////////////////
     //////////////////////////
     Texture backGround;
-    backGround.loadFromFile("Data/bg1.png");
+    backGround.loadFromFile("Data/lvl_layout.png");
     Sprite backGroundSprite(backGround);
 
     sf::Vector2u textureSize = backGround.getSize(); // original size of the image
     sf::Vector2u windowSize = window.getSize(); // size of your SFML window
 
     // Scale the sprite
-    backGroundSprite.setScale((float)windowSize.x / textureSize.x,(float)windowSize.y / textureSize.y);
+    backGroundSprite.setScale(1,(float)windowSize.y / textureSize.y);
 
     
     Texture wallTex1;
@@ -133,12 +133,6 @@ int main()
     buffer.loadFromFile("Data/bufferSprite.png");
     Sprite bufferSpriteStart(buffer);
     Sprite bufferSpriteEnd(buffer);
-
-
-
-
-
-
 
 
 
@@ -422,9 +416,10 @@ int main()
              }
             if(!hasKnockedBack)
                 player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
+            draw_bg(window, backGroundSprite, offset_x);
+
             display_level(window, height, width, lvl, walls, cell_size, offset_x);
             draw_player(window, LstillSprite, sonic.getx() - offset_x, sonic.gety());
-            //draw_bg(window, backGroundSprite, offset_x);
 
 			enemy.movement(sonic.getx(), sonic.gety());
 			enemy.draw(window);
