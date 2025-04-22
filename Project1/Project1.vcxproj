@@ -151,11 +151,13 @@
     <ClInclude Include="Batbrain.h" />
     <ClInclude Include="Beebot.h" />
     <ClInclude Include="Crabmeat.h" />
+    <ClInclude Include="Display.h" />
     <ClInclude Include="Eggstinger.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Motobug.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

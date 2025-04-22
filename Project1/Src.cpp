@@ -170,7 +170,7 @@ int main()
     /// for knockBack parabolic Trajecotry///
     //////////////////////////////////////
     float tempTerminalVelocityY = 15;
-    float tempVelocityY = -9.8;
+    float tempVelocityY = -7;
     float tempGravity = 0.6;
     Texture LstillTex;
     LstillTex.loadFromFile("Data/0left_still.png");
@@ -462,7 +462,7 @@ int main()
              cout << "HASKNOCKEDBACK = " << hasKnockedBack << endl;
              if (hasKnockedBack)
             {
-                sonic.getx() -= 8;
+                sonic.getx() -= 6;
                 sonic.gety() += tempVelocityY;
                 tempVelocityY += tempGravity;
                 if (tempVelocityY >= 0)
@@ -473,7 +473,7 @@ int main()
              if (onGround)
              {
                  hasKnockedBack = false;
-                 tempVelocityY = -9.8;
+                 tempVelocityY = -7;
              }
             if(!hasKnockedBack)
                 player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
