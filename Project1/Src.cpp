@@ -42,7 +42,7 @@ void display_level(RenderWindow& window, const int height, const int width, char
 ///////////////////////////////////////////////////////////////////////////////////
 void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord);
 void draw_bg(RenderWindow& window, Sprite&, int);
-void designlvl1(char**);
+void designlvl1(char** lvl, const char* filename, const int height, const int width);
 bool checkCollision(char** lvl,int player_x,int player_y);
 bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY);
 void playerVirtualGravity(char** lvl, float& offset_y, float&, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth, bool& spacePressed);
@@ -142,7 +142,16 @@ int main()
     {
         lvl[i] = new char[width] {'\0'};
     }
-    designlvl1(lvl);
+
+    designlvl1(lvl, "lvl1.txt", height, width);
+
+    for (int i = 0; i < 14; ++i) {
+        for (int j = 0; j < 110; ++j) {
+            cout << lvl[i][j];
+        }
+        cout << "\n";
+    }
+
     ///////////////////////////////////////
     //////  using virtual bufferZone///////
     ///////////////////////////////////////
@@ -240,9 +249,9 @@ int main()
     int CrabWalls[crabCoordinates];
 	int indexCrab = 0;
 
-    Crabmeat crabs[10];
+    Crabmeat crabs[4];
     int crabIndex = 0;
-    int crabCount = 1;
+    int crabCount = 4;
 
     getCrabCoordinates(CrabStart, CrabEnd, CrabWalls, height, width, crabCoordinates, indexCrab, lvl);
     move_crabs(crabs, CrabStart, CrabEnd, CrabWalls, indexCrab, crabIndex, crabCount, crabs->getSprite());
@@ -266,6 +275,7 @@ int main()
     bool leftRight = false;
 
     placeSpikesUnderPlatforms(lvl, height, width);
+
     Event event;
     while (window.isOpen())
     {
@@ -441,6 +451,21 @@ void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocity
 {
     offset_y = player_y;
     offset_y += velocityY;
+
+    int headY = (int)(player_y + hit_box_factor_y) / cell_size;
+    int tileLeftX  = (int)(player_x + hit_box_factor_x) / cell_size;
+    int tileRightX = (int)(player_x + hit_box_factor_x + Pwidth - 1) / cell_size;
+
+    bool hitsTopRow = (headY == 0 || headY == 1);
+    bool leftHit = (lvl[headY][tileLeftX] == 'w' || lvl[headY][tileLeftX] == 'q' || lvl[headY][tileLeftX] == 'e');
+    bool rightHit = (lvl[headY][tileRightX] == 'w' || lvl[headY][tileRightX] == 'q' || lvl[headY][tileRightX] == 'e');
+
+    if (velocityY < 0 && hitsTopRow && (leftHit || rightHit)) 
+    {
+        velocityY = 0;
+    }
+
+
     char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
     char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) ];
     char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
@@ -555,6 +580,18 @@ void draw_crabs(RenderWindow& window, Sprite& crab, Crabmeat crabs[], int& crabC
 
     }
 }
+char getMapValues(int val) 
+{
+    switch (val) 
+    {
+        case 0: return 's';
+        case 1: return 'q'; 
+        case 2: return 'w'; 
+        case 3: return 'e';
+        case 4: return 'p'; 
+        default: return 's'; 
+    }
+}
 void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite walls[], const int cell_size, int offset_x)
 {
     for (int i = 0; i < height; i += 1)
@@ -586,60 +623,21 @@ void display_level(RenderWindow& window, const int height, const int width, char
         }
     }
 }
-void designlvl1(char** lvl)
+void designlvl1(char** lvl, const char* filename, const int height, const int width)
 {
-    for (int i = 0; i < 14; i++)
-        for (int j = 0; j < 110; j++)
-            lvl[i][j] = 's';
+    ifstream in("lvl1.txt");
 
-  
-    for (int j = 0; j < 110; j++) 
-    {
-        lvl[0][j] = 'q';
-        lvl[1][j] = 'q';
+    for (int i = 0; i < height; i++) {
+
+        for (int j = 0; j < width; j++) {
+
+            int wall;
+            in >> wall;
+            lvl[i][j] = getMapValues(wall);
+        }
     }
 
-    for (int j = 0; j < 110; j++) 
-    {
-        if ((j >= 15 && j < 18) || (j >= 40 && j < 43) || (j >= 80 && j < 84))
-            continue;
-        lvl[12][j] = 'w';
-        lvl[13][j] = 'w';
-    }
-
-    for (int j = 10; j < 110; j += 20) {
-        lvl[2][j] = 'q';
-        lvl[3][j] = 'q';
-    }
-    //////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////
-    ////////////////// Change this Manually //////////////////////
-    //////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////
-    for (int j = 3; j < 12; j++)
-        lvl[9][j] = (j % 2 == 0) ? 'e' : 'q';  // Low platform
-
-    for (int j = 25; j < 30; j++)
-        lvl[6][j] = (j % 2 == 0) ? 'q' : 'e';  // Medium
-
-    for (int j = 45; j < 50; j++)
-        lvl[5][j] = (j % 2 == 0) ? 'e' : 'q';  // Higher
-
-    for (int j = 66; j < 72; j++)
-        lvl[6][j] = (j % 2 == 0) ? 'q' : 'e';  // Medium again
-
-    for (int j = 90; j < 96; j++)
-        lvl[8][j] = (j % 2 == 0) ? 'e' : 'q';  // Low again
-
-
-    lvl[8][6] = 'p';
-    lvl[11][20] = 'p';
-    lvl[11][14] = 'p';
-    lvl[11][42] = 'p';
-    lvl[11][86] = 'p';
-    lvl[5][27] = 'p';
-    lvl[4][47] = 'p';
-    lvl[7][92] = 'p'; 
+    in.close();
 }
 bool checkCollision(char** lvl, int player_x, int player_y)
 {
@@ -690,7 +688,7 @@ void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const i
 
 void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[], int& indexCrab, int& crabIndex, int& crabCount , Sprite& sprite) {
 
-    for (int i = 0; i < indexCrab; i++) {
+    for (int i = 0; i < crabCount; i++) {
 
         if (crabIndex < 10) {
 
