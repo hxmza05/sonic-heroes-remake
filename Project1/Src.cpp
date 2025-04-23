@@ -8,13 +8,17 @@
 //////////////////////////////
 
 
-#include"player.h"
+#include"Player.h"
+#include"Sonic.h"
+//#include"Animation.h"
 #include"Motobug.h"
 #include"Enemy.h"
 #include"Crabmeat.h"
 #include"Beebot.h"
 #include"Batbrain.h"
 #include"Eggstinger.h"
+#include"Menu.h"
+
 
 //////////////////////////////
 
@@ -153,7 +157,7 @@ int main()
 
 
     ////////////////////////////////////////////////////////
-    Player sonic;
+	Sonic sonic;
     float player_x = 150;
     float player_y = 150;
     bool hasCollided = false;
@@ -209,33 +213,7 @@ int main()
 
     ////////////////////////////////////////////////////////
 
-    const int totalMenuOptions = 6;
-    const char* menuOptions[totalMenuOptions] = { "New Game", "Options", "Continue", "Leader Board", "Credits", "Exit" };
-    int alignmentofTEXT[totalMenuOptions] = { 169, 117, 137, 205, 107, 54 }; // these are the pixels of text written in the above array
-    int selectedOption = 0;
-
-    Font font;
-    font.loadFromFile("Fonts/arial.ttf");
-    Text text[totalMenuOptions];
-
-    Text title("Sonic Classic Heroes", font, 64);
-    title.setFillColor(Color::Yellow);
-    title.setPosition(352.5f, 80);
-
-    for (int i = 0; i < totalMenuOptions; i++)
-    {
-
-        Text temp(menuOptions[i], font, 42);
-        temp.setPosition(float(screen_x / 2) - float(alignmentofTEXT[i] / 2), float(screen_y / 3.6) + float(i * screen_y / 12));
-        text[i] = temp;
-    }
-
-    bool gameState = false;
-    bool menuState = true;
-    bool arrowUp = false;
-    bool arrowDown = false;
-    bool enter = false;
-
+    Menu menu(screen_x, screen_y);
 
 
     ////////////////////////////////////////////////////////
@@ -285,11 +263,9 @@ int main()
     /////////////////////////////////
     ////////////Spikes///////////////
     /////////////////////////////////
+    bool leftRight = false;
 
     placeSpikesUnderPlatforms(lvl, height, width);
-
-
-
     Event event;
     while (window.isOpen())
     {
@@ -304,85 +280,20 @@ int main()
 
         if (Keyboard::isKeyPressed(Keyboard::Escape))
         {
-
             window.close();
         }
+
         window.clear();
-        if (menuState)
+
+        if (!menu.isGameStateActive())
         {
-            if (Keyboard::isKeyPressed(Keyboard::Up))
-            {
-                if (arrowUp == false)
-                {
-                    selectedOption--;
-                    if (selectedOption < 0)
-                    {
-
-                        selectedOption = totalMenuOptions - 1;
-                    }
-                    arrowUp = true;
-                }
-            }
-            else
-            {
-                arrowUp = false;
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Down))
-            {
-                if (arrowDown == false)
-                {
-                    selectedOption++;
-                    if (selectedOption >= totalMenuOptions)
-                    {
-
-                        selectedOption = 0;
-                    }
-                    arrowDown = true;
-                }
-            }
-            else
-            {
-                arrowDown = false;
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Enter))
-            {
-                if (enter == false)
-                {
-                    if (selectedOption == 0)
-                    {
-                        menuState = false;
-                        gameState = true;
-                    }
-                    else if (selectedOption == totalMenuOptions - 1)
-                    {
-                        window.close();
-                    }
-                    enter = true;
-                }
-            }
-            else
-            {
-                enter = false;
-            }
-
-            for (int i = 0; i < totalMenuOptions; i++)
-            {
-
-                text[i].setFillColor(i == selectedOption ? Color::Blue : Color::White);
-            }
-
-            window.draw(title);
-
-            for (int i = 0; i < totalMenuOptions; i++)
-            {
-
-                window.draw(text[i]);
-            }
+            menu.update(window);
+            menu.draw(window);
         }
 
-        else if (gameState)
+        else if (menu.isGameStateActive())
         {
-
+			
             /*for (int i = 0; i < repeatCount; i++) {
 
                 backGroundSprite.setPosition(i * bgWidth - float(offset_x*0.5f), 0);  
@@ -403,8 +314,11 @@ int main()
                 ///////////////////////////////////////
              
                 /////dont check when collision is detetced off the ground till the player is off the ground/////
-                 if (checkCollision(lvl, sonic.getx() - 15, sonic.gety()) && checkCollision(lvl, sonic.getx() - 15, sonic.gety() + Pheight - 1) && checkCollision(lvl, sonic.getx() - 15, sonic.gety() + Pheight / 2) && player_x > 0)
+                 if (checkCollision(lvl, sonic.getx() , sonic.gety()) && checkCollision(lvl, sonic.getx() , sonic.gety() + Pheight - 1) && checkCollision(lvl, sonic.getx() - 15, sonic.gety() + Pheight / 2) && player_x > 0)
                  {
+					 cout << "LEFT KEY PRESSED" << endl;
+                     sonic.getAnimationIndex()  = LEFT;
+					 sonic.getStates()[LEFT][0].RunAnimation();
                      sonic.getx() -= 15;
                      if (buffer_start > 4 * 64 && sonic.getx() <= buffer_start)
                      {
@@ -412,6 +326,7 @@ int main()
                          buffer_end = buffer_start + 576;
                          offset_x -= 15;
                      }
+					 leftRight = true;
                  }
                  else
                  {
@@ -423,10 +338,13 @@ int main()
                      }
                  }
              }
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&!hasKnockedBack)
+             else  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&!hasKnockedBack)
              {
                  if (checkCollision(lvl, sonic.getx() + Pwidth + 15 - 1, sonic.gety()) && checkCollision(lvl, sonic.getx() + Pwidth + 15 - 1, sonic.gety() + Pheight - 1) && checkCollision(lvl, sonic.getx() + Pwidth + 15 - 1, sonic.gety() + Pheight / 2))
                  {
+					 cout << "RIGHT KEY PRESSED" << endl;
+                     sonic.getAnimationIndex() = RIGHT;
+                      sonic.getStates()[RIGHT][0].RunAnimation();
                      sonic.getx() += 15;
                      if (buffer_end < 106 * 64 && sonic.getx() >= buffer_end)
                      {
@@ -434,6 +352,7 @@ int main()
                          buffer_start = buffer_end - 576;
                          offset_x += 15;
                      }
+					 leftRight = true;
                  }
                  else
                  {
@@ -441,27 +360,40 @@ int main()
                      velocityY = 15;
                  }
              }
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressed && !hasKnockedBack)
+			 else leftRight = false;
+              if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressed && !hasKnockedBack)
+                {
+                       
+                velocityY = -19.6;
+                onGround = false;
+                spacePressed = true;
+                sonic.getAnimationIndex() = UPR;
+                sonic.getStates()[UPR][0].RunAnimation();
+                }
+             if (spacePressed && leftRight)
              {
-                 
-                 velocityY = -19.6;
-                 onGround = false;
-                 spacePressed = true;
-                
+                 sonic.getAnimationIndex() = UPR;
+                 sonic.getStates()[UPR][0].RunAnimation();
+                 leftRight = false;
+             }
+			 if (!spacePressed && !leftRight)
+             {
+                 sonic.getAnimationIndex() = EDGER;
+                 sonic.getStates()[EDGER][0].RunAnimation();
              }
             if(!hasKnockedBack)
                 hasKnockedBack = collisionCheckWithSpikes(lvl,offset_y,hit_box_factor_y,hit_box_factor_x,Pheight,Pwidth,sonic.getx(), sonic.gety(), cell_size, velocityY);
              cout << "HASKNOCKEDBACK = " << hasKnockedBack << endl;
              if (hasKnockedBack)
-            {
-                sonic.getx() -= 6;
-                sonic.gety() += tempVelocityY;
-                tempVelocityY += tempGravity;
-                if (tempVelocityY >= 0)
                 {
-                    playerVirtualGravity(lvl, offset_y, offset_x, tempVelocityY, onGround, tempGravity, tempTerminalVelocityY, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
+                    sonic.getx() -= 6;
+                    sonic.gety() += tempVelocityY;
+                    tempVelocityY += tempGravity;
+                    if (tempVelocityY >= 0)
+                    {
+                        playerVirtualGravity(lvl, offset_y, offset_x, tempVelocityY, onGround, tempGravity, tempTerminalVelocityY, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
+                    }
                 }
-            }
              if (onGround)
              {
                  hasKnockedBack = false;
@@ -474,7 +406,7 @@ int main()
 
             display_level(window, height, width, lvl, walls, cell_size, offset_x);
 
-            draw_player(window, LstillSprite, sonic.getx() - offset_x, sonic.gety());
+            draw_player(window, sonic.getStates()[sonic.getAnimationIndex()][0].getSprites()[sonic.getStates()[sonic.getAnimationIndex()]->getIndex()], sonic.getx() - offset_x, sonic.gety());
 
             // change these according to the movement logic of motobug, for now it moves with player
             

@@ -13,6 +13,4 @@ class Layout
     Texture background;
 	Sprite backgroundSprite;
 
-
-
 };
