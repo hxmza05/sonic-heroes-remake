@@ -6,27 +6,30 @@ using namespace sf;
 using namespace std;
 
 
-class Beebot {
+class Beebot : public Enemy {
 
 private:
 
-	float x, y, speed;
 	float increase;
-	int hp;
-	Texture texture;
-	Sprite sprite;
-	bool BeeisAlive;
+	float amplitude;
+	float baseY;
 
 public:
 
 	Beebot() {
 
-		this->hp = 5;
-		this->increase = 0;
-		this->speed = 4.0;
-		BeeisAlive = true;
-		this->x = 300;
-		this->y = 300;
+		hp = 5;
+		increase = 0;
+		speed = 0.8;
+		amplitude = 20;
+		baseY = 0;
+		Alive = true;
+		Moving = true;
+		x = 0;
+		y = 0;
+		Start = 0;
+		End = 0;
+
 		texture.loadFromFile("Sprites/beebot.png");
 		sprite.setTexture(texture);
 		sprite.setTextureRect(IntRect(0, 0, 118, 50));
@@ -35,24 +38,8 @@ public:
 
 	}
 
-	float getX() {
-
-		return x;
-	}
-
-	float getY() {
-
-		return y;
-	}
-
-	int getHp() {
-
-		return hp;
-	}
-
-	bool alive() {
-
-		return BeeisAlive;
+	void setBaseY(int baseY) {
+		this->baseY = baseY;
 	}
 
 	void movement() {
@@ -60,23 +47,18 @@ public:
 		increase += 0.1;
 
 		x += speed;
-		y = 300 + 30 * sin(increase);
+
+		if (x >= End) {
+			speed = -abs(speed);
+		}
+		if (x <= Start) {
+			speed = abs(speed);
+		}
+
+		y = baseY + amplitude * sin(increase);
 
 		sprite.setPosition(x, y);
 
 	}
 
-	void draw(RenderWindow& window) {
-
-		if (BeeisAlive) {
-
-			window.draw(sprite);
-		}
-
-		else {
-
-			sprite.setPosition(999, 999);
-		}
-
-	}
 };
