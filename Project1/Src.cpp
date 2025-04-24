@@ -47,9 +47,10 @@ bool checkCollision(char** lvl,int player_x,int player_y);
 bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY);
 void playerVirtualGravity(char** lvl, float& offset_y, float&, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth, bool& spacePressed);
 void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char** lvl);
-void placeSpikesUnderPlatforms(char** lvl, int height, int width);
 void draw_crabs(RenderWindow& window, Sprite& crab, Crabmeat crabs[], int& crabCount, int offset_x);
-void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[], int& indexCrab, int& crabIndex, int& crabCount, Sprite& sprite);
+void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[], int& indexCrab, int& crabIndex, int& crabCount, const int cell_size, const float crabHeight);
+bool CollisionCheckWithCrabs(Crabmeat crabs[], int& crabCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float crabWidth, const float crabHeight);
+bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float crab_x, float crab_y, const float crabWidth, const float crabHeight);
 
 int main()
 {
@@ -248,13 +249,15 @@ int main()
     int CrabEnd[crabCoordinates];
     int CrabWalls[crabCoordinates];
 	int indexCrab = 0;
+    const float crabHeight = 44.0;
+    const float crabWidth = 60.0;
 
     Crabmeat crabs[4];
     int crabIndex = 0;
     int crabCount = 4;
 
     getCrabCoordinates(CrabStart, CrabEnd, CrabWalls, height, width, crabCoordinates, indexCrab, lvl);
-    move_crabs(crabs, CrabStart, CrabEnd, CrabWalls, indexCrab, crabIndex, crabCount, crabs->getSprite());
+    move_crabs(crabs, CrabStart, CrabEnd, CrabWalls, indexCrab, crabIndex, crabCount, cell_size, crabHeight);
 
 
 
@@ -266,6 +269,7 @@ int main()
     float knockedBacktime = 0;
 
 
+    sf::FloatRect playerBounds(sonic.getx(), sonic.gety(), Pwidth, Pheight);
 
 
 
@@ -274,7 +278,6 @@ int main()
     /////////////////////////////////
     bool leftRight = false;
 
-    placeSpikesUnderPlatforms(lvl, height, width);
 
     Event event;
     while (window.isOpen())
@@ -312,6 +315,8 @@ int main()
             }*/
 
 
+
+
             if (onGround)
             {
                 collisionDetectedOffGround = false;//resetting the bool if player hits the platform
@@ -324,7 +329,7 @@ int main()
                 ///////////////////////////////////////
              
                 /////dont check when collision is detetced off the ground till the player is off the ground/////
-                 if (checkCollision(lvl, sonic.getx() , sonic.gety()) && checkCollision(lvl, sonic.getx() , sonic.gety() + Pheight - 1) && checkCollision(lvl, sonic.getx() - 15, sonic.gety() + Pheight / 2) && player_x > 0)
+                 if (checkCollision(lvl, sonic.getx(), sonic.gety()) && checkCollision(lvl, sonic.getx(), sonic.gety() + Pheight - 1) && checkCollision(lvl, sonic.getx() - 15, sonic.gety() + Pheight / 2) && player_x > 0)
                  {
 					 cout << "LEFT KEY PRESSED" << endl;
                      sonic.getAnimationIndex()  = LEFT;
@@ -394,6 +399,13 @@ int main()
             if(!hasKnockedBack)
                 hasKnockedBack = collisionCheckWithSpikes(lvl,offset_y,hit_box_factor_y,hit_box_factor_x,Pheight,Pwidth,sonic.getx(), sonic.gety(), cell_size, velocityY);
              cout << "HASKNOCKEDBACK = " << hasKnockedBack << endl;
+
+
+            if (!hasKnockedBack) {
+
+                CollisionCheckWithCrabs(crabs, crabCount, sonic.getx(), sonic.gety(), Pwidth, Pheight, velocityY, hasKnockedBack, tempVelocityY, crabWidth, crabHeight);
+            }
+
              if (hasKnockedBack)
                 {
                     sonic.getx() -= 6;
@@ -686,21 +698,23 @@ void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const i
 
 }
 
-void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[], int& indexCrab, int& crabIndex, int& crabCount , Sprite& sprite) {
+void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[], int& indexCrab, int& crabIndex, int& crabCount, const int cell_size, const float crabHeight) {
 
-    for (int i = 0; i < crabCount; i++) {
+    int maxCrabs = min(indexCrab, crabCount);
+
+    for (int i = 0; i < maxCrabs; i++) {
 
         if (crabIndex < 10) {
 
-            float patrolStart = CrabStart[i] * 64;
-            float crabmeatEnd = CrabEnd[i] * 64;
-            float crabmeatmaxEnd = patrolStart + 12 * 64;
+            float patrolStart = CrabStart[i] * cell_size;
+            float crabmeatEnd = CrabEnd[i] * cell_size;
+            float crabmeatmaxEnd = patrolStart + 12 * cell_size;
             float patrolEnd = (crabmeatEnd > crabmeatmaxEnd) ? crabmeatmaxEnd : crabmeatEnd;
 
             float crabX = (patrolStart + patrolEnd) / 2.0f;
-            float crabY = (CrabWalls[i] + 1) * 64 - 44.0f;
+            float crabY = (CrabWalls[i] + 1) * cell_size - crabHeight;
 
-            crabs[crabIndex].setPositionAndPatrol(crabX, crabY, patrolStart, patrolEnd);
+            crabs[crabIndex].setPosition(crabX, crabY, patrolStart, patrolEnd);
 
             cout << "plcd crabb " << crabIndex << ": " << crabX << ", " << crabY << endl;
 
@@ -715,19 +729,68 @@ void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[
     crabCount = crabIndex;
 
 }
-void placeSpikesUnderPlatforms(char** lvl, int height, int width) {
 
-    for (int i = 1; i < height ; i++) {
+bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float crab_x, float crab_y, const float crabWidth, const float crabHeight)
+{
+    return (player_x + Pwidth > crab_x && player_x < crab_x + crabWidth && player_y + Pheight > crab_y && player_y < crab_y + crabHeight);
+}
 
-        for (int j = 0; j < width; j++) {
+bool CollisionCheckWithCrabs(Crabmeat crabs[], int& crabCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float crabWidth, const float crabHeight)
+{
+    
+    if (hasKnockedBack) {
 
-            if ((lvl[i][j] == 'w' || lvl[i][j] == 'q' || lvl[i][j] == 'e') && lvl[i - 1][j] == 's' && lvl[i + 1][j] == 's') {
+        return false;
+    }
 
-                if (rand() % 100 < 10) {
+    for (int i = 0; i < crabCount; i++) {
 
-                    lvl[i + 1][j] = 'p';
-                }
+        if (!crabs[i].alive()) {
+            continue;
+        }
+
+        if (PlayerCrabCollision(player_x, player_y, Pwidth, Pheight, crabs[i].getX(), crabs[i].getY(), crabWidth, crabHeight)) {
+
+            float bottom_of_Player = player_y + Pheight;
+            float top_of_Crab = crabs[i].getY();
+
+            if (bottom_of_Player - 10 < top_of_Crab) {
+
+                // crab ko marna hai ab becoz top collision, also add smoke effect and invincibilty 
+                cout << " Top-hit:  " << i << endl;
+
+                cout << "PlyrX: " << player_x << "crab X: " << crabs[i].getX() << endl;
+
+                velocityY = -10.0f;
             }
+
+            else {
+
+                hasKnockedBack = true;
+                tempVelocityY = -7;
+
+                float centre_of_Player = player_x + Pwidth / 2.0f;
+                float centre_of_CRab = crabs[i].getX() + crabWidth / 2.0f;
+
+                cout << "PlyrX " << centre_of_Player << " Crab CenterX " << centre_of_CRab << endl;
+
+                if (centre_of_Player < centre_of_CRab) {
+                    player_x -= 10;
+                }
+
+                else {
+                    player_x += 10;
+                }
+
+                cout << "PlyrX " << centre_of_Player << " Crab CenterX " << centre_of_CRab << endl;
+
+                cout << " Sidehit " << i << endl;
+
+                cout << "PlyrX " << player_x << " Crab X " << crabs[i].getX() << endl;
+            }
+            return true;
         }
     }
+
+    return false;
 }
