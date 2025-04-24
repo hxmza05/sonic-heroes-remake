@@ -878,7 +878,7 @@ void move_beebots(Beebot beebots[], int BeebotStart[], int BeebotEnd[], int Beeb
         float bee_Y = BeebotHeights[i] * cell_size + 10;  
 
         beebots[beeIndex].setPosition(bee_X, bee_Y, patrolStart, patrolEnd);
-        beebots[i].setBaseY(200);
+        beebots[i].setBaseY(270);
 
         cout << "placed bee " << beeIndex << ": " << bee_X << ", " << bee_Y << endl;
         beeIndex++;
