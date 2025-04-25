@@ -149,12 +149,12 @@ int main()
 
     designlvl1(lvl, "lvl1.txt", height, width);
 
-    for (int i = 0; i < 14; ++i) {
+   /* for (int i = 0; i < 14; ++i) {
         for (int j = 0; j < 110; ++j) {
             cout << lvl[i][j];
         }
         cout << "\n";
-    }
+    }*/
 
     ///////////////////////////////////////
     //////  using virtual bufferZone///////
@@ -171,40 +171,16 @@ int main()
 
     ////////////////////////////////////////////////////////
 	Sonic sonic;
-  /*  float sonic.getx() = 150;
-    float sonic.gety() = 150;*/
-    //bool sonic.getHasCollided() = false;
-    //bool sonic.getHasKnockedBack() = false;
-
     float max_speed = 15;
-
-    //float sonic.getVelocityX() = 0;
-    //float sonic.getVelocityY() = 0;
     bool spacePressed = false;// our own defined
     bool collisionDetectedOffGround = false;
-
-    //float sonic.getJumpStrength() = -20; // Initial jump velocity
-    //float sonic.getGravity() = 1;        // sonic.getGravity() sonic.getacceleration()
-
-
     ///////////////////////////////////////////
     /// for knockBack parabolic Trajecotry///
     //////////////////////////////////////
-    float tempTerminalVelocityY= 15;
-    /*float sonic.getTempVelocityY()() = -7;*/
-    //float sonic.() = 0.6;
-    Texture LstillTex;
-    LstillTex.loadFromFile("Data/0left_still.png");
-    Sprite LstillSprite(LstillTex);
-
     //bool sonic.getOnGround() = false;
 
     float offset_x = 0;
     float offset_y = 0;
-
-    //float terminal_Velocity = 20;
-
-    //float sonic.getacceleration() = 0.2;
 
     float scale_x = 2.5;
     float scale_y = 2.5;
@@ -213,16 +189,10 @@ int main()
     int raw_img_x = 24;
     int raw_img_y = 35;
 
-    /*int Sonic.getPheight( = raw_img_y * scale_y;
-    int sonic.getPwidth() = raw_img_x * scale_x;*/
-
-    // only to adjust the player's hitbox
-
     int hit_box_factor_x = 8 * scale_x;
     int hit_box_factor_y = 5 * scale_y;
 
-    LstillSprite.setTexture(LstillTex);
-    LstillSprite.setScale(scale_x, scale_y);
+	//sonic.setHitBoxFactorX(hit_box_factor_x);
 
     ////////////////////////////////////////////////////////
 
@@ -230,12 +200,8 @@ int main()
 
 
     ////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////
     ////////////////DECLARING ENEMIES///////////////////////
     ////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////
-
 
     Motobug bug;
     Batbrain bat;
@@ -336,18 +302,10 @@ int main()
             }
              if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !sonic.getHasKnockedBack())
              {
-                ///////////////////////////////////////
-                // i have to change this afterwards////
-                ///////////////////////////////////////
-             
-                /////dont check when collision is detetced off the ground till the player is off the ground/////
+                 //cout << "LEFT KEY PRESSED" << endl;
                  if (checkCollision(lvl, sonic.getx() , sonic.gety()) && checkCollision(lvl, sonic.getx() , sonic.gety() + sonic.getPheight() - 1) && checkCollision(lvl, sonic.getx() - 15, sonic.gety() + sonic.getPheight() / 2) && sonic.getx() > 0)
-
                  {
-					 cout << "LEFT KEY PRESSED" << endl;
-                     sonic.getAnimationIndex()  = LEFT;
-					 sonic.getStates()[LEFT][0].RunAnimation();
-                     sonic.getx() -= 15;
+                     sonic.moveLeft();
                      if (buffer_start > 4 * 64 && sonic.getx() <= buffer_start)
                      {
                          buffer_start = sonic.getx();
@@ -370,10 +328,7 @@ int main()
              {
                  if (checkCollision(lvl, sonic.getx() + sonic.getPwidth() + 15 - 1, sonic.gety()) && checkCollision(lvl, sonic.getx() + sonic.getPwidth() + 15 - 1, sonic.gety() + sonic.getPheight() - 1) && checkCollision(lvl, sonic.getx() + sonic.getPwidth() + 15 - 1, sonic.gety() + sonic.getPheight() / 2))
                  {
-					 cout << "RIGHT KEY PRESSED" << endl;
-                     sonic.getAnimationIndex() = RIGHT;
-                      sonic.getStates()[RIGHT][0].RunAnimation();
-                     sonic.getx() += 15;
+                     sonic.moveRight();
                      if (buffer_end < 106 * 64 && sonic.getx() >= buffer_end)
                      {
                          buffer_end = sonic.getx();
@@ -389,6 +344,10 @@ int main()
                  }
              }
 			 else leftRight = false;
+             if (!leftRight)
+             {
+				 sonic.getVelocityX() = 5;
+             }
               if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressed && !sonic.getHasKnockedBack())
                 {
                        
@@ -415,7 +374,6 @@ int main()
 
                 CollisionCheckWithCrabs(crabs, crabCount, sonic.getx(), sonic.gety(), sonic.getPwidth(), sonic.getPheight(), sonic.getVelocityY(), sonic.getHasKnockedBack(), sonic.getTempVelocityY(), crabWidth, crabHeight);
             }
-
             if (sonic.getHasKnockedBack())
                 {
                     sonic.getx() -= 6;
@@ -444,8 +402,6 @@ int main()
             
             draw_crabs( window, crabs, crabCount, offset_x);
             draw_beebots(window, beebots, beeCount, offset_x);
-
-
             /*
             bug.movement(sonic.getx(), sonic.gety());
             bug.draw(window);
@@ -499,9 +455,6 @@ void draw_bg(RenderWindow& window, Sprite& bgSprite, int offset_x)
     bgSprite.setPosition(0, 0);
     window.draw(bgSprite);
 }
-
-
-
 void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x) 
 {
     for (int i = 0; i < crabCount; i++) {

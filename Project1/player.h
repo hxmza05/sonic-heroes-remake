@@ -6,6 +6,19 @@ using namespace std;
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 using namespace sf;
+#define LEFT 0
+#define RIGHT 1
+#define UPL 2
+#define UPR 3
+#define EDGEL 4
+#define EDGER 5
+#define LEFTRUN 6
+#define RIGHTRUN 7
+#define PUSHLEFT 8
+#define PUSHRIGHT 9
+#define JUMPL 10
+#define JUMPR 11
+
 class Player
 {
 	float x;
@@ -50,8 +63,8 @@ public:
 		y = 150;
 		hasCollided = false;
 		hasKnockedBack = false;
-		max_speed = 15;
-		velocityX = 0;
+		max_speed = 20;
+		velocityX = 5;
 		velocityY = 9.8;
 		//spacePressed = false;// our own defined
 		collisionDetectedOffGround = false;
@@ -61,7 +74,7 @@ public:
 		tempVelocityY = -7;
 		tempGravity = 0.6;
 		onGround = false;
-		acceleration = 0.2;
+		acceleration = 1;
 		Pheight = 35 * 2.5;
 		Pwidth = 24 * 2.5;
 		hit_box_factor_x = 8 * 2.5;
@@ -149,6 +162,10 @@ public:
 	{
 		return hasKnockedBack;
 	}
+	int getMaxSpeed()
+	{
+		return max_speed;
+	}
 	//bool& getSpacePressed()
 	//{
 	//	return spacePressed;
@@ -172,6 +189,8 @@ public:
 	void draw_player(RenderWindow& window, Sprite& LstillSprite,float offset_x);
 	void player_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed);
 	void playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, const int cell_size,bool& spacePressed);
+	void moveLeft();
+	void moveRight();
 	
 
 };
@@ -262,5 +281,41 @@ void Player::playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, 
 		y = offset_y;
 		tempVelocityY += tempGravity;
 		onGround = false;
+	}
+}
+void Player :: moveLeft()
+{
+	x -= velocityX;
+	if (velocityX + acceleration < max_speed)
+	{
+		velocityX += acceleration;
+	}
+	if (velocityX < 10)
+	{
+		indexAnimation = LEFT;
+		states[LEFT][0].RunAnimation();/*&& topLeft != 'q' && topLeft != 'e';*/
+	}
+	else
+	{
+		indexAnimation = LEFTRUN;
+		states[LEFTRUN][0].RunAnimation();
+	}
+}
+void Player :: moveRight()
+{
+	x += velocityX;
+	if (velocityX + acceleration < max_speed)
+	{
+		velocityX += acceleration;
+	}
+	if (velocityX < 10)
+	{
+		indexAnimation = RIGHT;
+		states[RIGHT][0].RunAnimation();/*&& topLeft != 'q' && topLeft != 'e';*/
+	}
+	else
+	{
+		indexAnimation = RIGHTRUN;
+		states[RIGHTRUN][0].RunAnimation();
 	}
 }
