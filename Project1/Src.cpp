@@ -89,7 +89,7 @@ int main()
     //bacgrnd/////////////////
     //////////////////////////
     Texture backGround;
-    backGround.loadFromFile("Data/lvl_layout.png");
+    backGround.loadFromFile("Data/bg1.png");
     Sprite backGroundSprite(backGround);
 
     const int bgTextureWidth = 1600;
@@ -100,8 +100,8 @@ int main()
     sf::Vector2u textureSize = backGround.getSize();
     sf::Vector2u windowSize = window.getSize();
 
-    //backGroundSprite.setColor(sf::Color(255, 255, 255, 180));  
-    //backGroundSprite.setScale((float)screen_x / bgTextureWidth, (float)screen_y / bgTextureHeight);
+    backGroundSprite.setColor(sf::Color(255, 255, 255, 180));  
+    backGroundSprite.setScale((float)screen_x / bgTextureWidth, (float)screen_y / bgTextureHeight);
 
     int repeatCount = levelWidthPixels / bgWidth + 1;
 
@@ -330,12 +330,12 @@ int main()
         else if (menu.isGameStateActive())
         {
 			
-            /*for (int i = 0; i < repeatCount; i++) {
+            for (int i = 0; i < repeatCount; i++) {
 
                 backGroundSprite.setPosition(i * bgWidth - float(offset_x*0.5f), 0);  
                 window.draw(backGroundSprite);
 
-            }*/
+            }
 
 
 
@@ -416,8 +416,8 @@ int main()
              }
 			 if (!spacePressed && !leftRight)
              {
-                 sonic.getAnimationIndex() = EDGER;
-                 sonic.getStates()[EDGER][0].RunAnimation();
+                 sonic.getAnimationIndex() = EDGEL;
+                 sonic.getStates()[EDGEL][0].RunAnimation();
              }
             if(!hasKnockedBack)
                 hasKnockedBack = collisionCheckWithSpikes(lvl,offset_y,hit_box_factor_y,hit_box_factor_x,Pheight,Pwidth,sonic.getx(), sonic.gety(), cell_size, velocityY);
@@ -447,7 +447,7 @@ int main()
             if(!hasKnockedBack)
                 player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
 
-            draw_bg(window, backGroundSprite, offset_x);
+           // draw_bg(window, backGroundSprite, offset_x);
 
             display_level(window, height, width, lvl, walls, cell_size, offset_x);
 
