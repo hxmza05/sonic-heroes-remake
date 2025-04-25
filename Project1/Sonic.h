@@ -2,6 +2,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 using namespace sf;
+
 #define LEFT 0
 #define RIGHT 1
 #define UPL 2
