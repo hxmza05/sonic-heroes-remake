@@ -2,31 +2,90 @@
 
 class Enemy {
 
-private:
+protected:
 
-	int x;
-	int y;
-	int hp;
+	float x, y, speed;
+	float hp;
+	bool Alive, Moving;
+	float Start, End;
+
+	Texture texture;
+	Sprite sprite;
 
 public:
 
 	Enemy() {
 
-		this->x = 0;
-		this->y = 0;
-		this->hp = 0;
+		x = 0, y = 0, speed = 0;
+		hp = 0;
+		Alive = false, Moving = false;
+		Start = 0, End = 0;
 	}
-
-	Enemy(int x, int y, int hp) {
-
-		this->x = x;
-		this->y = y;
-		this->hp = hp;
-	}
-
-
 
 	
+	float& getX() {
+
+		return x;
+	}
+
+	float& getY() {
+
+		return y;
+	}
+
+	float& getHp() {
+
+		return hp;
+	}
+
+	bool& alive() {
+
+		return Alive;
+	}
+
+	void setPosition(float startX, float startY, float Start, float End) {
+
+		x = startX;
+		y = startY;
+		this->Start = Start;
+		this->End = End;
+		sprite.setPosition(x, y);
+
+	}
+
+	virtual void draw(RenderWindow& window, float offset_x) {
+
+		if (Alive) {
+
+			sprite.setPosition(x - offset_x, y);
+			window.draw(sprite);
+		}
+
+		else {
+
+			sprite.setPosition(999, 999);
+		}
+
+	}
+
+	////////////////////////// remove this later /////////////////////////////
+
+	float getSpriteHeight() 
+	{
+		return sprite.getGlobalBounds().height;
+	}
+
+	sf::FloatRect getBounds() const {
+		sf::FloatRect bounds = sprite.getGlobalBounds();
+		bounds.left = x;
+		return bounds;
+	}
+
+	////////////////////////// remove this later /////////////////////////////
+
+	Sprite& getSprite() {
+		return sprite;
+	}
 
 
 };
