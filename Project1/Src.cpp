@@ -30,9 +30,9 @@ int screen_x = 1200;
 int screen_y = 900;
 
 // prototypes
-void player_gravity(char** lvl, float& offset_y,float&, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth,bool &spacePressed);
+//void player_sonic.getGravity()(char** lvl, float& offset_y,float&, float& sonic.getVelocityY(), bool& sonic.getOnGround(), float& sonic.getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& sonic.getx(), float& sonic.gety(), const int cell_size, int& Sonic.getPheight(), int& sonic.getPwidth(),bool &spacePressed);
 
-void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, float player_y);
+//void draw_player(RenderWindow& window, Sprite& LstillSprite, float x, float y);
 
 void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite walls[], const int cell_size,int off_x);
 ///////////////////////////////////////////////////////////////////////////////////
@@ -43,9 +43,9 @@ void display_level(RenderWindow& window, const int height, const int width, char
 void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord);
 void draw_bg(RenderWindow& window, Sprite&, int);
 void designlvl1(char** lvl, const char* filename, const int height, const int width);
-bool checkCollision(char** lvl,int player_x,int player_y);
-bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY);
-void playerVirtualGravity(char** lvl, float& offset_y, float&, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth, bool& spacePressed);
+bool checkCollision(char** lvl,int x,int y);
+bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int x, int y, int cell_size, int velocityY);
+//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& sonic.getVelocityY(), bool& OnGround(), float& sonic.getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& sonic.getx(), float& sonic.gety(), const int cell_size, int& Sonic.getPheight(), int& sonic.getPwidth(), bool& spacePressed);
 void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char** lvl);
 void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
 void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[], int& indexCrab, int& crabIndex, int& crabCount, const int cell_size, const float crabHeight);
@@ -149,12 +149,12 @@ int main()
 
     designlvl1(lvl, "lvl1.txt", height, width);
 
-    for (int i = 0; i < 14; ++i) {
+   /* for (int i = 0; i < 14; ++i) {
         for (int j = 0; j < 110; ++j) {
             cout << lvl[i][j];
         }
         cout << "\n";
-    }
+    }*/
 
     ///////////////////////////////////////
     //////  using virtual bufferZone///////
@@ -171,40 +171,16 @@ int main()
 
     ////////////////////////////////////////////////////////
 	Sonic sonic;
-    float player_x = 150;
-    float player_y = 150;
-    bool hasCollided = false;
-    bool hasKnockedBack = false;
-
     float max_speed = 15;
-
-    float velocityX = 0;
-    float velocityY = 0;
     bool spacePressed = false;// our own defined
     bool collisionDetectedOffGround = false;
-
-    float jumpStrength = -20; // Initial jump velocity
-    float gravity = 1;        // Gravity acceleration
-
-
     ///////////////////////////////////////////
     /// for knockBack parabolic Trajecotry///
     //////////////////////////////////////
-    float tempTerminalVelocityY = 15;
-    float tempVelocityY = -7;
-    float tempGravity = 0.6;
-    Texture LstillTex;
-    LstillTex.loadFromFile("Data/0left_still.png");
-    Sprite LstillSprite(LstillTex);
-
-    bool onGround = false;
+    //bool sonic.getOnGround() = false;
 
     float offset_x = 0;
     float offset_y = 0;
-
-    float terminal_Velocity = 20;
-
-    float acceleration = 0.2;
 
     float scale_x = 2.5;
     float scale_y = 2.5;
@@ -213,16 +189,10 @@ int main()
     int raw_img_x = 24;
     int raw_img_y = 35;
 
-    int Pheight = raw_img_y * scale_y;
-    int Pwidth = raw_img_x * scale_x;
-
-    // only to adjust the player's hitbox
-
     int hit_box_factor_x = 8 * scale_x;
     int hit_box_factor_y = 5 * scale_y;
 
-    LstillSprite.setTexture(LstillTex);
-    LstillSprite.setScale(scale_x, scale_y);
+	//sonic.setHitBoxFactorX(hit_box_factor_x);
 
     ////////////////////////////////////////////////////////
 
@@ -230,12 +200,8 @@ int main()
 
 
     ////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////
     ////////////////DECLARING ENEMIES///////////////////////
     ////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////
-
 
     Motobug bug;
     Batbrain bat;
@@ -329,35 +295,18 @@ int main()
 
         else if (menu.isGameStateActive())
         {
-			
-            for (int i = 0; i < repeatCount; i++) {
 
-                backGroundSprite.setPosition(i * bgWidth - float(offset_x*0.5f), 0);  
-                window.draw(backGroundSprite);
-
-            }
-
-
-
-
-            if (onGround)
+            if (sonic.getOnGround())
             {
                 collisionDetectedOffGround = false;//resetting the bool if player hits the platform
-                hasKnockedBack = false;
+                sonic.getHasKnockedBack() = false;
             }
-             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !hasKnockedBack)
+             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !sonic.getHasKnockedBack())
              {
-                ///////////////////////////////////////
-                // i have to change this afterwards////
-                ///////////////////////////////////////
-             
-                /////dont check when collision is detetced off the ground till the player is off the ground/////
-                 if (checkCollision(lvl, sonic.getx(), sonic.gety()) && checkCollision(lvl, sonic.getx(), sonic.gety() + Pheight - 1) && checkCollision(lvl, sonic.getx() - 15, sonic.gety() + Pheight / 2) && player_x > 0)
+                 //cout << "LEFT KEY PRESSED" << endl;
+                 if (checkCollision(lvl, sonic.getx() , sonic.gety()) && checkCollision(lvl, sonic.getx() , sonic.gety() + sonic.getPheight() - 1) && checkCollision(lvl, sonic.getx() - 15, sonic.gety() + sonic.getPheight() / 2) && sonic.getx() > 0)
                  {
-					 cout << "LEFT KEY PRESSED" << endl;
-                     sonic.getAnimationIndex()  = LEFT;
-					 sonic.getStates()[LEFT][0].RunAnimation();
-                     sonic.getx() -= 15;
+                     sonic.moveLeft();
                      if (buffer_start > 4 * 64 && sonic.getx() <= buffer_start)
                      {
                          buffer_start = sonic.getx();
@@ -368,22 +317,19 @@ int main()
                  }
                  else
                  {
-                     if(velocityY <= 0 )
-                        velocityY = 15;
-                     if (sonic.getx() <= 0 && !onGround)
+                     if(sonic.getVelocityY() <= 0 )
+                        sonic.getVelocityY() = 15;
+                     if (sonic.getx() <= 0 && !sonic.getOnGround())
                      {
                          collisionDetectedOffGround = true;
                      }
                  }
              }
-             else  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&!hasKnockedBack)
+             else  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&!sonic.getHasKnockedBack())
              {
-                 if (checkCollision(lvl, sonic.getx() + Pwidth + 15 - 1, sonic.gety()) && checkCollision(lvl, sonic.getx() + Pwidth + 15 - 1, sonic.gety() + Pheight - 1) && checkCollision(lvl, sonic.getx() + Pwidth + 15 - 1, sonic.gety() + Pheight / 2))
+                 if (checkCollision(lvl, sonic.getx() + sonic.getPwidth() + 15 - 1, sonic.gety()) && checkCollision(lvl, sonic.getx() + sonic.getPwidth() + 15 - 1, sonic.gety() + sonic.getPheight() - 1) && checkCollision(lvl, sonic.getx() + sonic.getPwidth() + 15 - 1, sonic.gety() + sonic.getPheight() / 2))
                  {
-					 cout << "RIGHT KEY PRESSED" << endl;
-                     sonic.getAnimationIndex() = RIGHT;
-                      sonic.getStates()[RIGHT][0].RunAnimation();
-                     sonic.getx() += 15;
+                     sonic.moveRight();
                      if (buffer_end < 106 * 64 && sonic.getx() >= buffer_end)
                      {
                          buffer_end = sonic.getx();
@@ -394,21 +340,24 @@ int main()
                  }
                  else
                  {
-                     if(velocityY >= 0)
-                     velocityY = 15;
+                     if(sonic.getVelocityY() >= 0)
+                     sonic.getVelocityY() = 15;
                  }
              }
 			 else leftRight = false;
-              if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressed && !hasKnockedBack)
+             if (!leftRight)
+             {
+				 sonic.getVelocityX() = 5;
+             }
+              if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressed && !sonic.getHasKnockedBack())
                 {
                        
-                velocityY = -19.6;
-                onGround = false;
+                sonic.getVelocityY() = -19.6;
+                sonic.getOnGround() = false;
                 spacePressed = true;
-                sonic.getAnimationIndex() = UPR;
-                sonic.getStates()[UPR][0].RunAnimation();
+                
                 }
-             if (spacePressed && leftRight)
+             if (spacePressed)
              {
                  sonic.getAnimationIndex() = UPR;
                  sonic.getStates()[UPR][0].RunAnimation();
@@ -419,46 +368,41 @@ int main()
                  sonic.getAnimationIndex() = EDGEL;
                  sonic.getStates()[EDGEL][0].RunAnimation();
              }
-            if(!hasKnockedBack)
-                hasKnockedBack = collisionCheckWithSpikes(lvl,offset_y,hit_box_factor_y,hit_box_factor_x,Pheight,Pwidth,sonic.getx(), sonic.gety(), cell_size, velocityY);
-             cout << "HASKNOCKEDBACK = " << hasKnockedBack << endl;
+            if(!sonic.getHasKnockedBack())
+                sonic.getHasKnockedBack() = collisionCheckWithSpikes(lvl,offset_y,hit_box_factor_y,hit_box_factor_x,sonic.getPheight(), sonic.getPwidth(), sonic.getx(), sonic.gety(), cell_size, sonic.getVelocityY());
+             //cout << "sonic.getHasKnockedBack() = " << sonic.getHasKnockedBack() << endl;
+            if (!sonic.getHasKnockedBack()) {
 
-
-            if (!hasKnockedBack) {
-
-                CollisionCheckWithCrabs(crabs, crabCount, sonic.getx(), sonic.gety(), Pwidth, Pheight, velocityY, hasKnockedBack, tempVelocityY, crabWidth, crabHeight);
+                CollisionCheckWithCrabs(crabs, crabCount, sonic.getx(), sonic.gety(), sonic.getPwidth(), sonic.getPheight(), sonic.getVelocityY(), sonic.getHasKnockedBack(), sonic.getTempVelocityY(), crabWidth, crabHeight);
             }
-
-             if (hasKnockedBack)
+            if (sonic.getHasKnockedBack())
                 {
                     sonic.getx() -= 6;
-                    sonic.gety() += tempVelocityY;
-                    tempVelocityY += tempGravity;
-                    if (tempVelocityY >= 0)
+                    sonic.gety() += sonic.getTempVelocityY();
+                    sonic.getTempVelocityY() += sonic.getTempGravity();
+                    if (sonic.getTempVelocityY() >= 0)
                     {
-                        playerVirtualGravity(lvl, offset_y, offset_x, tempVelocityY, onGround, tempGravity, tempTerminalVelocityY, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
+                        sonic.playerVirtualGravity(lvl, offset_y, offset_x, cell_size,spacePressed);
                     }
                 }
-             if (onGround)
+             if (sonic.getOnGround())
              {
-                 hasKnockedBack = false;
-                 tempVelocityY = -7;
+                 sonic.getHasKnockedBack() = false;
+                 sonic.getTempVelocityY() = -7;
              }
-            if(!hasKnockedBack)
-                player_gravity(lvl, offset_y,offset_x, velocityY, onGround, gravity, terminal_Velocity, hit_box_factor_x, hit_box_factor_y, sonic.getx(), sonic.gety(), cell_size, Pheight, Pwidth, spacePressed);
+            if(!sonic.getHasKnockedBack())
+                sonic.player_gravity(lvl, offset_y,offset_x, cell_size, spacePressed);
 
            // draw_bg(window, backGroundSprite, offset_x);
 
             display_level(window, height, width, lvl, walls, cell_size, offset_x);
 
-            draw_player(window, sonic.getStates()[sonic.getAnimationIndex()][0].getSprites()[sonic.getStates()[sonic.getAnimationIndex()]->getIndex()], sonic.getx() - offset_x, sonic.gety());
+            sonic.draw_player(window, sonic.getStates()[sonic.getAnimationIndex()][0].getSprites()[sonic.getStates()[sonic.getAnimationIndex()]->getIndex()],offset_x);
 
             // change these according to the movement logic of motobug, for now it moves with player
             
             draw_crabs( window, crabs, crabCount, offset_x);
             draw_beebots(window, beebots, beeCount, offset_x);
-
-
             /*
             bug.movement(sonic.getx(), sonic.gety());
             bug.draw(window);
@@ -483,92 +427,7 @@ int main()
 }
 
 // functions
-void player_gravity(char** lvl, float& offset_y, float& offset_x,float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth,bool& spacePressed)
-{
-    offset_y = player_y;
-    offset_y += velocityY;
-
-    int headY = (int)(player_y + hit_box_factor_y) / cell_size;
-    int tileLeftX  = (int)(player_x + hit_box_factor_x) / cell_size;
-    int tileRightX = (int)(player_x + hit_box_factor_x + Pwidth - 1) / cell_size;
-
-    bool hitsTopRow = (headY == 0 || headY == 1);
-    bool leftHit = (lvl[headY][tileLeftX] == 'w' || lvl[headY][tileLeftX] == 'q' || lvl[headY][tileLeftX] == 'e');
-    bool rightHit = (lvl[headY][tileRightX] == 'w' || lvl[headY][tileRightX] == 'q' || lvl[headY][tileRightX] == 'e');
-
-    if (velocityY < 0 && hitsTopRow && (leftHit || rightHit)) 
-    {
-        velocityY = 0;
-    }
-
-
-    char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
-    char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size) ];
-    char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
-
-    char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
-    char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
-    char topRight = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
-    bool forLeft = topLeft == 's';
-    bool forMiddle = topMiddle == 's';
-    bool forRight = topRight == 's';
-
-
-    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w'|| bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e'|| bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0 &&(forLeft || forMiddle || forRight))
-    {
-        onGround = true;
-        /*player_y = ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size) * cell_size - hit_box_factor_y - Pheight;*/
-        velocityY = 0;
-        spacePressed = false;
-    }
-    else
-    {
-        player_y = offset_y;
-        onGround = false;
-    }
-    if (!onGround)
-    {
-        velocityY += gravity;
-        if (velocityY >= terminal_Velocity)
-            velocityY = terminal_Velocity;
-    }
-    else
-    {
-        velocityY = 0;
-        spacePressed = false;
-    }
-}
-void playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, float& velocityY, bool& onGround, float& gravity, float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& player_x, float& player_y, const int cell_size, int& Pheight, int& Pwidth, bool& spacePressed)
-{
-    offset_y = player_y;
-    offset_y += velocityY;
-    char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
-    char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
-    char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
-
-    char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
-    char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
-    char topRight = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
-    bool forLeft = topLeft == 's';
-    bool forMiddle = topMiddle == 's';
-    bool forRight = topRight == 's';
-
-
-    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w' || bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e' || bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0 && (forLeft || forMiddle || forRight))
-    {
-        onGround = true;
-        /*player_y = ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size) * cell_size - hit_box_factor_y - Pheight;*/
-        velocityY = 0;
-        spacePressed = false;
-    }
-    else
-    {
-        player_y = offset_y;
-        velocityY += gravity;
-        onGround = false;
-    }
-}
-bool collisionCheckWithSpikes(char ** lvl,int offset_y,int hit_box_factor_y,int hit_box_factor_x,int Pheight,int Pwidth,int player_x,int player_y, int cell_size,int velocityY)
+bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY)
 {
     offset_y = player_y;
     offset_y += velocityY;
@@ -583,13 +442,9 @@ bool collisionCheckWithSpikes(char ** lvl,int offset_y,int hit_box_factor_y,int 
     bool forMiddle = topMiddle != 'w' && topMiddle != 'q' && topMiddle != 'e';
     bool forRight = topRight != 'w' && topRight != 'q' && topRight != 'e';
 
-    cout << "Left : " << bottom_left_down << " ---- Mid : " << bottom_mid_down << " -------" << "Right : " << bottom_right_down << "----";
+    //cout << "Left : " << bottom_left_down << " ---- Mid : " << bottom_mid_down << " -------" << "Right : " << bottom_right_down << "----";
 
     return ((bottom_left_down == 'p' || bottom_mid_down == 'p' || bottom_right_down == 'p') && velocityY > 0 && (forLeft || forMiddle || forRight));
-}
-void knockBack(int& velocityY, int& player_x, int& player_y, bool& hasknockedBack)
-{
-    //hasknockedBack = collisionCheckWithSpikes()
 }
 void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord)
 {
@@ -598,14 +453,8 @@ void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord)
 }
 void draw_bg(RenderWindow& window, Sprite& bgSprite, int offset_x)
 {
-    bgSprite.setPosition(-offset_x, 0);
+    bgSprite.setPosition(0, 0);
     window.draw(bgSprite);
-}
-
-void draw_player(RenderWindow& window, Sprite& LstillSprite, float player_x, float player_y)
-{
-    LstillSprite.setPosition(player_x, player_y);
-    window.draw(LstillSprite);
 }
 void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x) 
 {
@@ -684,10 +533,7 @@ void designlvl1(char** lvl, const char* filename, const int height, const int wi
 
     in.close();
 }
-bool checkCollision(char** lvl, int player_x, int player_y)
-{
-    return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q' || lvl[player_y / 64][player_x / 64] == 'p');
-}
+
 
 void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char**lvl) {
 
@@ -714,7 +560,7 @@ void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const i
                     indexCrab++;
                 }
 
-                cout << "Found platform from tile " << start << " to " << end << " at row " << i << endl;
+                //cout << "Found platform from tile " << start << " to " << end << " at row " << i << endl;
 
             }
 
@@ -749,14 +595,14 @@ void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[
 
             crabs[crabIndex].setPosition(crabX, crabY, patrolStart, patrolEnd);
 
-            cout << "plcd crabb " << crabIndex << ": " << crabX << ", " << crabY << endl;
+            //cout << "plcd crabb " << crabIndex << ": " << crabX << ", " << crabY << endl;
 
             crabIndex++;
 
         }
     }
 
-    cout << "detec " << indexCrab << " crab platform rangrs" << endl;
+    //cout << "detec " << indexCrab << " crab platform rangrs" << endl
 
 
     crabCount = crabIndex;
@@ -863,6 +709,12 @@ void getBeebotCoordinates(int BeebotStart[], int BeebotEnd[], int BeebotHeights[
         }
     }
 }
+
+bool checkCollision(char** lvl, int player_x, int player_y)
+{
+    return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q' || lvl[player_y / 64][player_x / 64] == 'p');
+}
+
 
 
 void move_beebots(Beebot beebots[], int BeebotStart[], int BeebotEnd[], int BeebotHeights[], int& indexBee, int& beeIndex, int& beeCount, const int cell_size, const float bee_height)
