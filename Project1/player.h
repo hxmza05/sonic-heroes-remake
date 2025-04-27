@@ -1,4 +1,4 @@
-//#pragma once
+#pragma once
 #include<iostream>
 using namespace std;
 #include"Animation.h"
@@ -51,8 +51,6 @@ class Player
 protected:
 	float scale_x = 2.5;
 	float scale_y = 2.5;
-	Texture playerTexture;
-	Sprite playerSprite;
 	Animation** states;
 	int indexAnimation;
 	int totalAnimations;
@@ -64,7 +62,7 @@ public:
 		hasCollided = false;
 		hasKnockedBack = false;
 		max_speed = 20;
-		velocityX = 5;
+		velocityX = 1;
 		velocityY = 9.8;
 		//spacePressed = false;// our own defined
 		collisionDetectedOffGround = false;
@@ -243,7 +241,7 @@ void Player:: player_gravity(char** lvl, float& offset_y, float& offset_x, const
 	if (!onGround)
 	{
 		velocityY += gravity;
-		cout << "Gravity being added correctly \n";
+		//cout << "Gravity being added correctly \n";
 		if (velocityY >= terminal_Velocity)
 			velocityY = terminal_Velocity;
 	}

@@ -1,6 +1,7 @@
 #pragma once
 
-class Enemy {
+class Enemy 
+{
 
 protected:
 

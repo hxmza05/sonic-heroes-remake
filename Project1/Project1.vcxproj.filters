@@ -18,6 +18,9 @@
     <ClCompile Include="Src.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Team.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Obstacle.h">
@@ -57,6 +60,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Sonic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Knuckles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TailedFox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
