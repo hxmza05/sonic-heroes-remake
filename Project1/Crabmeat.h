@@ -93,7 +93,8 @@ public:
 	}
 
 
-	void movement() {
+	void movement()
+	{
 
 		Moving ? x += speed : x -= speed;
 

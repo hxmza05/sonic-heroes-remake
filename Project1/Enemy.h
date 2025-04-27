@@ -7,7 +7,8 @@ using namespace sf;
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 
-class Enemy {
+class Enemy 
+{
 
 protected:
 

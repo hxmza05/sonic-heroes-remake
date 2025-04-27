@@ -1,24 +1,9 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Window.hpp>
+#include"Player.h"
 using namespace sf;
 
-#define LEFT 0
-#define RIGHT 1
-#define UPL 2
-#define UPR 3
-#define EDGEL 4
-#define EDGER 5
-#define LEFTRUN 6
-#define RIGHTRUN 7
-#define PUSHLEFT 8
-#define PUSHRIGHT 9
-#define JUMPL 10
-#define JUMPR 11
-#define STILL 12
 
-class Sonic :public Player
+class Knuckles :public Player
 {
 	Texture jogLeft;
 	Texture jogRight;
@@ -35,14 +20,14 @@ class Sonic :public Player
 	Texture still;
 
 public:
-	Sonic()
+	Knuckles()
 	{
-		states = new Animation*[13];
+		states = new Animation * [13];
 		indexAnimation = 0;
 		totalAnimations = 13;
 		jogLeft.loadFromFile("Data/0jog_left.png");
 		states[LEFT] = new Animation(10);
-		for (int i = 0,width = 0;i < 10;i++,width+=40)
+		for (int i = 0, width = 0;i < 10;i++, width += 40)
 		{
 			states[LEFT]->getSprites()[i].setTexture(jogLeft);
 			states[LEFT]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
