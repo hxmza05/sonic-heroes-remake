@@ -46,8 +46,8 @@ void designlvl1(char** lvl, const char* filename, const int height, const int wi
 bool checkCollision(char** lvl,int x,int y);
 bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int x, int y, int cell_size, int velocityY);
 //void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& sonic.getVelocityY(), bool& OnGround(), float& sonic.getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& sonic.getx(), float& sonic.gety(), const int cell_size, int& Sonic.getPheight(), int& sonic.getPwidth(), bool& spacePressed);
+//void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
 void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char** lvl);
-void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
 void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[], int& indexCrab, int& crabIndex, int& crabCount, const int cell_size, const float crabHeight);
 bool CollisionCheckWithCrabs(Crabmeat crabs[], int& crabCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float crabWidth, const float crabHeight);
 bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float crab_x, float crab_y, const float crabWidth, const float crabHeight);
@@ -374,6 +374,7 @@ int main()
             if (!sonic.getHasKnockedBack()) {
 
                 CollisionCheckWithCrabs(crabs, crabCount, sonic.getx(), sonic.gety(), sonic.getPwidth(), sonic.getPheight(), sonic.getVelocityY(), sonic.getHasKnockedBack(), sonic.getTempVelocityY(), crabWidth, crabHeight);
+
             }
             if (sonic.getHasKnockedBack())
                 {
@@ -401,7 +402,7 @@ int main()
 
             // change these according to the movement logic of motobug, for now it moves with player
             
-            draw_crabs( window, crabs, crabCount, offset_x);
+            Crabmeat::draw_crabs( window, crabs, crabCount, offset_x);
             draw_beebots(window, beebots, beeCount, offset_x);
             /*
             bug.movement(sonic.getx(), sonic.gety());
@@ -456,15 +457,7 @@ void draw_bg(RenderWindow& window, Sprite& bgSprite, int offset_x)
     bgSprite.setPosition(0, 0);
     window.draw(bgSprite);
 }
-void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x) 
-{
-    for (int i = 0; i < crabCount; i++) {
 
-        crabs[i].movement();
-        crabs[i].draw(window, offset_x);
-
-    }
-}
 void draw_beebots(RenderWindow& window, Beebot beebots[], int& beeCount, int offset_x)
 {
     for (int i = 0; i < beeCount; i++) {
@@ -535,7 +528,7 @@ void designlvl1(char** lvl, const char* filename, const int height, const int wi
 }
 
 
-void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char**lvl) {
+void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char** lvl) {
 
     for (int i = 5; i < heigth - 1; i++) {
 
@@ -660,6 +653,10 @@ bool CollisionCheckWithCrabs(Crabmeat crabs[], int& crabCount, float& player_x, 
                 else {
                     player_x += 10;
                 }
+
+                crabs[i].setAnimation(3);
+                crabs[i].RunNewAnimation();
+                crabs[i].setAttack();
 
                 cout << "PlyrX " << centre_of_Player << " Crab CenterX " << centre_of_CRab << endl;
 

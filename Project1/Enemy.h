@@ -1,4 +1,11 @@
 #pragma once
+#include<iostream>
+using namespace std;
+using namespace sf;
+#include"Animation.h"
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <SFML/Window.hpp>
 
 class Enemy {
 
@@ -11,6 +18,9 @@ protected:
 
 	Texture texture;
 	Sprite sprite;
+	Animation** states;
+	int indexAnimation;
+	int totalAnimations;
 
 public:
 
@@ -20,6 +30,7 @@ public:
 		hp = 0;
 		Alive = false, Moving = false;
 		Start = 0, End = 0;
+		indexAnimation = 0, totalAnimations = 0;
 	}
 
 	
@@ -41,6 +52,15 @@ public:
 	bool& alive() {
 
 		return Alive;
+	}
+
+	void setAnimation(int animationIndex) {
+		indexAnimation = animationIndex;
+	}
+	
+	void RunNewAnimation() {
+		states[indexAnimation]->RunAnimation();
+		sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
 	}
 
 	void setPosition(float startX, float startY, float Start, float End) {
