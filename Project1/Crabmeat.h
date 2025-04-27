@@ -163,8 +163,6 @@ public:
 	void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
 	void move_crabs(Crabmeat crabs[], int& crabIndex, int& crabCount, const int cell_size);
 
-
-
 };
 
 void Crabmeat::draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x)
@@ -176,7 +174,6 @@ void Crabmeat::draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount
 
 	}
 }
-
 
 void Crabmeat::getCrabCoordinates(char** lvl, int height, int width) {
 
@@ -211,8 +208,6 @@ void Crabmeat::getCrabCoordinates(char** lvl, int height, int width) {
 		}
 	}
 }
-
-
 
 void Crabmeat::move_crabs(Crabmeat crabs[], int& crabIndex, int& crabCount, const int cell_size){
 

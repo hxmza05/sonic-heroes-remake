@@ -147,7 +147,7 @@ public:
 			states[JUMPR]->getSprites()[i].setScale(2, 2);
 
 		}
-		still.loadFromFile("C:/Users/PMLS/Desktop/oop project/Skeleton-final/Data/0still.png");
+		still.loadFromFile("Data/0still.png");
 		states[STILL] = new Animation(11);
 		for (int i = 0, width = 0;i < 11;i++, width += 49)
 		{
