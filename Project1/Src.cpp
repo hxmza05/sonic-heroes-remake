@@ -112,8 +112,8 @@ int main()
     sf::Vector2u textureSize = backGround.getSize();
     sf::Vector2u windowSize = window.getSize();
 
-    //backGroundSprite.setColor(sf::Color(255, 255, 255, 180));  
-    //backGroundSprite.setScale((float)screen_x / bgTextureWidth, (float)screen_y / bgTextureHeight);
+    backGroundSprite.setColor(sf::Color(255, 255, 255, 180));  
+    backGroundSprite.setScale((float)screen_x / bgTextureWidth, (float)screen_y / bgTextureHeight);
 
     int repeatCount = levelWidthPixels / bgWidth + 1;
 
@@ -372,8 +372,10 @@ int main()
              }
 			 if (!spacePressed && !leftRight)
              {
+
                  team[playerIndex][0].getAnimationIndex() = STILL;
                  team[playerIndex][0].getStates()[STILL][0].RunAnimation();
+
              }
             if(!team[playerIndex][0].getHasKnockedBack())
                 team[playerIndex][0].getHasKnockedBack() = collisionCheckWithSpikes(lvl,offset_y,hit_box_factor_y,hit_box_factor_x,team[playerIndex][0].getPheight(), team[playerIndex][0].getPwidth(), team[playerIndex][0].getx(), team[playerIndex][0].gety(), cell_size, team[playerIndex][0].getVelocityY());
@@ -400,7 +402,7 @@ int main()
             if(!team[playerIndex][0].getHasKnockedBack())
                 team[playerIndex][0].player_gravity(lvl, offset_y,offset_x, cell_size, spacePressed);
 
-            draw_bg(window, backGroundSprite, offset_x);
+           // draw_bg(window, backGroundSprite, offset_x);
 
             display_level(window, height, width, lvl, walls, cell_size, offset_x);
 
