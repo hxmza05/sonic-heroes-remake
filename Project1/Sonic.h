@@ -156,4 +156,8 @@ public:
 			states[STILL]->getSprites()[i].setScale(2, 2);
 		}
 	}
+	virtual void followLeader(const int const **pathToFollow)
+	{
+		
+	}
 };

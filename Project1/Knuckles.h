@@ -18,7 +18,6 @@ class Knuckles :public Player
 	Texture jumpLeft;
 	Texture jumpRight;
 	Texture still;
-
 public:
 	Knuckles()
 	{
@@ -132,7 +131,7 @@ public:
 			states[JUMPR]->getSprites()[i].setScale(2, 2);
 
 		}
-		still.loadFromFile("C:/Users/PMLS/Desktop/oop project/Skeleton-final/Data/0still.png");
+		still.loadFromFile("Data / 0still.png");
 		states[STILL] = new Animation(11);
 		for (int i = 0, width = 0;i < 11;i++, width += 49)
 		{
@@ -140,5 +139,10 @@ public:
 			states[STILL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
 			states[STILL]->getSprites()[i].setScale(2, 2);
 		}
+		delayInFollow = 10;
+	}
+	virtual void followLeader(const int const** pathToFollow)
+	{
+		
 	}
 };

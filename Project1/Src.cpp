@@ -396,13 +396,14 @@ int main()
              }
             if(!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
                 team.getPlayer()[team.getPlayerIndex()][0].player_gravity(lvl, offset_y,offset_x, cell_size, spacePressed);
-
+            team.storePath();
+            team.autoMoveFollowers();
             draw_bg(window, backGroundSprite, offset_x);
 
             display_level(window, height, width, lvl, walls, cell_size, offset_x);
 
-            team.getPlayer()[team.getPlayerIndex()][0].draw_player(window, team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()][0].getSprites()[team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()]->getIndex()],offset_x);
-
+            //team.getPlayer()[team.getPlayerIndex()][0].draw_player(window, team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()][0].getSprites()[team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()]->getIndex()],offset_x);
+            team.draw(window, offset_x);
             // change these according to the movement logic of motobug, for now it moves with player
             
             Crabmeat::draw_crabs( window, crabs, crabCount, offset_x);

@@ -140,5 +140,10 @@ public:
 			states[STILL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
 			states[STILL]->getSprites()[i].setScale(2, 2);
 		}
+		delayInFollow = 4;
+	}
+	virtual void followLeader(const int const** pathToFollow)
+	{
+
 	}
 };
