@@ -53,7 +53,12 @@ bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, in
 //void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team[playerIndex][0].getVelocityY(), bool& OnGround(), float& team[playerIndex][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team[playerIndex][0].getx(), float& team[playerIndex][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team[playerIndex][0].getPwidth(), bool& spacePressed);
 
 bool CollisionCheckWithCrabs(Crabmeat crabs[], int& crabCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float crabWidth, const float crabHeight);
+
 bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float crab_x, float crab_y, const float crabWidth, const float crabHeight);
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 
 int main()
@@ -214,7 +219,6 @@ int main()
     ////////////////////////////////////////////////////////
 
     Motobug bug;
-    Batbrain bat;
     Eggstinger stinger;
 
 
@@ -251,7 +255,18 @@ int main()
     beebots[0].move_beebots(beebots, beeIndex, beeCount, cell_size);
 
 
+    /////////////////////////////////
+    ////////////Bat Brain////////////
+    /////////////////////////////////
 
+    Batbrain batbrains[2];
+    int batCount = 2;
+
+    batbrains[0].getBatbrainCoordinates(lvl, height, width);
+
+    int batIndex = 0;
+
+    batbrains[0].move_Batbrain(batbrains, batIndex, batCount, cell_size);
 
 
     /////////////////////////////////
@@ -414,7 +429,10 @@ int main()
             }
 
 
-
+            for (int i = 0; i < batCount; i++) {
+                batbrains[i].movement(lvl, team[playerIndex][0].getx(), team[playerIndex][0].gety(), cell_size);
+                batbrains[i].draw(window, offset_x);
+            }
             /*
             bug.movement(team[playerIndex][0].getx(), team[playerIndex][0].gety());
             bug.draw(window);
@@ -606,7 +624,4 @@ bool checkCollision(char** lvl, int player_x, int player_y)
 {
     return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q' || lvl[player_y / 64][player_x / 64] == 'p');
 }
-
-
-
 

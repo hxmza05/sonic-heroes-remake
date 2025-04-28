@@ -137,9 +137,8 @@ void Beebot::getBeebotCoordinates(char** lvl, int height, int width)
 		while (j < width - 1) {
 
 			if (lvl[i][j] == 's' && lvl[i + 1][j] == 's' && lvl[i - 1][j] == 's') {
-				
 
-					int start = j;
+				int start = j;
 
 				while (j < width && lvl[i][j] == 's' && lvl[i + 1][j] == 's' && lvl[i - 1][j] == 's') {
 					j++;
@@ -156,6 +155,7 @@ void Beebot::getBeebotCoordinates(char** lvl, int height, int width)
 					cout << "Found air zone from tile " << start << " to " << end << " at row " << i << endl;
 				}
 			}
+
 			else {
 				j++;
 			}

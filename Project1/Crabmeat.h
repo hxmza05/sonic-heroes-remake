@@ -160,11 +160,11 @@ public:
 	}
 
 	void getCrabCoordinates(char** lvl, int height, int width);
-	void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
+	//void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
 	void move_crabs(Crabmeat crabs[], int& crabIndex, int& crabCount, const int cell_size);
 
 };
-
+/*
 void Crabmeat::draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x)
 {
 	for (int i = 0; i < crabCount; i++) {
@@ -174,7 +174,7 @@ void Crabmeat::draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount
 
 	}
 }
-
+*/
 void Crabmeat::getCrabCoordinates(char** lvl, int height, int width) {
 
 	for (int i = 5; i < height - 1; i++) {
@@ -217,15 +217,15 @@ void Crabmeat::move_crabs(Crabmeat crabs[], int& crabIndex, int& crabCount, cons
 
 		if (crabIndex < 10) {
 
-			float patrolStart = CrabStart[i] * cell_size;
+			float Start = CrabStart[i] * cell_size;
 			float crabmeatEnd = CrabEnd[i] * cell_size;
-			float crabmeatmaxEnd = patrolStart + 12 * cell_size;
-			float patrolEnd = (crabmeatEnd > crabmeatmaxEnd) ? crabmeatmaxEnd : crabmeatEnd;
+			float crabmeatmaxEnd = Start + 12 * cell_size;
+			float End = (crabmeatEnd > crabmeatmaxEnd) ? crabmeatmaxEnd : crabmeatEnd;
 
-			float crabX = (patrolStart + patrolEnd) / 2.0f;
+			float crabX = (Start + End) / 2.0f;
 			float crabY = (CrabWalls[i] + 1) * cell_size - crabHeight;
 
-			crabs[i].setPosition(crabX, crabY, patrolStart, patrolEnd);
+			crabs[i].setPosition(crabX, crabY, Start, End);
 
 			crabIndex++;
 		}
