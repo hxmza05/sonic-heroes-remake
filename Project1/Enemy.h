@@ -14,7 +14,7 @@ protected:
 
 	float x, y, speed;
 	float hp;
-	bool Alive, Moving;
+	bool Alive, Moving, Attack;
 	float Start, End;
 
 	Texture texture;

@@ -21,25 +21,37 @@ private:
 	const float bee_height = 37.5;
 	const float bee_width = 88.5;
 
-	float increase;
-	float amplitude;
-	float baseY;
+	Texture move_bee;
+	//Texture wings;
+	//Sprite wings_sprites;
+
+	Clock moveClock;
+	Clock attackClock;
+	bool ZigZag;
+	bool shotProjectile;
+	bool attackingPlayer;
+	float targetX, targetY;
+
+
 
 public:
 
 	Beebot() {
 
 		hp = 5;
-		increase = 0;
-		speed = 0.8;
-		amplitude = 20;
-		baseY = 0;
+		speed = 1.2;
 		Alive = true;
 		Moving = true;
 		x = 0;
 		y = 0;
 		Start = 0;
 		End = 0;
+		ZigZag = true;
+		shotProjectile = false;
+		attackingPlayer = false;
+		targetX = 0, targetY = 0;
+		moveClock.restart();
+		attackClock.restart();
 
 		beeCoordintes = 10;
 		indexBee = 0;
@@ -48,18 +60,31 @@ public:
 		BeebotEnd = new int[beeCoordintes];
 		BeebotHeights = new int[beeCoordintes];
 
+		move_bee.loadFromFile("Sprites/beebot.png");
+		//wings.loadFromFile("Sprites/bee_wings0.png");
 
-		texture.loadFromFile("Sprites/beebot.png");
-		sprite.setTexture(texture);
-		sprite.setTextureRect(IntRect(0, 0, 118, 50));
-		sprite.setPosition(x, y);
-		sprite.setScale(0.75f, 0.75f);
+		totalAnimations = 2;
+		indexAnimation = 0;
+		states = new Animation * [totalAnimations];
+
+		states[0] = new Animation(1);
+
+		for (int i = 0, height = 0; i < 1; i++) {
+			states[0]->getSprites()[i].setTexture(move_bee);
+			states[0]->getSprites()[i].setTextureRect(IntRect(0, 0, 118, 50));
+			states[0]->getSprites()[i].setScale(0.75f, 0.75f);
+		}
+
+		/*states[7] = new Animation(3);
+
+		for (int i = 0, height = 0; i < 3; i++, height += 33) {
+			states[7]->getSprites()[i].setTexture(wings);
+			states[7]->getSprites()[i].setTextureRect(IntRect(0, height, 150, 33));
+			states[7]->getSprites()[i].setScale(0.35f, 0.75f);
+		}*/
 
 	}
 
-	void setBaseY(int baseY) {
-		this->baseY = baseY;
-	}
 
 	float getbeeHeight() const {
 		return bee_height;
@@ -69,44 +94,135 @@ public:
 		return bee_width;
 	}
 
-	void movement() {
+	void movement(char** lvl, float player_x, float player_y, const int cell_size) {
 
-		increase += 0.1;
+		if (!attackingPlayer) {
 
-		x += speed;
 
-		if (x >= End) {
-			speed = -abs(speed);
+			if (Moving) {
+
+				x += speed;
+
+				if (x >= End) {
+					Moving = false;
+				}
+			}
+
+			else {
+
+				x -= speed;
+
+				if (x <= Start) {
+					Moving = true;
+				}
+			}
+
+			if (moveClock.getElapsedTime().asMilliseconds() >= 500) {
+
+				ZigZag = !ZigZag;
+				moveClock.restart();
+			}
+
+			if (ZigZag) {
+
+				y += 1.0f * speed;
+			}
+
+			else {
+
+				y -= 1.0f * speed;
+			}
+
+			float dx = player_x - x;
+			float dy = player_y - y;
+			float distance = sqrt(dx * dx + dy * dy);
+
+			if (distance < 150.0f)
+			{
+				attackingPlayer = true;
+				//targetX = player_x + 40.0f;
+				//targetY = player_y + 40.0f;
+				attackClock.restart();     
+			}
+
 		}
-		if (x <= Start) {
-			speed = abs(speed);
+
+		else {
+
+
+			if (player_x > x + 80.0f)
+			{
+				x -= speed * 4.0f;
+
+				if (x < -100.0f) {
+					Alive = false;
+					cout << "Bee leavng map after missing player" << endl;
+				}
+			}
+
+			else {
+
+				if (abs(x - (player_x + 70.0f)) > 5.0f) {
+
+					if (x < player_x + 70.0f) {
+						x += speed;
+					}
+
+					else {
+						x -= speed;
+					}
+				}
+
+				if (abs(y - player_y - 70.0f) > 5.0f) {
+
+					if (y < player_y - 70.0f) {
+						y += speed;
+					}
+
+					else {
+						y -= speed;
+					}
+				}
+
+				if (attackClock.getElapsedTime().asSeconds() > 5.0f) {
+					shotProjectile = true;
+					attackClock.restart();
+					cout << "Bee shoots projectile at player!" << endl;
+					// actuali spawn projectile here
+				}
+			}
+
 		}
 
-		y = baseY + amplitude * sin(increase);
+
+
+		states[indexAnimation]->RunAnimation();
+		sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
+
+		//states[7]->RunAnimation();
+		//wings_sprites = states[1]->getSprites()[states[1]->getIndex()];
 
 		sprite.setPosition(x, y);
-
+		//wings_sprites.setPosition(x + 15, y - 15);
 	}
 
 
 	void getBeebotCoordinates(char** lvl, int height, int width);
-	void draw_beebots(RenderWindow& window, Beebot beebots[], int& beeCount, int offset_x);
+	//void draw_beebots(RenderWindow& window, Beebot beebots[], int& beeCount, int offset_x);
 	void move_beebots(Beebot beebots[], int& beeIndex, int& beeCount, const int cell_size);
 
 };
 
 
-
+/*
 void Beebot::draw_beebots(RenderWindow& window, Beebot beebots[], int& beeCount, int offset_x)
 {
 	for (int i = 0; i < beeCount; i++) {
-
-		beebots[i].movement();
-		beebots[i].draw(window, offset_x);
-
+			beebots[i].movement();
+			beebots[i].draw(window, offset_x);
 	}
 }
-
+*/
 void Beebot::move_beebots(Beebot beebots[], int& beeIndex, int& beeCount, const int cell_size)
 {
 	for (int i = 0; i < beeCount; i++) {
@@ -120,7 +236,6 @@ void Beebot::move_beebots(Beebot beebots[], int& beeIndex, int& beeCount, const 
 		float bee_Y = BeebotHeights[i] * cell_size + 10;
 
 		beebots[beeIndex].setPosition(bee_X, bee_Y, patrolStart, patrolEnd);
-		beebots[i].setBaseY(270);
 
 		cout << "placed bee " << beeIndex << ": " << bee_X << ", " << bee_Y << endl;
 		beeIndex++;
@@ -130,7 +245,7 @@ void Beebot::move_beebots(Beebot beebots[], int& beeIndex, int& beeCount, const 
 
 void Beebot::getBeebotCoordinates(char** lvl, int height, int width)
 {
-	for (int i = 2; i < height / 2 + 1; i++) {
+	for (int i = 5; i < height / 2 + 1; i++) {
 
 		int j = 0;
 
