@@ -39,7 +39,7 @@ public:
 		for (int i = 0, width = 0;i < 10;i++, width += 49)
 		{
 			states[RIGHT]->getSprites()[i].setTexture(jogRight);
-			states[RIGHT]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[RIGHT]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49, 50));
 			states[RIGHT]->getSprites()[i].setScale(2, 2);
 		}
 		upLeft.loadFromFile("Data/TJump.png");
@@ -83,7 +83,7 @@ public:
 		for (int i = 0, width = 0;i < 10;i++, width += 49)
 		{
 			states[LEFTRUN]->getSprites()[i].setTexture(leftRun);
-			states[LEFTRUN]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[LEFTRUN]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49, 50));
 			states[LEFTRUN]->getSprites()[i].setScale(2, 2);
 
 		}
@@ -92,7 +92,7 @@ public:
 		for (int i = 0, width = 0;i < 10;i++, width += 49)
 		{
 			states[RIGHTRUN]->getSprites()[i].setTexture(rightRun);
-			states[RIGHTRUN]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[RIGHTRUN]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49, 50));
 			states[RIGHTRUN]->getSprites()[i].setScale(2, 2);
 
 		}

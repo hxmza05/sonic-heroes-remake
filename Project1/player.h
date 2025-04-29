@@ -225,5 +225,17 @@ public:
 	void moveLeft();
 	void moveRight();
 	void checkDelayNow(int idx);
+	void executePushingLeft()
+	{
+		indexAnimation = PUSHLEFT;
+		states[indexAnimation][0].RunAnimation();
+		cout << "\n\n\nPushing left executed \n\n\n";
+	}
+	void executePushingRight()
+	{
+		indexAnimation = PUSHRIGHT;
+		states[indexAnimation][0].RunAnimation();
+		cout << "\n\n\nPushing right executed\n\n\n";
+	}
 
 };

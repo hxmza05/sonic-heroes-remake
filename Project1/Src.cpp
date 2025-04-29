@@ -332,6 +332,10 @@ int main()
                  }
                  else
                  {
+                     if (!checkCollision(lvl, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety()))
+                     {
+                         team.getPlayer()[team.getPlayerIndex()][0].executePushingLeft();
+                     }
                      if(team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() <= 0 )
                         team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() = 15;
                      if (team.getPlayer()[team.getPlayerIndex()][0].getx() <= 0 && !team.getPlayer()[team.getPlayerIndex()][0].getOnGround())
@@ -355,6 +359,11 @@ int main()
                  }
                  else
                  {
+                     if (!checkCollision(lvl, team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety()))
+                     {
+                         team.getPlayer()[team.getPlayerIndex()][0].executePushingRight();
+
+                     }
                      if(team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() >= 0)
                      team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() = 15;
                  }
