@@ -21,7 +21,7 @@ public:
 		team[0] = new Sonic();
 		team[1] = new TailedFox();
 		team[2] = new Knuckles();
-		playerIndex = 0;
+		playerIndex = 1;
 		leadersPath = new int*[100];
 		for (int i = 0;i < 100;i++)
 		{
@@ -87,9 +87,11 @@ public:
 	}*/
 	void draw(RenderWindow& window,int offsetx)
 	{
-		for (int i = 0;i < 3;i++)
+		for (int i = 1;i >=0 ;i-=3)
 		{
-			team[i]->draw_player(window, team[i]->getStates()[0]->getSprites()[team[i]->getStates()[0]->getIndex()], offsetx);
+			team[i][0].draw_player(window,team[i][0].getStates()[team[i][0].getAnimationIndex()][0].getSprites()[team[i][0].getStates()[team[i][0].getAnimationIndex()][0].getIndex()], offsetx);
+			//team.getPlayer()[team.getPlayerIndex()][0].draw_player(window, team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()][0].getSprites()[team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()]->getIndex()],offset_x);
+
 		}
 	}
 	void storePath()

@@ -67,7 +67,7 @@ public:
 		hasCollided = false;
 		hasKnockedBack = false;
 		max_speed = 20;
-		velocityX = 1;
+		velocityX = 0.5;
 		velocityY = 9.8;
 		//spacePressed = false;// our own defined
 		collisionDetectedOffGround = false;
@@ -77,7 +77,7 @@ public:
 		tempVelocityY = -7;
 		tempGravity = 0.6;
 		onGround = false;
-		acceleration = 1;
+		acceleration = 0.2;
 		Pheight = 35 * 2.5;
 		Pwidth = 24 * 2.5;
 		hit_box_factor_x = 8 * 2.5;
@@ -218,7 +218,6 @@ public:
 			return;
 		}
 	}
-
 	void autoMove(int x_coord,int y_coord);
 	void draw_player(RenderWindow& window, Sprite& LstillSprite,float offset_x);
 	void player_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed);

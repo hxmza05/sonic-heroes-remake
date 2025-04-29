@@ -53,11 +53,18 @@ bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, in
 //void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), bool& OnGround(), float& team.getPlayer()[team.getPlayerIndex()][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team.getPlayer()[team.getPlayerIndex()][0].getx(), float& team.getPlayer()[team.getPlayerIndex()][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), bool& spacePressed);
 void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char** lvl);
 void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[], int& indexCrab, int& crabIndex, int& crabCount, const int cell_size, const float crabHeight);
+
+
+//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team[playerIndex][0].getVelocityY(), bool& OnGround(), float& team[playerIndex][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team[playerIndex][0].getx(), float& team[playerIndex][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team[playerIndex][0].getPwidth(), bool& spacePressed);
+
 bool CollisionCheckWithCrabs(Crabmeat crabs[], int& crabCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float crabWidth, const float crabHeight);
+
 bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float crab_x, float crab_y, const float crabWidth, const float crabHeight);
-void getBeebotCoordinates(int BeebotStart[], int BeebotEnd[], int BeebotHeights[], const int height, const int width, const int maxBeeBots, int& indexBee, char** lvl);
-void move_beebots(Beebot beebots[], int BeebotStart[], int BeebotEnd[], int BeebotHeights[], int& indexBee, int& beeIndex, int& beeCount, const int cell_size, const float bee_height);
-void draw_beebots(RenderWindow& window, Beebot beebots[], int& beeCount, int offset_x);
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
 
 int main()
 {
@@ -213,7 +220,6 @@ int main()
     ////////////////////////////////////////////////////////
 
     Motobug bug;
-    Batbrain bat;
     Eggstinger stinger;
 
 
@@ -221,42 +227,47 @@ int main()
     ////////////Crab Meat////////////
     /////////////////////////////////
 
-    const int crabCoordinates = 10;
-    int CrabStart[crabCoordinates];
-    int CrabEnd[crabCoordinates];
-    int CrabWalls[crabCoordinates];
-	int indexCrab = 0;
-    const float crabHeight = 44.0;
-    const float crabWidth = 60.0;
 
-    Crabmeat crabs[4];
-    int crabIndex = 0;
-    int crabCount = 4;
 
-    getCrabCoordinates(CrabStart, CrabEnd, CrabWalls, height, width, crabCoordinates, indexCrab, lvl);
-    move_crabs(crabs, CrabStart, CrabEnd, CrabWalls, indexCrab, crabIndex, crabCount, cell_size, crabHeight);
+    Crabmeat crabs[5];
+    int crabCount = 5;
+
+    crabs[0].getCrabCoordinates(lvl, height, width);
+
+
+    int crabIndex = 0; 
+
+    crabs[0].move_crabs(crabs, crabIndex, crabCount, cell_size);
+
+
 
     /////////////////////////////////
     ////////////Bee Botss////////////
     /////////////////////////////////
 
-    const int beeCoordintes = 10;
-    int air_Row = 5;
-    int BeebotStart[beeCoordintes];
-    int BeebotEnd[beeCoordintes];
-    int BeebotHeights[beeCoordintes];
-    const float bee_height = 37.5;
-    const float bee_width = 88.5;
-    int indexBee = 0;
-    int beeIndex = 0;
-    int beeCount = 5;
 
     Beebot beebots[5];
-    
+    int beeCount = 5;
 
-    getBeebotCoordinates(BeebotStart, BeebotEnd, BeebotHeights, height, width, beeCoordintes, indexBee, lvl);
-    move_beebots(beebots, BeebotStart, BeebotEnd, BeebotHeights, indexBee, beeIndex, beeCount, cell_size, bee_height);
+    beebots[0].getBeebotCoordinates(lvl, height, width);
 
+    int beeIndex = 0;
+
+    beebots[0].move_beebots(beebots, beeIndex, beeCount, cell_size);
+
+
+    /////////////////////////////////
+    ////////////Bat Brain////////////
+    /////////////////////////////////
+
+    Batbrain batbrains[2];
+    int batCount = 2;
+
+    batbrains[0].getBatbrainCoordinates(lvl, height, width);
+
+    int batIndex = 0;
+
+    batbrains[0].move_Batbrain(batbrains, batIndex, batCount, cell_size);
 
 
     /////////////////////////////////
@@ -377,7 +388,7 @@ int main()
                 team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = collisionCheckWithSpikes(lvl,offset_y,hit_box_factor_y,hit_box_factor_x,team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getVelocityY());
              //cout << "team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = " << team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() << endl;
             if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) {
-                CollisionCheckWithCrabs(crabs, crabCount, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY(), crabWidth, crabHeight);
+                CollisionCheckWithCrabs(crabs, crabCount, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY(), 60, 44);
             }
             if (team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
                 {
@@ -406,8 +417,22 @@ int main()
             team.draw(window, offset_x);
             // change these according to the movement logic of motobug, for now it moves with player
             
-            Crabmeat::draw_crabs( window, crabs, crabCount, offset_x);
-            draw_beebots(window, beebots, beeCount, offset_x);
+
+            for (int i = 0; i < crabCount; i++) {
+                crabs[i].movement();
+                crabs[i].draw(window, offset_x);
+            }
+
+            for (int i = 0; i < beeCount; i++) {
+                beebots[i].movement();
+                beebots[i].draw(window, offset_x);
+            }
+
+
+            for (int i = 0; i < batCount; i++) {
+                batbrains[i].movement(lvl, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size);
+                batbrains[i].draw(window, offset_x);
+            }
             /*
             bug.movement(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety());
             bug.draw(window);
@@ -462,15 +487,7 @@ void draw_bg(RenderWindow& window, Sprite& bgSprite, int offset_x)
     window.draw(bgSprite);
 }
 
-void draw_beebots(RenderWindow& window, Beebot beebots[], int& beeCount, int offset_x)
-{
-    for (int i = 0; i < beeCount; i++) {
 
-        beebots[i].movement();
-        beebots[i].draw(window, offset_x);
-
-    }
-}
 char getMapValues(int val) 
 {
     switch (val) 
@@ -531,79 +548,6 @@ void designlvl1(char** lvl, const char* filename, const int height, const int wi
     in.close();
 }
 
-void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char**lvl) {
-
-    for (int i = 5; i < heigth - 1; i++) {
-
-        int j = 0;
-
-        while (j < width - 1) {
-
-            if (lvl[i][j] == 's' && (lvl[i + 1][j] == 'w' || lvl[i + 1][j] == 'e' || lvl[i + 1][j] == 'q')) {
-
-                int start = j;
-
-                while (j < width && lvl[i][j] == 's' && (lvl[i + 1][j] == 'w' || lvl[i + 1][j] == 'e' || lvl[i + 1][j] == 'q'))
-                    j++;
-
-                int end = j - 1;
-
-                if (end - start + 1 >= 4 && indexCrab < crabCoordinates) {
-
-                    CrabStart[indexCrab] = start;
-                    CrabEnd[indexCrab] = end;
-                    CrabWalls[indexCrab] = i;
-                    indexCrab++;
-                }
-
-                //cout << "Found platform from tile " << start << " to " << end << " at row " << i << endl;
-
-            }
-
-            else {
-
-                j++;
-            }
-
-
-        }
-
-    }
-
-
-}
-
-void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[], int& indexCrab, int& crabIndex, int& crabCount, const int cell_size, const float crabHeight) {
-
-    int maxCrabs = min(indexCrab, crabCount);
-
-    for (int i = 0; i < maxCrabs; i++) {
-
-        if (crabIndex < 10) {
-
-            float patrolStart = CrabStart[i] * cell_size;
-            float crabmeatEnd = CrabEnd[i] * cell_size;
-            float crabmeatmaxEnd = patrolStart + 12 * cell_size;
-            float patrolEnd = (crabmeatEnd > crabmeatmaxEnd) ? crabmeatmaxEnd : crabmeatEnd;
-
-            float crabX = (patrolStart + patrolEnd) / 2.0f;
-            float crabY = (CrabWalls[i] + 1) * cell_size - crabHeight;
-
-            crabs[crabIndex].setPosition(crabX, crabY, patrolStart, patrolEnd);
-
-            //cout << "plcd crabb " << crabIndex << ": " << crabX << ", " << crabY << endl;
-
-            crabIndex++;
-
-        }
-    }
-
-    //cout << "detec " << indexCrab << " crab platform rangrs" << endl
-
-
-    crabCount = crabIndex;
-
-}
 
 bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float crab_x, float crab_y, const float crabWidth, const float crabHeight)
 {
@@ -676,65 +620,8 @@ bool CollisionCheckWithCrabs(Crabmeat crabs[], int& crabCount, float& player_x, 
 
 
 
-void getBeebotCoordinates(int BeebotStart[], int BeebotEnd[], int BeebotHeights[], const int height, const int width, const int maxBeeBots, int& indexBee, char** lvl)
-{
-    for (int i = 2; i < height / 2 + 1; i++) {  
-
-        int j = 0;
-
-        while (j < width - 1) {
-
-            if (lvl[i][j] == 's' && lvl[i + 1][j] == 's' && lvl[i - 1][j] == 's') {\
-
-                int start = j;
-
-                while (j < width && lvl[i][j] == 's' && lvl[i + 1][j] == 's' && lvl[i - 1][j] == 's') {
-                    j++;
-                }
-
-                int end = j - 1;
-
-                if (end - start + 1 >= 4 && indexBee < maxBeeBots) {
-                    BeebotStart[indexBee] = start;
-                    BeebotEnd[indexBee] = end;
-                    BeebotHeights[indexBee] = i;
-                    indexBee++;
-
-                    cout << "Found air zone from tile " << start << " to " << end << " at row " << i << endl;
-                }
-            }
-            else {
-                j++;
-            }
-        }
-    }
-}
-
 bool checkCollision(char** lvl, int player_x, int player_y)
 {
     return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q' || lvl[player_y / 64][player_x / 64] == 'p');
-}
-
-
-
-void move_beebots(Beebot beebots[], int BeebotStart[], int BeebotEnd[], int BeebotHeights[], int& indexBee, int& beeIndex, int& beeCount, const int cell_size, const float bee_height)
-{
-    for (int i = 0; i < beeCount; i++) {
-
-        float patrolStart = BeebotStart[i] * cell_size;
-        float beebot_End = BeebotEnd[i] * cell_size;
-        float beebot_maxEnd = patrolStart + 10 * cell_size;
-        float patrolEnd = (beebot_End > beebot_maxEnd) ? beebot_maxEnd : beebot_End;
-
-        float bee_X = (patrolStart + patrolEnd) / 2.0f;
-        float bee_Y = BeebotHeights[i] * cell_size + 10;  
-
-        beebots[beeIndex].setPosition(bee_X, bee_Y, patrolStart, patrolEnd);
-        beebots[i].setBaseY(270);
-
-        cout << "placed bee " << beeIndex << ": " << bee_X << ", " << bee_Y << endl;
-        beeIndex++;
-    }
-    beeCount = beeIndex;
 }
 

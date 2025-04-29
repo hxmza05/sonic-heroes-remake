@@ -117,6 +117,7 @@ void Player::moveRight()
 	{
 		indexAnimation = RIGHT;
 		states[RIGHT][0].RunAnimation();/*&& topLeft != 'q' && topLeft != 'e';*/
+		cout<<"right  animation running";
 	}
 	else
 	{
@@ -155,12 +156,12 @@ void Player::autoMove(int x_coord, int y_coord)
 	}
 	 if (y_coord == y)
 	{
-		 if (x_coord < x)
+		 if (x_coord > x)
 		 {
 			 indexAnimation = RIGHTRUN;
 			 states[RIGHTRUN][0].RunAnimation();
 		 }
-		 else if (x_coord > x)
+		 else if (x_coord < x)
 		 {
 			 indexAnimation = LEFTRUN;
 			 states[LEFTRUN][0].RunAnimation();

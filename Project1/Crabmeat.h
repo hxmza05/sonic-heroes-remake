@@ -18,6 +18,16 @@ private:
 	bool attack;
 	Clock clock;
 
+	int* CrabStart;
+	int* CrabEnd;
+	int* CrabWalls;
+	int crabCoordinates;
+	int indexCrab;
+
+	const float crabHeight = 44.0;
+	const float crabWidth = 60.0;
+
+
 public:
 
 	Crabmeat() {
@@ -34,6 +44,13 @@ public:
 
 		totalAnimations = 4;
 		indexAnimation = 0;
+
+		crabCoordinates = 10;
+		indexCrab = 0;
+
+		CrabStart = new int[crabCoordinates];
+		CrabEnd = new int[crabCoordinates];	
+		CrabWalls = new int[crabCoordinates];
 
 
 		idle.loadFromFile("Sprites/crabmeat.png");
@@ -92,6 +109,13 @@ public:
 		clock.restart();
 	}
 
+	float getcrabHeight() const {
+		return crabHeight;
+	}
+
+	float getcrabWidth() const {
+		return crabWidth;
+	}
 
 	void movement()
 	{
@@ -135,10 +159,12 @@ public:
 
 	}
 
-	static void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
+	void getCrabCoordinates(char** lvl, int height, int width);
+	//void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
+	void move_crabs(Crabmeat crabs[], int& crabIndex, int& crabCount, const int cell_size);
 
 };
-
+/*
 void Crabmeat::draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x)
 {
 	for (int i = 0; i < crabCount; i++) {
@@ -148,5 +174,62 @@ void Crabmeat::draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount
 
 	}
 }
+*/
+void Crabmeat::getCrabCoordinates(char** lvl, int height, int width) {
 
+	for (int i = 5; i < height - 1; i++) {
 
+		int j = 0;
+
+		while (j < width - 1) {
+
+			if (lvl[i][j] == 's' && (lvl[i + 1][j] == 'w' || lvl[i + 1][j] == 'e' || lvl[i + 1][j] == 'q')) {
+
+				int start = j;
+
+				while (j < width && lvl[i][j] == 's' && (lvl[i + 1][j] == 'w' || lvl[i + 1][j] == 'e' || lvl[i + 1][j] == 'q'))
+					j++;
+
+				int end = j - 1;
+
+				if (end - start + 1 >= 4 && indexCrab < crabCoordinates) {
+
+					CrabStart[indexCrab] = start;
+					CrabEnd[indexCrab] = end;
+					CrabWalls[indexCrab] = i;
+					indexCrab++;
+				}
+				//cout << "Found platform from tile " << start << " to " << end << " at row " << i << endl;
+			}
+
+			else { 
+				j++;
+			}
+		}
+	}
+}
+
+void Crabmeat::move_crabs(Crabmeat crabs[], int& crabIndex, int& crabCount, const int cell_size){
+
+	int maxCrabs = min(indexCrab, crabCount);
+
+	for (int i = 0; i < maxCrabs; i++) {
+
+		if (crabIndex < 10) {
+
+			float Start = CrabStart[i] * cell_size;
+			float crabmeatEnd = CrabEnd[i] * cell_size;
+			float crabmeatmaxEnd = Start + 12 * cell_size;
+			float End = (crabmeatEnd > crabmeatmaxEnd) ? crabmeatmaxEnd : crabmeatEnd;
+
+			float crabX = (Start + End) / 2.0f;
+			float crabY = (CrabWalls[i] + 1) * cell_size - crabHeight;
+
+			crabs[i].setPosition(crabX, crabY, Start, End);
+
+			crabIndex++;
+		}
+	}
+
+	crabCount = crabIndex;
+}

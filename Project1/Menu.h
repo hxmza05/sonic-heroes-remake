@@ -27,11 +27,9 @@ private:
     bool enter;
     bool menuState;
     bool gameState;
-
 public:
-
-    Menu(int screenWidth, int screenHeigth) : title("Sonic Classic Heroes", font, 64) {
-
+    Menu(int screenWidth, int screenHeigth) : title("Sonic Classic Heroes", font, 64) 
+    {
         selectedOption = 0;
         horizontal_x = screenWidth;
         vertical_y = screenHeigth;
@@ -40,11 +38,9 @@ public:
         arrowUp = false;
         arrowDown = false;
         enter = false;
-
         font.loadFromFile("Fonts/arial.ttf");
         title.setFillColor(Color::Yellow);
         title.setPosition(352.5f, 80);
-
         for (int i = 0; i < totalMenuOptions; i++)
         {
             Text temp(menuOptions[i], font, 42);
@@ -53,9 +49,7 @@ public:
             text[i].setFillColor(i == selectedOption ? sf::Color::Blue : sf::Color::White);
 
         }
-
     }
-
     bool isGameStateActive() { 
 
         return gameState; 
