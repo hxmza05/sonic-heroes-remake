@@ -18,6 +18,7 @@ using namespace sf;
 #define PUSHRIGHT 9
 #define JUMPL 10
 #define JUMPR 11
+#define STILL 12
 
 class Player
 {
@@ -55,6 +56,9 @@ protected:
 	int indexAnimation;
 	int totalAnimations;
 	int* trail;
+	virtual void followLeader(const int const ** pathToFollow) = 0;
+	int delayInFollow;
+	bool hasStartedFollowing;
 public:
 	Player()
 	{
@@ -85,6 +89,8 @@ public:
 		totalAnimations = 0;
 		terminal_Velocity = 20;
 		trail = new int[20];
+		delayInFollow = 0;
+		hasStartedFollowing = false;
 	}
 	float& getx()
 	{
@@ -182,15 +188,43 @@ public:
 	{
 		return indexAnimation;
 	}
+	int getDelayinFollow()
+	{
+		return delayInFollow;
+	}
+	void setDelayInFollow(int d)
+	{
+		delayInFollow = d;
+	}
+	bool getHasStartedFollowing()
+	{
+		return hasStartedFollowing;
+	}
+	void setHasStartedFollowing(bool b)
+	{
+		hasStartedFollowing = b;
+	}
 	Animation** getStates()
 	{
 		return states;
 	}
+	void updateDelay()
+	{
+		delayInFollow++;
+
+		if (delayInFollow == 100)
+		{
+			delayInFollow = 0;
+			return;
+		}
+	}
+
+	void autoMove(int x_coord,int y_coord);
 	void draw_player(RenderWindow& window, Sprite& LstillSprite,float offset_x);
 	void player_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed);
 	void playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, const int cell_size,bool& spacePressed);
 	void moveLeft();
 	void moveRight();
-	
+	void checkDelayNow(int idx);
 
 };

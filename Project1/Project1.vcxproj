@@ -157,7 +157,9 @@
     <ClInclude Include="Display.h" />
     <ClInclude Include="Eggstinger.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Knuckles.h" />
+    <ClInclude Include="Leaderboard.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Motobug.h" />
     <ClInclude Include="Obstacle.h" />

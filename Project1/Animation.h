@@ -38,7 +38,6 @@ public:
 
 		}
 	}
-
 	~Animation()
 	{
 		delete[] sprites;

@@ -212,7 +212,10 @@ int main()
 
     ////////////////////////////////////////////////////////
 
-    Menu menu(screen_x, screen_y);
+    Leaderboard leaderboard;
+
+    Menu menu(screen_x, screen_y, &leaderboard);
+
 
 
     ////////////////////////////////////////////////////////
@@ -304,14 +307,27 @@ int main()
         }
         window.clear();
 
-        if (!menu.isGameStateActive())
+        if (menu.isEnteringName())
+        {
+            while (window.pollEvent(event)) {
+
+                if (event.type == Event::Closed) {
+                    window.close(); 
+                }
+
+                menu.update(window, event); 
+            }
+            menu.update(window);
+            menu.draw(window);
+        }
+        else if (!menu.isGameStateActive())
         {
             menu.update(window);
             menu.draw(window);
         }
-        else if (menu.isGameStateActive())
+        else if (menu.isGameStateActive())            /// leaderboard.addNewScore(menu.getPlayerName(), playerScore); ye add krna hai when player dies and score > highscores[] ho
         {
-            draw_bg(window, backGroundSprite, offset_x);
+            //draw_bg(window, backGroundSprite, offset_x);
 
             if (team.getPlayer()[team.getPlayerIndex()][0].getOnGround())
             {
@@ -413,11 +429,14 @@ int main()
                 team.getPlayer()[team.getPlayerIndex()][0].player_gravity(lvl, offset_y,offset_x, cell_size, spacePressed);
 
            // draw_bg(window, backGroundSprite, offset_x);
+            team.storePath();
+            team.autoMoveFollowers();
+            draw_bg(window, backGroundSprite, offset_x);
 
             display_level(window, height, width, lvl, walls, cell_size, offset_x);
 
-            team.getPlayer()[team.getPlayerIndex()][0].draw_player(window, team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()][0].getSprites()[team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()]->getIndex()],offset_x);
-
+            //team.getPlayer()[team.getPlayerIndex()][0].draw_player(window, team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()][0].getSprites()[team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()]->getIndex()],offset_x);
+            team.draw(window, offset_x);
             // change these according to the movement logic of motobug, for now it moves with player
             
 

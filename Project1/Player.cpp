@@ -124,3 +124,65 @@ void Player::moveRight()
 		states[RIGHTRUN][0].RunAnimation();
 	}
 }
+void Player::autoMove(int x_coord, int y_coord)
+{
+	if (y_coord == y && x_coord == x)
+		return;
+	if (y < y_coord)
+	{
+		indexAnimation = JUMPR;
+		states[JUMPR][0].RunAnimation();
+	
+	}
+	if (y > y_coord)
+	{
+		
+		if (x_coord < x)
+		{
+			indexAnimation = RIGHTRUN;
+			states[RIGHTRUN][0].RunAnimation();
+		}
+		else if(x_coord > x)
+		{
+			indexAnimation = LEFTRUN;
+			states[LEFTRUN][0].RunAnimation();
+		}
+		else
+		{
+			indexAnimation = STILL;
+			states[STILL][0].RunAnimation();
+		}
+	}
+	 if (y_coord == y)
+	{
+		 if (x_coord < x)
+		 {
+			 indexAnimation = RIGHTRUN;
+			 states[RIGHTRUN][0].RunAnimation();
+		 }
+		 else if (x_coord > x)
+		 {
+			 indexAnimation = LEFTRUN;
+			 states[LEFTRUN][0].RunAnimation();
+		 }
+		 else
+		 {
+			 indexAnimation = STILL;
+			 states[STILL][0].RunAnimation();
+		 }
+	}
+	 x = x_coord;
+	 y = y_coord;
+	 //updateDelay();
+
+}
+
+void Player:: checkDelayNow(int idx)
+{
+	if (idx > delayInFollow)
+	{
+		delayInFollow = 0;
+		hasStartedFollowing = true;
+	}
+
+}

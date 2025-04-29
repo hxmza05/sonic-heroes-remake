@@ -165,22 +165,22 @@ public:
 				if (abs(x - (player_x + 70.0f)) > 5.0f) {
 
 					if (x < player_x + 70.0f) {
-						x += speed;
+						x += speed * 2.0f;
 					}
 
 					else {
-						x -= speed;
+						x -= speed * 2.0f;
 					}
 				}
 
 				if (abs(y - player_y - 70.0f) > 5.0f) {
 
 					if (y < player_y - 70.0f) {
-						y += speed;
+						y += speed * 2.0f;
 					}
 
 					else {
-						y -= speed;
+						y -= speed * 2.0f;
 					}
 				}
 
