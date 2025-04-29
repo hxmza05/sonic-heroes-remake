@@ -21,7 +21,7 @@ public:
 		team[0] = new Sonic();
 		team[1] = new TailedFox();
 		team[2] = new Knuckles();
-		playerIndex = 1;
+		playerIndex = 0;
 		leadersPath = new int*[100];
 		for (int i = 0;i < 100;i++)
 		{
@@ -87,8 +87,12 @@ public:
 	}*/
 	void draw(RenderWindow& window,int offsetx)
 	{
-		for (int i = 1;i >=0 ;i-=3)
+		team[playerIndex][0].draw_player(window, team[playerIndex][0].getStates()[team[playerIndex][0].getAnimationIndex()][0].getSprites()[team[playerIndex][0].getStates()[team[playerIndex][0].getAnimationIndex()][0].getIndex()], offsetx);
+
+		for (int i = 2;i >=0 ;i--)
 		{
+			if (i == playerIndex)
+				continue;
 			team[i][0].draw_player(window,team[i][0].getStates()[team[i][0].getAnimationIndex()][0].getSprites()[team[i][0].getStates()[team[i][0].getAnimationIndex()][0].getIndex()], offsetx);
 			//team.getPlayer()[team.getPlayerIndex()][0].draw_player(window, team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()][0].getSprites()[team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()]->getIndex()],offset_x);
 
