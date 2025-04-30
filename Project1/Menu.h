@@ -41,6 +41,7 @@ public:
 
     Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : title("Sonic Classic Heroes", font, 64), leaderboard(lb) {
 
+
         selectedOption = 0;
         horizontal_x = screenWidth;
         vertical_y = screenHeigth;
@@ -51,6 +52,7 @@ public:
         leaderboardState = false;
         enteringName = false;
         enter = false;
+
 
         font.loadFromFile("Fonts/scoreFont.ttf");
         title.setFillColor(Color::Yellow);
@@ -73,10 +75,9 @@ public:
             Text temp(menuOptions[i], font, 42);
             temp.setPosition(float(screenWidth / 2) - float(alignmentofTEXT[i] / 2), float(screenHeigth / 3.6) + float(i * screenHeigth / 12));
             text[i] = temp;
-            text[i].setFillColor(i == selectedOption ? sf::Color::Blue : sf::Color::White);
+            text[i].setFillColor(i == selectedOption ? Color::Blue : Color::White);
 
         }
-
     }
 
     bool isGameStateActive() { 

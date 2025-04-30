@@ -117,6 +117,7 @@ void Player::moveRight()
 	{
 		indexAnimation = RIGHT;
 		states[RIGHT][0].RunAnimation();/*&& topLeft != 'q' && topLeft != 'e';*/
+		//cout<<"right  animation running";
 	}
 	else
 	{
@@ -127,54 +128,35 @@ void Player::moveRight()
 void Player::autoMove(int x_coord, int y_coord)
 {
 	if (y_coord == y && x_coord == x)
-		return;
-	if (y < y_coord)
 	{
-		indexAnimation = JUMPR;
-		states[JUMPR][0].RunAnimation();
-	
-	}
-	if (y > y_coord)
-	{
-		
-		if (x_coord < x)
-		{
-			indexAnimation = RIGHTRUN;
-			states[RIGHTRUN][0].RunAnimation();
-		}
-		else if(x_coord > x)
-		{
-			indexAnimation = LEFTRUN;
-			states[LEFTRUN][0].RunAnimation();
-		}
-		else
+		if(indexAnimation != STILL)
 		{
 			indexAnimation = STILL;
 			states[STILL][0].RunAnimation();
 		}
+		return;
 	}
-	 if (y_coord == y)
+	if (y > y_coord)
 	{
-		 if (x_coord < x)
-		 {
-			 indexAnimation = RIGHTRUN;
-			 states[RIGHTRUN][0].RunAnimation();
-		 }
-		 else if (x_coord > x)
-		 {
-			 indexAnimation = LEFTRUN;
-			 states[LEFTRUN][0].RunAnimation();
-		 }
-		 else
-		 {
-			 indexAnimation = STILL;
-			 states[STILL][0].RunAnimation();
-		 }
+		indexAnimation = JUMPR;
+		states[JUMPR][0].RunAnimation();
+	}
+	else if (y <= y_coord && x != x_coord)
+	{
+		if (x < x_coord)
+		{
+			indexAnimation = RIGHTRUN;
+			states[RIGHTRUN][0].RunAnimation();
+		}
+		else if(x > x_coord)
+		{
+			indexAnimation = LEFTRUN;
+			states[LEFTRUN][0].RunAnimation();
+		}
 	}
 	 x = x_coord;
 	 y = y_coord;
 	 //updateDelay();
-
 }
 
 void Player:: checkDelayNow(int idx)
@@ -184,5 +166,4 @@ void Player:: checkDelayNow(int idx)
 		delayInFollow = 0;
 		hasStartedFollowing = true;
 	}
-
 }

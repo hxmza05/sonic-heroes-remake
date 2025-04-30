@@ -49,6 +49,8 @@ class Player
 	// only to adjust the player's hitbox
 	int hit_box_factor_x;
 	int hit_box_factor_y;
+	bool knockedByProjectile;
+
 protected:
 	float scale_x = 2.5;
 	float scale_y = 2.5;
@@ -67,7 +69,7 @@ public:
 		hasCollided = false;
 		hasKnockedBack = false;
 		max_speed = 20;
-		velocityX = 1;
+		velocityX = 0.5;
 		velocityY = 9.8;
 		//spacePressed = false;// our own defined
 		collisionDetectedOffGround = false;
@@ -77,7 +79,7 @@ public:
 		tempVelocityY = -7;
 		tempGravity = 0.6;
 		onGround = false;
-		acceleration = 1;
+		acceleration = 0.2;
 		Pheight = 35 * 2.5;
 		Pwidth = 24 * 2.5;
 		hit_box_factor_x = 8 * 2.5;
@@ -91,6 +93,7 @@ public:
 		trail = new int[20];
 		delayInFollow = 0;
 		hasStartedFollowing = false;
+		knockedByProjectile = false;
 	}
 	float& getx()
 	{
@@ -208,6 +211,10 @@ public:
 	{
 		return states;
 	}
+	bool& getHasKnockedByProjectile()
+	{
+		return knockedByProjectile;
+	}
 	void updateDelay()
 	{
 		delayInFollow++;
@@ -218,7 +225,6 @@ public:
 			return;
 		}
 	}
-
 	void autoMove(int x_coord,int y_coord);
 	void draw_player(RenderWindow& window, Sprite& LstillSprite,float offset_x);
 	void player_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed);
@@ -226,5 +232,17 @@ public:
 	void moveLeft();
 	void moveRight();
 	void checkDelayNow(int idx);
+	void executePushingLeft()
+	{
+		indexAnimation = PUSHLEFT;
+		states[indexAnimation][0].RunAnimation();
+		//cout << "\n\n\nPushing left executed \n\n\n";
+	}
+	void executePushingRight()
+	{
+		indexAnimation = PUSHRIGHT;
+		states[indexAnimation][0].RunAnimation();
+		//cout << "\n\n\nPushing right executed\n\n\n";
+	}
 
 };
