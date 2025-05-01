@@ -21,18 +21,19 @@ private:
 
 	CircleShape circle;
 
-	const float x_width = 17.9f;
-	const float x_heigth = 18.0f;
+	const float x_width;
+	const float x_heigth;
 
 
 public:
 
-	Projectile() {
+	Projectile() : x_width(17.9f), x_heigth(18.0f) {
 
 		x = 0,y = 0;
 		speed_x = 0, speed_y = 0;
 		active = false, wallCollision = false;
 		playerCollision = false;
+
 
 		//texture.loadFromFile("Sprites/projectile.png");
 		//sprite.setTexture(texture);
@@ -73,7 +74,7 @@ public:
 	bool Active() const;
 	bool checkCollisionWithPlayer(float player_x, float player_y, int Pwidth, int Pheight, float x, float y, const float x_width, const float x_heigth);
 	bool checkCollisionWithWall(char** lvl, int cell_size);
-	bool handleCollision(char** lvl, int cell_size, float& player_x, float& player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
+	bool handleCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
 
 
 
@@ -155,13 +156,14 @@ bool Projectile::checkCollisionWithWall(char** lvl, int cell_size) {
 
 }
 
-bool Projectile::handleCollision(char** lvl, int cell_size, float& player_x, float& player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY)
+bool Projectile::handleCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY)
 {	
 	if (checkCollisionWithPlayer(player_x, player_y, player_width, player_height, x, y, x_width, x_heigth)) {
 		active = false;	
 		cout << "Projectile Hit player  deactivated" << endl;
 		hasKnockedBack = true;
 		tempVelocityY = -7;
+		cout << "Knockback active ? " << hasKnockedBack << endl;
 	}
 
 	else if (checkCollisionWithWall(lvl, cell_size)) {

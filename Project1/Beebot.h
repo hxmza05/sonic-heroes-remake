@@ -138,8 +138,7 @@ public:
 	void movement(char** lvl, float player_x, float player_y, const int cell_size, int player_width, int player_height);
 	void getBeebotCoordinates(char** lvl, int height, int width);
 	void move_beebots(Beebot** beebots, int& beeIndex, int& beeCount, const int cell_size);
-	void handleProjectilesCollision(char** lvl, int cell_size, float& player_x, float& player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
-
+	void handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
 	void drawProjectiles(RenderWindow& window, float offset_x);
 
 
@@ -170,49 +169,52 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 
 		if (player_x >= Start && player_x <= End && distanceX <= 60.0f && (player_y - beeBaseY) <= 256.0f && (player_y - beeBaseY) >= -100.0f) {
 
-			if (!isLockedOn && canLock && cooldownClock.getElapsedTime().asSeconds() >= 5) {
+			if (!isLockedOn && canLock && cooldownClock.getElapsedTime().asSeconds() >= 5.0f) {
 				isLockedOn = true;
 				lockTimer.restart();
 				canLock = false;
+				cooldownClock.restart();
+				targetX = playerCenterX;
+				targetY = player_y + player_height / 2.0f;
 				//cout << "Bee Locking on to player"<<endl;
 			}
 
-			y = beeBaseY;
+			if (isLockedOn) {
 
-			if (lockTimer.getElapsedTime().asSeconds() >= 1.0f && !shotProjectile && cooldownClock.getElapsedTime().asSeconds() >= 5.0f) {
+				y = beeBaseY;
 
-				shotProjectile = true;
-				cooldownClock.restart();
-				canLock = true;
+				if (lockTimer.getElapsedTime().asSeconds() >= 1.0f && !shotProjectile) {
 
-				float projectileX = playerCenterX - beeCenterX;
-				float projectileY = (player_y + player_height / 2.0f) - (y + getbeeHeight() / 2.0f);
+					shotProjectile = true;
 
-				float magnitude = sqrt(projectileX * projectileX + projectileY * projectileY);
+					float projectileX = targetX - beeCenterX;
+					float projectileY = (targetY)-(y + getbeeHeight() / 2.0f);
 
-				if (magnitude != 0) {
-					projectileX /= magnitude;
-					projectileY /= magnitude;
+					float magnitude = sqrt(projectileX * projectileX + projectileY * projectileY);
+
+					if (magnitude != 0) {
+						projectileX /= magnitude;
+						projectileY /= magnitude;
+					}
+
+					if (!projectiles) {
+						projectiles = new Projectile();
+					}
+
+					projectiles->setPosition(beeCenterX, y + getbeeHeight() / 2.0f, projectileX, projectileY, 4.0f);
+
+					//cout << "Bee Fired projectile at player"<<endl;
+
 				}
 
-				if (!projectiles) {
-					projectiles = new Projectile();
+				if (shotProjectile) {
+					isLockedOn = false;
+					shotProjectile = false;
+					attackingPlayer = false;
+					canLock = true;
+					//cout << "Bee Resuming patrol" << endl;
 				}
 
-				projectiles->setPosition(beeCenterX, y + getbeeHeight() / 2.0f, projectileX, projectileY, 4.0f);
-
-
-				//cout << "Bee Fired projectile at player"<<endl;
-				//isLockedOn = false;
-				//attackingPlayer = false;
-
-			}
-
-			if (shotProjectile) {
-				isLockedOn = false;
-				shotProjectile = false;
-				attackingPlayer = false;
-				//cout << "Bee Resuming patrol" << endl;
 			}
 
 		}
@@ -356,7 +358,7 @@ void Beebot::drawProjectiles(RenderWindow& window, float offset_x) {
 }
 
 
-void Beebot::handleProjectilesCollision(char** lvl, int cell_size, float& player_x, float& player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY)
+void Beebot::handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY)
 {
 	if (projectiles && projectiles->Active()) {
 
