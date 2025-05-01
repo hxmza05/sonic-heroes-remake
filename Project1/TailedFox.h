@@ -92,7 +92,7 @@ public:
 		for (int i = 0, width = 0;i < 10;i++, width += 49)
 		{
 			states[RIGHTRUN]->getSprites()[i].setTexture(rightRun);
-			states[RIGHTRUN]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49, 50));
+			states[RIGHTRUN]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49 , 50));
 			states[RIGHTRUN]->getSprites()[i].setScale(2, 2);
 
 		}
@@ -128,7 +128,7 @@ public:
 		for (int i = 0, width = 0;i < 4;i++, width += 54)
 		{
 			states[JUMPR]->getSprites()[i].setTexture(jumpRight);
-			states[JUMPR]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[JUMPR]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 54, 50));
 			states[JUMPR]->getSprites()[i].setScale(2, 2);
 
 		}

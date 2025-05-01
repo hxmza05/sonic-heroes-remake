@@ -90,7 +90,7 @@ int main()
     // Uppercase for not interactable background accessories
 
     // C is for crystals
-
+    srand(time(0));
     const int cell_size = 64;
     const int height = 14;
     const int width = 110;
@@ -326,7 +326,7 @@ int main()
                      {
                          buffer_start = team.getPlayer()[team.getPlayerIndex()][0].getx();
                          buffer_end = buffer_start + 576;
-                         offset_x -= 15;
+                         offset_x -= team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
                      }
 					 leftRight = true;
                  }
@@ -353,7 +353,8 @@ int main()
                      {
                          buffer_end = team.getPlayer()[team.getPlayerIndex()][0].getx();
                          buffer_start = buffer_end - 576;
-                         offset_x += 15;
+                         offset_x += team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
+                         //offset_x += 15;
                      }
 					 leftRight = true;
                  }
@@ -368,6 +369,11 @@ int main()
                      team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() = 15;
                  }
              }
+          /*   if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+             {
+                 team.switchPlayer();
+             }*/
+
 			 else leftRight = false;
              if (!leftRight)
              {
@@ -456,8 +462,8 @@ int main()
             stinger.draw(window);
             */
 
-           /*draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
-           draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
+           //draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
+           //draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);
 
         }
         window.display();
@@ -553,7 +559,6 @@ void designlvl1(char** lvl, const char* filename, const int height, const int wi
             lvl[i][j] = getMapValues(wall);
         }
     }
-
     in.close();
 }
 
