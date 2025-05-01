@@ -71,7 +71,17 @@
     <ClInclude Include="TailedFox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Level.h">
+=======
+    <ClInclude Include="Leaderboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+>>>>>>> 619d1f03b73aca2e357d077f8511907c02fab523
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

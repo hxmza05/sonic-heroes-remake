@@ -33,7 +33,7 @@ public:
 	Crabmeat() {
 
 		this->hp = 4;
-		this->speed = 2.0;
+		this->speed = 1.0;
 		Alive = true;
 		Moving = true;
 		attack = false;

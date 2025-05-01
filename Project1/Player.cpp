@@ -117,7 +117,7 @@ void Player::moveRight()
 	{
 		indexAnimation = RIGHT;
 		states[RIGHT][0].RunAnimation();/*&& topLeft != 'q' && topLeft != 'e';*/
-		cout<<"right  animation running";
+		//cout<<"right  animation running";
 	}
 	else
 	{

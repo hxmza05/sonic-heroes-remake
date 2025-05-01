@@ -157,12 +157,18 @@
     <ClInclude Include="Display.h" />
     <ClInclude Include="Eggstinger.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Knuckles.h" />
+<<<<<<< HEAD
     <ClInclude Include="Level.h" />
+=======
+    <ClInclude Include="Leaderboard.h" />
+>>>>>>> 619d1f03b73aca2e357d077f8511907c02fab523
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Motobug.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="Sonic.h" />
     <ClInclude Include="TailedFox.h" />
     <ClInclude Include="Window.h" />

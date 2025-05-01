@@ -49,17 +49,25 @@ void designlvl1(char** lvl, const char* filename, const int height, const int wi
 bool checkCollision(char** lvl,int x,int y);
 bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int x, int y, int cell_size, int velocityY);
 //void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& sonic.getVelocityY(), bool& OnGround(), float& sonic.getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& sonic.getx(), float& sonic.gety(), const int cell_size, int& Sonic.getPheight(), int& sonic.getPwidth(), bool& spacePressed);
-//void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
-//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), bool& OnGround(), float& team.getPlayer()[team.getPlayerIndex()][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team.getPlayer()[team.getPlayerIndex()][0].getx(), float& team.getPlayer()[team.getPlayerIndex()][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), bool& spacePressed);
-void getCrabCoordinates(int CrabStart[], int CrabEnd[], int CrabWalls[], const int heigth, const int width, const int crabCoordinates, int& indexCrab, char** lvl);
-void move_crabs(Crabmeat crabs[], int CrabStart[], int CrabEnd[], int CrabWalls[], int& indexCrab, int& crabIndex, int& crabCount, const int cell_size, const float crabHeight);
 
 
 //void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team[playerIndex][0].getVelocityY(), bool& OnGround(), float& team[playerIndex][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team[playerIndex][0].getx(), float& team[playerIndex][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team[playerIndex][0].getPwidth(), bool& spacePressed);
 
+//void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
+//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), bool& OnGround(), float& team.getPlayer()[team.getPlayerIndex()][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team.getPlayer()[team.getPlayerIndex()][0].getx(), float& team.getPlayer()[team.getPlayerIndex()][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), bool& spacePressed);
+
+//void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
+//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), bool& OnGround(), float& team.getPlayer()[team.getPlayerIndex()][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team.getPlayer()[team.getPlayerIndex()][0].getx(), float& team.getPlayer()[team.getPlayerIndex()][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), bool& spacePressed);
+
+
+//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team[playerIndex][0].getVelocityY(), bool& OnGround(), float& team[playerIndex][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team[playerIndex][0].getx(), float& team[playerIndex][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team[playerIndex][0].getPwidth(), bool& spacePressed);
+
+
 bool CollisionCheckWithCrabs(Crabmeat crabs[], int& crabCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float crabWidth, const float crabHeight);
 
 bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float crab_x, float crab_y, const float crabWidth, const float crabHeight);
+
+bool CollisionCheckWithBeebots(Beebot**beebots, int& beeCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float beeWidth, const float beeHeight, bool onGround, bool spacePressed);
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -212,7 +220,10 @@ int main()
 
     ////////////////////////////////////////////////////////
 
-    Menu menu(screen_x, screen_y);
+    Leaderboard leaderboard;
+
+    Menu menu(screen_x, screen_y, &leaderboard);
+
 
 
     ////////////////////////////////////////////////////////
@@ -246,28 +257,31 @@ int main()
     /////////////////////////////////
 
 
-    Beebot beebots[5];
     int beeCount = 5;
-
-    beebots[0].getBeebotCoordinates(lvl, height, width);
-
     int beeIndex = 0;
+    Beebot** beebots = new Beebot * [beeCount];
 
-    beebots[0].move_beebots(beebots, beeIndex, beeCount, cell_size);
+    for (int i = 0; i < beeCount; i++) {
+        beebots[i] = new Beebot();
+    }
+
+    beebots[0]->getBeebotCoordinates(lvl, height, width);
+    beebots[0]->move_beebots(beebots, beeIndex, beeCount, cell_size);
+
 
 
     /////////////////////////////////
     ////////////Bat Brain////////////
     /////////////////////////////////
 
-    Batbrain batbrains[2];
-    int batCount = 2;
+    //Batbrain batbrains[2];
+    //int batCount = 2;
 
-    batbrains[0].getBatbrainCoordinates(lvl, height, width);
+    //batbrains[0].getBatbrainCoordinates(lvl, height, width);
 
-    int batIndex = 0;
+    //int batIndex = 0;
 
-    batbrains[0].move_Batbrain(batbrains, batIndex, batCount, cell_size);
+    //batbrains[0].move_Batbrain(batbrains, batIndex, batCount, cell_size);
 
 
     /////////////////////////////////
@@ -304,12 +318,25 @@ int main()
         }
         window.clear();
 
-        if (!menu.isGameStateActive())
+        if (menu.isEnteringName())
+        {
+            while (window.pollEvent(event)) {
+
+                if (event.type == Event::Closed) {
+                    window.close(); 
+                }
+
+                menu.update(window, event); 
+            }
+            menu.update(window);
+            menu.draw(window);
+        }
+        else if (!menu.isGameStateActive())
         {
             menu.update(window);
             menu.draw(window);
         }
-        else if (menu.isGameStateActive())
+        else if (menu.isGameStateActive())            /// leaderboard.addNewScore(menu.getPlayerName(), playerScore); ye add krna hai when player dies and score > highscores[] ho
         {
             if (team.getPlayer()[team.getPlayerIndex()][0].getOnGround())
             {
@@ -395,7 +422,6 @@ int main()
              }
 			 if (!spacePressed && !leftRight)
              {
-
                  team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() = STILL;
                  team.getPlayer()[team.getPlayerIndex()][0].getStates()[STILL][0].RunAnimation();
              }
@@ -405,7 +431,10 @@ int main()
             if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) {
                 CollisionCheckWithCrabs(crabs, crabCount, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY(), 60, 44);
             }
-            if (team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+            if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) {
+                CollisionCheckWithBeebots(beebots, beeCount, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY(), beebots[0]->getbeeWidth(), beebots[0]->getbeeHeight(), team.getPlayer()[team.getPlayerIndex()][0].getOnGround(), spacePressed);
+            }
+            if (team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() )/*|| team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedByProjectile()*/
                 {
                     team.getPlayer()[team.getPlayerIndex()][0].getx() -= 6;
                     team.getPlayer()[team.getPlayerIndex()][0].gety() += team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY();
@@ -422,6 +451,8 @@ int main()
              }
             if(!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
                 team.getPlayer()[team.getPlayerIndex()][0].player_gravity(lvl, offset_y,offset_x, cell_size, spacePressed);
+
+           // draw_bg(window, backGroundSprite, offset_x);
             team.storePath();
             team.autoMoveFollowers();
             draw_bg(window, backGroundSprite, offset_x);
@@ -438,17 +469,24 @@ int main()
                 crabs[i].draw(window, offset_x);
             }
 
+
+            
             for (int i = 0; i < beeCount; i++) {
-                beebots[i].movement();
-                beebots[i].draw(window, offset_x);
+                beebots[i]->movement(lvl, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight());
+                beebots[i]->draw(window, offset_x);
+                beebots[i]->drawProjectiles(window, offset_x);
+                beebots[i]->handleProjectilesCollision(lvl, cell_size, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY());
+
             }
 
 
+
+            /*
             for (int i = 0; i < batCount; i++) {
                 batbrains[i].movement(lvl, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size);
                 batbrains[i].draw(window, offset_x);
             }
-            /*
+            
             bug.movement(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety());
             bug.draw(window);
 
@@ -563,9 +601,9 @@ void designlvl1(char** lvl, const char* filename, const int height, const int wi
 }
 
 
-bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float crab_x, float crab_y, const float crabWidth, const float crabHeight)
+bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight)
 {
-    return (player_x + Pwidth > crab_x && player_x < crab_x + crabWidth && player_y + Pheight > crab_y && player_y < crab_y + crabHeight);
+    return (player_x + Pwidth > enemy_x && player_x < enemy_x + enemyWidth && player_y + Pheight > enemy_y && player_y < enemy_y + enemyHeight);
 }
 
 bool CollisionCheckWithCrabs(Crabmeat crabs[], int& crabCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float crabWidth, const float crabHeight)
@@ -602,28 +640,28 @@ bool CollisionCheckWithCrabs(Crabmeat crabs[], int& crabCount, float& player_x, 
                 hasKnockedBack = true;
                 tempVelocityY = -7;
 
-                float centre_of_Player = player_x + Pwidth / 2.0f;
-                float centre_of_CRab = crabs[i].getX() + crabWidth / 2.0f;
+                //float centre_of_Player = player_x + Pwidth / 2.0f;
+                //float centre_of_CRab = crabs[i].getX() + crabWidth / 2.0f;
 
-                cout << "PlyrX " << centre_of_Player << " Crab CenterX " << centre_of_CRab << endl;
+                //cout << "PlyrX " << centre_of_Player << " Crab CenterX " << centre_of_CRab << endl;
 
-                if (centre_of_Player < centre_of_CRab) {
-                    player_x -= 10;
-                }
+                //if (centre_of_Player < centre_of_CRab) {
+                //    player_x -= 10;
+                //}
 
-                else {
-                    player_x += 10;
-                }
+                //else {
+                //    player_x += 10;
+                //}
 
                 crabs[i].setAnimation(3);
                 crabs[i].RunNewAnimation();
                 crabs[i].setAttack();
 
-                cout << "PlyrX " << centre_of_Player << " Crab CenterX " << centre_of_CRab << endl;
+                //cout << "PlyrX " << centre_of_Player << " Crab CenterX " << centre_of_CRab << endl;
 
-                cout << " Sidehit " << i << endl;
+                //cout << " Sidehit " << i << endl;
 
-                cout << "PlyrX " << player_x << " Crab X " << crabs[i].getX() << endl;
+                //cout << "PlyrX " << player_x << " Crab X " << crabs[i].getX() << endl;
             }
             return true;
         }
@@ -639,3 +677,41 @@ bool checkCollision(char** lvl, int player_x, int player_y)
     return !(lvl[player_y / 64][player_x / 64] == 'e' || lvl[player_y / 64][player_x / 64] == 'w' || lvl[player_y / 64][player_x / 64] == 'q' || lvl[player_y / 64][player_x / 64] == 'p');
 }
 
+bool CollisionCheckWithBeebots(Beebot** beebots, int& beeCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float beeWidth, const float beeHeight, bool onGround, bool spacePressed)
+{
+    if (hasKnockedBack) {
+
+        return false;
+    }
+
+    for (int i = 0; i < beeCount; i++) {
+
+        if (!beebots[i]->alive()) {
+            continue;
+        }
+
+        if (PlayerCrabCollision(player_x, player_y, Pwidth, Pheight, beebots[i]->getX(), beebots[i]->getY(), beeWidth, beeHeight)) {
+
+            if (!(onGround == false && spacePressed == true)) {
+                hasKnockedBack = true;
+                tempVelocityY = -7; // knockback upwards initially
+
+                float center_of_player = player_x + Pwidth / 2.0f;
+                float center_of_bee = beebots[i]->getX() + beeWidth / 2.0f;
+
+                if (center_of_player < center_of_bee) {
+                    player_x -= 10; // knock player left
+                }
+                else {
+                    player_x += 10; // knock player right
+                }
+
+                cout << "Player hit by Beebot --- thrown back" << endl;
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}

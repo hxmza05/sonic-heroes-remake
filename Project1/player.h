@@ -49,6 +49,8 @@ class Player
 	// only to adjust the player's hitbox
 	int hit_box_factor_x;
 	int hit_box_factor_y;
+	bool knockedByProjectile;
+
 protected:
 	float scale_x = 2.5;
 	float scale_y = 2.5;
@@ -91,6 +93,7 @@ public:
 		trail = new int[20];
 		delayInFollow = 0;
 		hasStartedFollowing = false;
+		knockedByProjectile = false;
 	}
 	float& getx()
 	{
@@ -208,6 +211,10 @@ public:
 	{
 		return states;
 	}
+	bool& getHasKnockedByProjectile()
+	{
+		return knockedByProjectile;
+	}
 	void updateDelay()
 	{
 		delayInFollow++;
@@ -229,13 +236,13 @@ public:
 	{
 		indexAnimation = PUSHLEFT;
 		states[indexAnimation][0].RunAnimation();
-		cout << "\n\n\nPushing left executed \n\n\n";
+		//cout << "\n\n\nPushing left executed \n\n\n";
 	}
 	void executePushingRight()
 	{
 		indexAnimation = PUSHRIGHT;
 		states[indexAnimation][0].RunAnimation();
-		cout << "\n\n\nPushing right executed\n\n\n";
+		//cout << "\n\n\nPushing right executed\n\n\n";
 	}
 
 };
