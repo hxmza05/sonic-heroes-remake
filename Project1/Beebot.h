@@ -315,7 +315,7 @@ void Beebot::move_beebots(Beebot** beebots, int& beeIndex, int& beeCount, const 
 
 void Beebot::getBeebotCoordinates(char** lvl, int height, int width)
 {
-	for (int i = 5; i < height / 2 + 1; i++) {
+	for (int i = 5; i < height / 2 + 1; i++) { //////////// add variables for start and end range in loop conditions
 
 		int j = 0;
 

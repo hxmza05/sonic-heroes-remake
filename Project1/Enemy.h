@@ -76,16 +76,8 @@ public:
 
 	virtual void draw(RenderWindow& window, float offset_x) {
 
-		if (Alive) {
-
-			sprite.setPosition(x - offset_x, y);
-			window.draw(sprite);
-		}
-
-		else {
-
-			sprite.setPosition(999, 999);
-		}
+		sprite.setPosition(x - offset_x, y);
+		window.draw(sprite);	
 
 	}
 
