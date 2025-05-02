@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Collectibles.h" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Src.cpp" />
     <ClCompile Include="Team.h" />
@@ -159,11 +160,8 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Knuckles.h" />
-<<<<<<< HEAD
     <ClInclude Include="Level.h" />
-=======
     <ClInclude Include="Leaderboard.h" />
->>>>>>> 619d1f03b73aca2e357d077f8511907c02fab523
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Motobug.h" />
     <ClInclude Include="Obstacle.h" />

@@ -78,13 +78,9 @@ public:
 					factor = -32;
 				}*/
 				team[i]->updateDelay();
-<<<<<<< HEAD
 				cout << "Path index LEader's = " << pathIndex << "----- tailed fox's = " << team[1][0].getDelayinFollow() << "----- knuckel's = " << team[2][0].getDelayinFollow() << "\n";
 				team[i][0].autoMove(leadersPath[team[i][0].getDelayinFollow()][0] - 16, leadersPath[team[i][0].getDelayinFollow()][1]);
-=======
-				//cout << "Path index LEader's = " << pathIndex << "----- tailed fox's = " << team[1][0].getDelayinFollow() << "----- knuckel's = " << team[2][0].getDelayinFollow() << "\n";
-				team[i][0].autoMove(leadersPath[team[i][0].getDelayinFollow()][0], leadersPath[team[i][0].getDelayinFollow()][1]);
->>>>>>> 619d1f03b73aca2e357d077f8511907c02fab523
+
 			}
 		}
 	}

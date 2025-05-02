@@ -157,9 +157,7 @@ int main()
     //sf::FloatRect wall1bounds = wall2Sprite.getGlobalBounds();
     //cout << "Width pf the 1st wall : " << wall1bounds.width << "----" << " Heifht = " << wall1bounds.height << "\n";
     ///////////////////////////////////////////
-
     Music lvlMus;
-
     lvlMus.openFromFile("Data/labrynth.ogg");
     lvlMus.setVolume(30);
     lvlMus.play();
@@ -436,6 +434,7 @@ int main()
             }
             if (team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() )/*|| team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedByProjectile()*/
                 {
+                cout << "\n\nVirtual gravity function running\n\n";
                     team.getPlayer()[team.getPlayerIndex()][0].getx() -= 6;
                     team.getPlayer()[team.getPlayerIndex()][0].gety() += team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY();
                     team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY() += team.getPlayer()[team.getPlayerIndex()][0].getTempGravity();
@@ -464,19 +463,23 @@ int main()
             // change these according to the movement logic of motobug, for now it moves with player
             
 
-            for (int i = 0; i < crabCount; i++) {
+            for (int i = 0; i < crabCount; i++)
+            {
                 crabs[i].movement();
                 crabs[i].draw(window, offset_x);
             }
 
 
             
-            for (int i = 0; i < beeCount; i++) {
+            for (int i = 0; i < beeCount; i++)
+            {
                 beebots[i]->movement(lvl, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight());
                 beebots[i]->draw(window, offset_x);
                 beebots[i]->drawProjectiles(window, offset_x);
-                beebots[i]->handleProjectilesCollision(lvl, cell_size, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY());
-
+                if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+                {
+                    beebots[i]->handleProjectilesCollision(lvl, cell_size, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY());
+                }
             }
 
 
