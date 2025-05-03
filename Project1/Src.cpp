@@ -71,7 +71,7 @@ bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight
 bool CollisionCheckWithBeebots(Beebot**beebots, int& beeCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float beeWidth, const float beeHeight, bool onGround, bool spacePressed);
 
 
-void placeRingsFromMap(char** lvl, Collectibles*** collectibles, int height, int width, Texture* rings);
+void placeRingsFromMap(char** lvl, Collectibles*** collectibles, int height, int width, Texture* rings, Texture* afterEffect);
 
 void updateAndDrawCollectibles(Collectibles*** collectibles, int height, int width, RenderWindow& window);
 
@@ -340,7 +340,10 @@ int main()
     Texture rings;
     rings.loadFromFile("Sprites/rings.png"); 
 
-    placeRingsFromMap(lvl, collectibles, height, width, &rings);
+    Texture ring_effect;
+    ring_effect.loadFromFile("Sprites/after_ring.png");
+
+    placeRingsFromMap(lvl, collectibles, height, width, &rings, &ring_effect);
 
     int ringsCollected = 0;
 
@@ -596,14 +599,11 @@ void draw_bg(RenderWindow& window, Sprite& bgSprite, int offset_x)
 }
 
 
-
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////Rings////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void placeRingsFromMap(char** lvl, Collectibles*** collectibles, int height, int width, Texture* rings) {
+void placeRingsFromMap(char** lvl, Collectibles*** collectibles, int height, int width, Texture* rings, Texture* afterEffect) {
 
     for (int i = 0; i < height; ++i) {
 
@@ -611,7 +611,7 @@ void placeRingsFromMap(char** lvl, Collectibles*** collectibles, int height, int
 
             if (lvl[i][j] == 'r') {
 
-                collectibles[i][j] = new Ring(j, i, rings);
+                collectibles[i][j] = new Ring(j, i, rings, afterEffect);
             }
         }
     }
@@ -623,7 +623,7 @@ void updateAndDrawCollectibles(Collectibles*** collectibles, int height, int wid
 
         for (int j = 0; j < width; ++j) {
 
-            if (collectibles[i][j] && collectibles[i][j]->isActive()) {
+            if (collectibles[i][j]) {
                 collectibles[i][j]->update();
                 collectibles[i][j]->draw(window);
             }

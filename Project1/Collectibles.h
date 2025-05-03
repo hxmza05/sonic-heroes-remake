@@ -22,7 +22,11 @@ protected:
 
 
 	Texture* texture;
+	Texture* afterEffect;
 	Sprite sprite;
+
+	bool showEffect;
+	Clock effectClock;
 
 public:
 
@@ -33,6 +37,9 @@ public:
 		totalAnimations = 0;
 		states = nullptr;
 		texture = nullptr;
+		afterEffect = nullptr;
+		showEffect = false;
+		effectClock.restart();
 	}
 
 	Collectibles(int x, int y, bool collected) {
@@ -43,11 +50,14 @@ public:
 		totalAnimations = 0;
 		states = nullptr;
 		texture = nullptr;
+		afterEffect = nullptr;
+		showEffect = false;
+		effectClock.restart();
 	}
 
 	virtual void draw(RenderWindow& window) {
 
-		if (!collected) {
+		if (!collected || showEffect) {
 			window.draw(sprite);
 		}
 
@@ -83,24 +93,6 @@ public:
 	int getIndex() const {
 		return states[indexAnimation]->getIndex();
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 };

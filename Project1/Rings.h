@@ -15,17 +15,20 @@ private:
 
     Clock ringsClock;
     const float ringHeight;
+    int ringAnimIndex = 0;
+    
 
 public:
 
-    Ring(int x, int y, Texture* texture) : Collectibles(x, y, false), ringHeight(66.0) {
+    Ring(int x, int y, Texture* texture, Texture* afterEffect) : Collectibles(x, y, false), ringHeight(66.0) {
 
         this->texture = texture;
-        totalAnimations = 1;
+        this->afterEffect = afterEffect;
+        totalAnimations = 2;
         indexAnimation = 0;
         ringsClock.restart();
 
-        states = new Animation * [1];
+        states = new Animation * [2];
         states[0] = new Animation(4);
 
 
@@ -51,17 +54,54 @@ public:
 
         sprite = states[0]->getSprites()[0];
 
+        ringAnimIndex = 0;
+
+        states[1] = new Animation(4);
+
+        for (int i = 0; i < 4; i++) {
+
+            states[1]->getSprites()[i].setTexture(*afterEffect);
+            states[1]->getSprites()[i].setTextureRect(IntRect(i * 32 + 16, 0, 16, 64));
+            //states[1]->getSprites()[i].setOrigin(8.f, 32.f); 
+            states[1]->getSprites()[i].setScale(2.5f, 2.5f);
+
+        }
+
+
+
+
     }
 
 
     void collect() override {
         collected = true;
+        showEffect = true;
+        effectClock.restart();
+        indexAnimation = 1;
+        states[1]->reset();
     }
 
 
     void update() override {
 
         if (collected) {
+
+            if (showEffect) {
+
+                for (int i = 0; i < 4; i++) {
+                    states[1]->getSprites()[i].setTextureRect(IntRect(i * 32 + 16, ringAnimIndex * 16, 16, 16));
+                }
+
+                states[1]->RunAnimation();
+                sprite = states[1]->getSprites()[states[1]->getIndex()];
+                sprite.setPosition(x * 64, y * 64 + 12);
+
+                if (effectClock.getElapsedTime().asSeconds() > 0.9f) {
+                    showEffect = false;
+                }
+
+            }
+
             return;
         }
 
