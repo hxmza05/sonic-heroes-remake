@@ -162,10 +162,10 @@ bool Projectile::handleCollision(char** lvl, int cell_size, float player_x, floa
 		active = false;	
 		cout << "Projectile Hit player  deactivated" << endl;
 		hasKnockedBack = true;
-		tempVelocityY = -7;
+		tempVelocityY = -10;
 		cout << "Knockback active ? " << hasKnockedBack << endl;
+		return true;
 	}
-
 	else if (checkCollisionWithWall(lvl, cell_size)) {
 		active = false;
 		cout << "Projectile Hit wall  deactivated" << endl;

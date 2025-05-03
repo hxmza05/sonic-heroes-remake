@@ -160,6 +160,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Knuckles.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="Leaderboard.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Motobug.h" />

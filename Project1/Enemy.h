@@ -105,23 +105,4 @@ public:
 
 		return !(lvl[(int)(enemy_y) / cell_size][(int)(enemy_x) / cell_size] == 's');
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 };

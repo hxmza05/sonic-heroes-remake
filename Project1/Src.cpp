@@ -98,7 +98,7 @@ int main()
     // Uppercase for not interactable background accessories
 
     // C is for crystals
-
+    srand(time(0));
     const int cell_size = 64;
     const int height = 14;
     const int width = 110;
@@ -155,9 +155,7 @@ int main()
     //sf::FloatRect wall1bounds = wall2Sprite.getGlobalBounds();
     //cout << "Width pf the 1st wall : " << wall1bounds.width << "----" << " Heifht = " << wall1bounds.height << "\n";
     ///////////////////////////////////////////
-
     Music lvlMus;
-
     lvlMus.openFromFile("Data/labrynth.ogg");
     lvlMus.setVolume(30);
     lvlMus.play();
@@ -368,7 +366,7 @@ int main()
                      {
                          buffer_start = team.getPlayer()[team.getPlayerIndex()][0].getx();
                          buffer_end = buffer_start + 576;
-                         offset_x -= 15;
+                         offset_x -= team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
                      }
 					 leftRight = true;
                  }
@@ -395,7 +393,8 @@ int main()
                      {
                          buffer_end = team.getPlayer()[team.getPlayerIndex()][0].getx();
                          buffer_start = buffer_end - 576;
-                         offset_x += 15;
+                         offset_x += team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
+                         //offset_x += 15;
                      }
 					 leftRight = true;
                  }
@@ -410,6 +409,11 @@ int main()
                      team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() = 15;
                  }
              }
+          /*   if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+             {
+                 team.switchPlayer();
+             }*/
+
 			 else leftRight = false;
              if (!leftRight)
              {
@@ -445,6 +449,7 @@ int main()
             }*/
             if (team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() )/*|| team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedByProjectile()*/
                 {
+                cout << "\n\nVirtual gravity function running\n\n";
                     team.getPlayer()[team.getPlayerIndex()][0].getx() -= 6;
                     team.getPlayer()[team.getPlayerIndex()][0].gety() += team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY();
                     team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY() += team.getPlayer()[team.getPlayerIndex()][0].getTempGravity();
@@ -478,11 +483,14 @@ int main()
                 crabs[i]->draw(window, offset_x);
             }
          
-            for (int i = 0; i < beeCount; i++) {
+    
+            for (int i = 0; i < beeCount; i++)
+            {
                 beebots[i]->movement(lvl, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight());
                 beebots[i]->draw(window, offset_x);
                 beebots[i]->drawProjectiles(window, offset_x);
-                if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) {
+                if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+                {
                     beebots[i]->handleProjectilesCollision(lvl, cell_size, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY());
                 }
             }
@@ -508,8 +516,8 @@ int main()
             stinger.draw(window);
             */
 
-           /*draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
-           draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
+           //draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
+           //draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);
 
         }
         window.display();
@@ -605,7 +613,6 @@ void designlvl1(char** lvl, const char* filename, const int height, const int wi
             lvl[i][j] = getMapValues(wall);
         }
     }
-
     in.close();
 }
 

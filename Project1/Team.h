@@ -7,6 +7,7 @@
 #include"Sonic.h"
 #include"TailedFox.h"
 #include"Knuckles.h"
+#include"time.h"
 class Team
 {
 	Player** team;
@@ -21,7 +22,7 @@ public:
 		team[0] = new Sonic();
 		team[1] = new TailedFox();
 		team[2] = new Knuckles();
-		playerIndex = 0;
+		playerIndex = 2;
 		leadersPath = new int*[100];
 		for (int i = 0;i < 100;i++)
 		{
@@ -33,7 +34,7 @@ public:
 	{
 		return playerIndex;
 	}
-	void switchPlayer()
+	/*void switchPlayer()
 	{
 		if (playerIndex == 2)
 		{
@@ -42,7 +43,7 @@ public:
 		}
 		playerIndex++;
 
-	}
+	}*/
 	Player** getPlayer()
 	{
 		return team;
@@ -70,11 +71,16 @@ public:
 				team[i]->checkDelayNow(pathIndex);
 			}
 			else 
-			
 			{
+				/*int factor = 32;
+				if (pathIndex > 50)
+				{
+					factor = -32;
+				}*/
 				team[i]->updateDelay();
-				//cout << "Path index LEader's = " << pathIndex << "----- tailed fox's = " << team[1][0].getDelayinFollow() << "----- knuckel's = " << team[2][0].getDelayinFollow() << "\n";
-				team[i][0].autoMove(leadersPath[team[i][0].getDelayinFollow()][0], leadersPath[team[i][0].getDelayinFollow()][1]);
+				cout << "Path index LEader's = " << pathIndex << "----- tailed fox's = " << team[1][0].getDelayinFollow() << "----- knuckel's = " << team[2][0].getDelayinFollow() << "\n";
+				team[i][0].autoMove(leadersPath[team[i][0].getDelayinFollow()][0] - 16, leadersPath[team[i][0].getDelayinFollow()][1]);
+
 			}
 		}
 	}

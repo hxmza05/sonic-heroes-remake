@@ -134,6 +134,10 @@ void Player::autoMove(int x_coord, int y_coord)
 			indexAnimation = STILL;
 			states[STILL][0].RunAnimation();
 		}
+		else
+		{
+			//moveRandomely();
+		}
 		return;
 	}
 	if (y > y_coord)
@@ -159,7 +163,7 @@ void Player::autoMove(int x_coord, int y_coord)
 	 //updateDelay();
 }
 
-void Player:: checkDelayNow(int idx)
+void Player::checkDelayNow(int idx)
 {
 	if (idx > delayInFollow)
 	{
