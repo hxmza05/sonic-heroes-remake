@@ -87,6 +87,7 @@ void Player::playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, 
 		tempVelocityY += tempGravity;
 		onGround = false;
 	}
+	cout << "tempVelocityY ------" << tempVelocityY << endl;
 }
 void Player::moveLeft()
 {

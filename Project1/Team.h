@@ -15,6 +15,7 @@ class Team
 	//stores x and y coordinates of the leader
 	int** leadersPath;
 	int pathIndex;
+	bool spacePressed;
 public:
 	Team()
 	{
@@ -22,13 +23,14 @@ public:
 		team[0] = new Sonic();
 		team[1] = new TailedFox();
 		team[2] = new Knuckles();
-		playerIndex = 2;
+		playerIndex = 1;
 		leadersPath = new int*[100];
 		for (int i = 0;i < 100;i++)
 		{
 			leadersPath[i] = new int[2];
 		}
 		pathIndex = 0;
+		spacePressed = false;
 	}
 	int getPlayerIndex()
 	{
@@ -55,6 +57,10 @@ public:
 	int getPathIndex()
 	{
 		return pathIndex;
+	}
+	bool& getSpacePressed()
+	{
+		return spacePressed;
 	}
 	void switchLeader()
 	{

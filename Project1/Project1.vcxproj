@@ -145,13 +145,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Collectibles.h" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Src.cpp" />
-    <ClCompile Include="Team.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Rings.h" />
+    <ClInclude Include="Team.h" />
+    <ClInclude Include="Collectibles.h" />
     <ClInclude Include="Batbrain.h" />
     <ClInclude Include="Beebot.h" />
     <ClInclude Include="Crabmeat.h" />

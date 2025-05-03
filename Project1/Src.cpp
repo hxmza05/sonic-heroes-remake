@@ -11,7 +11,8 @@
 
 #include"Player.h"
 #include"Sonic.h"
-//#include"Animation.h"
+#include"Collectibles.h"
+#include"Rings.h"
 #include"Motobug.h"
 #include"Enemy.h"
 #include"Crabmeat.h"
@@ -68,6 +69,13 @@ bool CollisionCheckWithCrabs(Crabmeat** crabs, int& crabCount, float& player_x, 
 bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float crab_x, float crab_y, const float crabWidth, const float crabHeight);
 
 bool CollisionCheckWithBeebots(Beebot**beebots, int& beeCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float beeWidth, const float beeHeight, bool onGround, bool spacePressed);
+
+
+void placeRingsFromMap(char** lvl, Collectibles*** collectibles, int height, int width, Texture* rings);
+
+void updateAndDrawCollectibles(Collectibles*** collectibles, int height, int width, RenderWindow& window);
+
+void handleRingCollection(Collectibles*** collectibles, char** lvl, int height, int width, Player& player, int& ringsCollected, int cell_size);
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -297,6 +305,9 @@ int main()
     //batbrains[0].move_Batbrain(batbrains, batIndex, batCount, cell_size);
 
 
+
+
+
     /////////////////////////////////
     ///////////////////////////////////
     /////////////time stuff//////////////
@@ -309,12 +320,32 @@ int main()
 
 
 
-    /////////////////////////////////
-    ////////////Spikes///////////////
-    /////////////////////////////////
+    /////////////////////////////////////////
+    ////////////Collectibles/////////////////
+    /////////////////////////////////////////
+
+    Collectibles*** collectibles = new Collectibles **[height];
+
+    for (int i = 0; i < height; i++) {
+
+        collectibles[i] = new Collectibles * [width];
+
+        for (int j = 0; j < width; j++) {
+
+            collectibles[i][j] = nullptr;
+        }
+    }
+
+
+    Texture rings;
+    rings.loadFromFile("Sprites/rings.png"); 
+
+    placeRingsFromMap(lvl, collectibles, height, width, &rings);
+
+    int ringsCollected = 0;
+
+
     bool leftRight = false;
-
-
     Event event;
     while (window.isOpen())
     {
@@ -442,7 +473,7 @@ int main()
                 team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = collisionCheckWithSpikes(lvl,offset_y,hit_box_factor_y,hit_box_factor_x,team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getVelocityY());
              //cout << "team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = " << team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() << endl;
             if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) {
-                CollisionCheckWithCrabs(crabs, crabCount, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY(), 60, 44);
+                CollisionCheckWithCrabs(crabs, crabCount, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), 60, 44);
             }/*
             if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) {
                 CollisionCheckWithBeebots(beebots, beeCount, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY(), beebots[0]->getbeeWidth(), beebots[0]->getbeeHeight(), team.getPlayer()[team.getPlayerIndex()][0].getOnGround(), spacePressed);
@@ -458,11 +489,11 @@ int main()
                         team.getPlayer()[team.getPlayerIndex()][0].playerVirtualGravity(lvl, offset_y, offset_x, cell_size,spacePressed);
                     }
                 }
-             if (team.getPlayer()[team.getPlayerIndex()][0].getOnGround())
+            /* if (team.getPlayer()[team.getPlayerIndex()][0].getOnGround())
              {
                  team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = false;
                  team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY() = -7;
-             }
+             }*/
             if(!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
                 team.getPlayer()[team.getPlayerIndex()][0].player_gravity(lvl, offset_y,offset_x, cell_size, spacePressed);
 
@@ -473,7 +504,26 @@ int main()
 
             display_level(window, height, width, lvl, walls, cell_size, offset_x);
 
+            updateAndDrawCollectibles(collectibles, height, width, window);
+            handleRingCollection(collectibles, lvl, height, width, team.getPlayer()[team.getPlayerIndex()][0], ringsCollected, cell_size);
+
             //team.getPlayer()[team.getPlayerIndex()][0].draw_player(window, team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()][0].getSprites()[team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()]->getIndex()],offset_x);
+           
+            for (int i = 0; i < beeCount; i++)
+            {
+                beebots[i]->movement(lvl, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight());
+                beebots[i]->draw(window, offset_x);
+                beebots[i]->drawProjectiles(window, offset_x);
+                //if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+                //{
+                if (beebots[i]->handleProjectilesCollision(lvl, cell_size, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY()))
+                {
+                    team.getPlayer()[team.getPlayerIndex()][0].getOnGround() = false;
+                   
+                }//}
+            }
+            cout << "Ongground = " << team.getPlayer()[team.getPlayerIndex()][0].getOnGround();
+            cout << "\n";
             team.draw(window, offset_x);
             // change these according to the movement logic of motobug, for now it moves with player
             
@@ -483,17 +533,6 @@ int main()
                 crabs[i]->draw(window, offset_x);
             }
          
-    
-            for (int i = 0; i < beeCount; i++)
-            {
-                beebots[i]->movement(lvl, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight());
-                beebots[i]->draw(window, offset_x);
-                beebots[i]->drawProjectiles(window, offset_x);
-                if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
-                {
-                    beebots[i]->handleProjectilesCollision(lvl, cell_size, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY());
-                }
-            }
 
             for (int i = 0; i < motobugCount; i++) {
                 motobugs[i]->movement(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety());
@@ -557,6 +596,80 @@ void draw_bg(RenderWindow& window, Sprite& bgSprite, int offset_x)
 }
 
 
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////Rings////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void placeRingsFromMap(char** lvl, Collectibles*** collectibles, int height, int width, Texture* rings) {
+
+    for (int i = 0; i < height; ++i) {
+
+        for (int j = 0; j < width; ++j) {
+
+            if (lvl[i][j] == 'r') {
+
+                collectibles[i][j] = new Ring(j, i, rings);
+            }
+        }
+    }
+}
+
+void updateAndDrawCollectibles(Collectibles*** collectibles, int height, int width, RenderWindow& window) {
+
+    for (int i = 0; i < height; ++i) {
+
+        for (int j = 0; j < width; ++j) {
+
+            if (collectibles[i][j] && collectibles[i][j]->isActive()) {
+                collectibles[i][j]->update();
+                collectibles[i][j]->draw(window);
+            }
+        }
+    }
+}
+
+void handleRingCollection(Collectibles*** collectibles, char**lvl, int height, int width, Player& player, int& ringsCollected, int cell_size) {
+
+
+    for (int i = 0; i < height; ++i) {
+
+        for (int j = 0; j < width; ++j) {
+
+            if (collectibles[i][j] && collectibles[i][j]->isActive()) {
+
+                float ring_x = j * cell_size;
+                float ring_y = i * cell_size + 12;
+
+                int frameIndex = collectibles[i][j]->getIndex();
+                float rawWidths[4] = { 66, 56, 32, 53 };
+                float ringWidth = rawWidths[frameIndex] * 0.75f;
+                float ringHeight = 66 * 0.75f;
+
+                if (player.getx() + player.getPwidth() > ring_x && player.getx() < ring_x + ringWidth
+                    && player.gety() + player.getPheight() > ring_y && player.gety() < ring_y + ringHeight) {
+
+                    collectibles[i][j]->collect();
+                    ringsCollected++;
+                    lvl[i][j] = 's';
+
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////Rings////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 char getMapValues(int val) 
 {
     switch (val) 
@@ -566,6 +679,7 @@ char getMapValues(int val)
         case 2: return 'w'; 
         case 3: return 'e';
         case 4: return 'p'; 
+        case 5: return 'r';
         default: return 's'; 
     }
 }
