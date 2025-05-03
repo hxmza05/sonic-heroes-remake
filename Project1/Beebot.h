@@ -138,7 +138,7 @@ public:
 	void movement(char** lvl, float player_x, float player_y, const int cell_size, int player_width, int player_height);
 	void getBeebotCoordinates(char** lvl, int height, int width);
 	void move_beebots(Beebot** beebots, int& beeIndex, int& beeCount, const int cell_size);
-	void handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
+	bool handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
 	void drawProjectiles(RenderWindow& window, float offset_x);
 
 
@@ -171,9 +171,9 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 
 			if (!isLockedOn && canLock && cooldownClock.getElapsedTime().asSeconds() >= 5.0f) {
 				isLockedOn = true;
-				lockTimer.restart();
 				canLock = false;
 				cooldownClock.restart();
+				lockTimer.restart();
 				targetX = playerCenterX;
 				targetY = player_y + player_height / 2.0f;
 				//cout << "Bee Locking on to player"<<endl;
@@ -277,7 +277,6 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 		y += (ZigZag ? speed : -speed);
 
 	}
-
 	states[indexAnimation]->RunAnimation();
 	sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
 	sprite.setPosition(x, y);
@@ -285,8 +284,6 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 	if (projectiles && projectiles->Active()) {
 		projectiles->move();
 	}
-
-
 }
 
 
@@ -315,7 +312,7 @@ void Beebot::move_beebots(Beebot** beebots, int& beeIndex, int& beeCount, const 
 
 void Beebot::getBeebotCoordinates(char** lvl, int height, int width)
 {
-	for (int i = 5; i < height / 2 + 1; i++) {
+	for (int i = 5; i < height / 2 + 1; i++) { //////////// add variables for start and end range in loop conditions
 
 		int j = 0;
 
@@ -358,18 +355,23 @@ void Beebot::drawProjectiles(RenderWindow& window, float offset_x) {
 }
 
 
-void Beebot::handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY)
+bool Beebot::handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY)
 {
-	if (projectiles && projectiles->Active()) {
+	if (projectiles && projectiles->Active()) 
+	{
 
-		projectiles->handleCollision(lvl, cell_size, player_x, player_y, player_width, player_height, hasKnockedBack, tempVelocityY);
-
-		if (!projectiles->Active()) {
-			delete projectiles;
-			projectiles = nullptr;
-			cout << "Bee Projectile deleted" << endl;
+		if (projectiles->handleCollision(lvl, cell_size, player_x, player_y, player_width, player_height, hasKnockedBack, tempVelocityY))
+		{
+			if (!projectiles->Active())
+			{
+				delete projectiles;
+				projectiles = nullptr;
+				cout << "Bee Projectile deleted" << endl;
+			}
+			return true;
 		}
 	}
+	return false;
 }
 
 

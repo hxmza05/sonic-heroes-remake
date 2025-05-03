@@ -20,6 +20,10 @@ protected:
 	const int width;
 	Enemy*** enemies;
 public:
+	Level(char** level = nullptr,Enemy*** e = nullptr,int h,int w):endMark(0),height(h),width(w)
+	{
+		
+	}
 	//Level2(Texture T,Sprite S,)
 	//{
 	//	enemies = new * Enemy[3];

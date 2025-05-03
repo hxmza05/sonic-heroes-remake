@@ -24,13 +24,13 @@ private:
 	int crabCoordinates;
 	int indexCrab;
 
-	const float crabHeight = 44.0;
-	const float crabWidth = 60.0;
+	const float crabHeight;
+	const float crabWidth;
 
 
 public:
 
-	Crabmeat() {
+	Crabmeat() : crabHeight(44.0), crabWidth(60.0) {
 
 		this->hp = 4;
 		this->speed = 1.0;
@@ -160,24 +160,13 @@ public:
 	}
 
 	void getCrabCoordinates(char** lvl, int height, int width);
-	//void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
-	void move_crabs(Crabmeat crabs[], int& crabIndex, int& crabCount, const int cell_size);
+	void move_crabs(Crabmeat** crabs, int& crabIndex, int& crabCount, const int cell_size);
 
 };
-/*
-void Crabmeat::draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x)
-{
-	for (int i = 0; i < crabCount; i++) {
 
-		crabs[i].movement();
-		crabs[i].draw(window, offset_x);
-
-	}
-}
-*/
 void Crabmeat::getCrabCoordinates(char** lvl, int height, int width) {
 
-	for (int i = 5; i < height - 1; i++) {
+	for (int i = 5; i < height/2 + 2; i++) { //////////// add variables for start and end range in loop conditions
 
 		int j = 0;
 
@@ -193,7 +182,6 @@ void Crabmeat::getCrabCoordinates(char** lvl, int height, int width) {
 				int end = j - 1;
 
 				if (end - start + 1 >= 4 && indexCrab < crabCoordinates) {
-
 					CrabStart[indexCrab] = start;
 					CrabEnd[indexCrab] = end;
 					CrabWalls[indexCrab] = i;
@@ -209,7 +197,7 @@ void Crabmeat::getCrabCoordinates(char** lvl, int height, int width) {
 	}
 }
 
-void Crabmeat::move_crabs(Crabmeat crabs[], int& crabIndex, int& crabCount, const int cell_size){
+void Crabmeat::move_crabs(Crabmeat** crabs, int& crabIndex, int& crabCount, const int cell_size){
 
 	int maxCrabs = min(indexCrab, crabCount);
 
@@ -225,7 +213,7 @@ void Crabmeat::move_crabs(Crabmeat crabs[], int& crabIndex, int& crabCount, cons
 			float crabX = (Start + End) / 2.0f;
 			float crabY = (CrabWalls[i] + 1) * cell_size - crabHeight;
 
-			crabs[i].setPosition(crabX, crabY, Start, End);
+			crabs[i]->setPosition(crabX, crabY, Start, End);
 
 			crabIndex++;
 		}
