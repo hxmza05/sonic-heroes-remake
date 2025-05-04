@@ -111,7 +111,6 @@ public:
         }
 
         sprite = states[0]->getSprites()[states[0]->getIndex()];
-        sprite.setPosition(x * 64, y * 64 + 12); 
 
     }
 

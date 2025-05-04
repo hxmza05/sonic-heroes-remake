@@ -36,6 +36,10 @@ private:
     Text promptText;
     Text nameInputText;
 
+    Clock mouseCursor;
+    bool showCursor;
+    RectangleShape nameBox;
+
 
 public:
 
@@ -68,6 +72,12 @@ public:
         nameInputText.setCharacterSize(42);
         nameInputText.setFillColor(Color::White);
         nameInputText.setPosition(300, 400);
+
+        nameBox.setSize(Vector2f(400, 60));
+        nameBox.setFillColor(Color(0, 0, 0, 150));
+        nameBox.setOutlineColor(Color::White);
+        nameBox.setOutlineThickness(2);
+        nameBox.setPosition(295, 395); 
 
 
         for (int i = 0; i < totalMenuOptions; i++)
@@ -122,7 +132,6 @@ public:
                     arrowUp = true;
                 }
             }
-
             else {
                 arrowUp = false;
             }
@@ -136,7 +145,6 @@ public:
                     arrowDown = true;
                 }
             }
-
             else {
                 arrowDown = false;
             }
@@ -146,8 +154,7 @@ public:
                 if (!enter)
                 {
                     if (selectedOption == 0) {
-                        gameState = true;
-                        menuState = false;
+                        enteringName = true; // ask name before starting
                     }
                     else if (selectedOption == 3) {
                         leaderboardState = true;
@@ -159,7 +166,6 @@ public:
                     enter = true;
                 }
             }
-
             else {
                 enter = false;
             }
@@ -177,7 +183,19 @@ public:
                 menuState = true;
             }
         }
+
+        if (enteringName) {
+            if (mouseCursor.getElapsedTime().asSeconds() >= 0.5f) {
+                showCursor = !showCursor;
+                mouseCursor.restart();
+            }
+
+            std::string displayName = playerName;
+            if (showCursor && playerName.length() < 15) displayName += "_";
+            nameInputText.setString(displayName);
+        }
     }
+
 
     void update(RenderWindow& window, Event& event)
     {
@@ -185,29 +203,37 @@ public:
         {
             if (event.type == Event::TextEntered)
             {
-                if (event.text.unicode == '\b' && !playerName.empty())
+                if (event.text.unicode < 128)
                 {
-                    playerName.pop_back();
+                    char entered = static_cast<char>(event.text.unicode);
+                    if (entered == '\b' && !playerName.empty()) {
+                        playerName.pop_back();
+                    }
+                    else if ((isalnum(entered) || entered == ' ') && playerName.length() < 15) {
+                        playerName += entered;
+                    }
+                    // Don't set nameInputText here — done in display logic
                 }
-                else if (event.text.unicode < 128 && playerName.length() < 15 &&
-                    event.text.unicode != '\r' && event.text.unicode != '\n')
-                {
-                    playerName += static_cast<char>(event.text.unicode);
-                }
-
-                nameInputText.setString(playerName);
             }
 
             else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter)
             {
+                playerName.erase(0, playerName.find_first_not_of(" \n\r\t")); 
+                size_t lastChar = playerName.find_last_not_of(" \n\r\t");
+                if (lastChar != std::string::npos)
+                    playerName.erase(lastChar + 1);
+
                 if (!playerName.empty())
                 {
                     enteringName = false;
                     gameState = true;
+                    menuState = false; 
                 }
             }
+
         }
     }
+
 
 
     void draw(RenderWindow& window)
@@ -215,6 +241,7 @@ public:
         if (enteringName)
         {
             window.draw(promptText);
+            window.draw(nameBox);
             window.draw(nameInputText);
         }
         else if (menuState)

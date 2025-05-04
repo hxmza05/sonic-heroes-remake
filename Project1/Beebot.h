@@ -1,10 +1,7 @@
 #pragma once
 #include <iostream>
 #include<cmath>
-//#include "Enemy.h"
-//#include "Animation.h"
 #include "Projectile.h"
-//#include "Player.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -140,7 +137,8 @@ public:
 	void move_beebots(Beebot** beebots, int& beeIndex, int& beeCount, const int cell_size);
 	bool handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
 	void drawProjectiles(RenderWindow& window, float offset_x);
-
+	bool CollisionCheckWithBeebots(Beebot** beebots, int& beeCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float beeWidth, const float beeHeight, bool onGround, bool spacePressed);
+	bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight);
 
 };
 
@@ -284,6 +282,7 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 	if (projectiles && projectiles->Active()) {
 		projectiles->move();
 	}
+
 }
 
 
@@ -312,7 +311,7 @@ void Beebot::move_beebots(Beebot** beebots, int& beeIndex, int& beeCount, const 
 
 void Beebot::getBeebotCoordinates(char** lvl, int height, int width)
 {
-	for (int i = 5; i < height / 2 + 1; i++) { //////////// add variables for start and end range in loop conditions
+	for (int i = 3; i < height / 2 - 1; i++) { //////////// add variables for start and end range in loop conditions
 
 		int j = 0;
 
@@ -328,9 +327,14 @@ void Beebot::getBeebotCoordinates(char** lvl, int height, int width)
 
 				int end = j - 1;
 
-				if (end - start + 1 >= 4 && indexBee < beeCoordintes) {
-					BeebotStart[indexBee] = start;
-					BeebotEnd[indexBee] = end;
+				if (end - start + 1 >= 6 && indexBee < beeCoordintes) {
+
+					int midpoint = (start + end) / 2;
+					int patrolStart = max(0, midpoint - 2);
+					int patrolEnd = min(width - 1, midpoint + 2);
+
+					BeebotStart[indexBee] = patrolStart;
+					BeebotEnd[indexBee] = patrolEnd;
 					BeebotHeights[indexBee] = i;
 					indexBee++;
 
@@ -374,4 +378,31 @@ bool Beebot::handleProjectilesCollision(char** lvl, int cell_size, float player_
 	return false;
 }
 
+bool Beebot::PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight)
+{
+	return (player_x + Pwidth > enemy_x && player_x < enemy_x + enemyWidth && player_y + Pheight > enemy_y && player_y < enemy_y + enemyHeight);
+}
 
+bool Beebot::CollisionCheckWithBeebots(Beebot** beebots, int& beeCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float beeWidth, const float beeHeight, bool onGround, bool spacePressed)
+{
+
+	for (int i = 0; i < beeCount; i++) {
+
+		if (!beebots[i]->alive()) {
+			continue;
+		}
+
+		if (PlayerCrabCollision(player_x, player_y, Pwidth, Pheight, beebots[i]->getX(), beebots[i]->getY(), beeWidth, beeHeight)) {
+
+			if (!(onGround == false && spacePressed == true)) {
+				hasKnockedBack = true;
+				tempVelocityY = -7; // knockback upwards initially
+				cout << "Player hit by Beebot --- thrown back" << endl;
+			}
+
+			return true;
+		}
+	}
+
+	return false;
+}
