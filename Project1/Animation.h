@@ -38,6 +38,10 @@ public:
 
 		}
 	}
+	void reset() 
+	{
+		index = 0;
+	}
 	~Animation()
 	{
 		delete[] sprites;

@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
 #include<cmath>
-#include "Enemy.h"
-#include "Animation.h"
+//#include "Enemy.h"
+//#include "Animation.h"
 #include "Projectile.h"
-#include "Player.h"
+//#include "Player.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
