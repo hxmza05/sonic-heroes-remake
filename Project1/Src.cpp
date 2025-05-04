@@ -33,7 +33,7 @@ int screen_x = 1200;
 int screen_y = 900;
 
 // prototypes
-//void player_sonic.getGravity()(char** lvl, float& offset_y,float&, float& team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), bool& team.getPlayer()[team.getPlayerIndex()][0].getOnGround(), float& team.getPlayer()[team.getPlayerIndex()][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team.getPlayer()[team.getPlayerIndex()][0].getx(), float& team.getPlayer()[team.getPlayerIndex()][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team.getPlayer()[team.getPlayerIndex()][0].getPwidth(),bool &spacePressed);
+//void player_sonic.getGravity()(char** lvl, float& offset_y,float&, float& team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), bool& team.getPlayer()[team.getPlayerIndex()][0].getOnGround(), float& team.getPlayer()[team.getPlayerIndex()][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team.getPlayer()[team.getPlayerIndex()][0].getx(), float& team.getPlayer()[team.getPlayerIndex()][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team.getPlayer()[team.getPlayerIndex()][0].getPwidth(),bool &team.getSpacePressed());
 
 //void draw_player(RenderWindow& window, Sprite& LstillSprite, float x, float y);
 
@@ -48,26 +48,26 @@ void draw_bg(RenderWindow& window, Sprite&, int);
 void designlvl1(char** lvl, const char* filename, const int height, const int width);
 bool checkCollision(char** lvl,int x,int y);
 bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int x, int y, int cell_size, int velocityY);
-//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& sonic.getVelocityY(), bool& OnGround(), float& sonic.getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& sonic.getx(), float& sonic.gety(), const int cell_size, int& Sonic.getPheight(), int& sonic.getPwidth(), bool& spacePressed);
+//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& sonic.getVelocityY(), bool& OnGround(), float& sonic.getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& sonic.getx(), float& sonic.gety(), const int cell_size, int& Sonic.getPheight(), int& sonic.getPwidth(), bool& team.getSpacePressed());
 
 
-//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team[playerIndex][0].getVelocityY(), bool& OnGround(), float& team[playerIndex][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team[playerIndex][0].getx(), float& team[playerIndex][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team[playerIndex][0].getPwidth(), bool& spacePressed);
-
-//void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
-//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), bool& OnGround(), float& team.getPlayer()[team.getPlayerIndex()][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team.getPlayer()[team.getPlayerIndex()][0].getx(), float& team.getPlayer()[team.getPlayerIndex()][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), bool& spacePressed);
+//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team[playerIndex][0].getVelocityY(), bool& OnGround(), float& team[playerIndex][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team[playerIndex][0].getx(), float& team[playerIndex][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team[playerIndex][0].getPwidth(), bool& team.getSpacePressed());
 
 //void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
-//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), bool& OnGround(), float& team.getPlayer()[team.getPlayerIndex()][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team.getPlayer()[team.getPlayerIndex()][0].getx(), float& team.getPlayer()[team.getPlayerIndex()][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), bool& spacePressed);
+//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), bool& OnGround(), float& team.getPlayer()[team.getPlayerIndex()][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team.getPlayer()[team.getPlayerIndex()][0].getx(), float& team.getPlayer()[team.getPlayerIndex()][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), bool& team.getSpacePressed());
+
+//void draw_crabs(RenderWindow& window, Crabmeat crabs[], int& crabCount, int offset_x);
+//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), bool& OnGround(), float& team.getPlayer()[team.getPlayerIndex()][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team.getPlayer()[team.getPlayerIndex()][0].getx(), float& team.getPlayer()[team.getPlayerIndex()][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), bool& team.getSpacePressed());
 
 
-//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team[playerIndex][0].getVelocityY(), bool& OnGround(), float& team[playerIndex][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team[playerIndex][0].getx(), float& team[playerIndex][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team[playerIndex][0].getPwidth(), bool& spacePressed);
+//void playerVirtualsonic.getGravity()(char** lvl, float& offset_y, float&, float& team[playerIndex][0].getVelocityY(), bool& OnGround(), float& team[playerIndex][0].getGravity(), float& terminal_Velocity, int& hit_box_factor_x, int& hit_box_factor_y, float& team[playerIndex][0].getx(), float& team[playerIndex][0].gety(), const int cell_size, int& Sonic.getPheight(), int& team[playerIndex][0].getPwidth(), bool& team.getSpacePressed());
 
 
 bool CollisionCheckWithCrabs(Crabmeat** crabs, int& crabCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float crabWidth, const float crabHeight);
 
 bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float crab_x, float crab_y, const float crabWidth, const float crabHeight);
 
-bool CollisionCheckWithBeebots(Beebot**beebots, int& beeCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float beeWidth, const float beeHeight, bool onGround, bool spacePressed);
+bool CollisionCheckWithBeebots(Beebot**beebots, int& beeCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float beeWidth, const float beeHeight, bool onGround, bool );
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -192,7 +192,7 @@ int main()
     ////////////////////////////////////////////////////////
 	//Sonic team.getPlayer()[team.getPlayerIndex()][0].
     float max_speed = 15;
-    bool spacePressed = false;// our own defined
+    //bool team.getSpacePressed() = false;// our own defined
     bool collisionDetectedOffGround = false;
     ///////////////////////////////////////////
     /// for knockBack parabolic Trajecotry///
@@ -308,7 +308,7 @@ int main()
     //sf::FloatRect playerBounds(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), Pwidth, Pheight);
 
 
-
+    int spaceCount = 0;
     /////////////////////////////////
     ////////////Spikes///////////////
     /////////////////////////////////
@@ -353,6 +353,7 @@ int main()
             {
                 collisionDetectedOffGround = false;//resetting the bool if player hits the platform
                 team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = false;
+                team.getSpaceCount() = 0;
             }
              if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
              {
@@ -411,39 +412,45 @@ int main()
              {
                  team.switchPlayer();
              }*/
-
 			 else leftRight = false;
              if (!leftRight)
              {
 				 team.getPlayer()[team.getPlayerIndex()][0].getVelocityX() = 0;
              }
-              if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !spacePressed && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+              if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)  && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
                 {
-                       
-                team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() = -19.6;
-                team.getPlayer()[team.getPlayerIndex()][0].getOnGround() = false;
-                spacePressed = true;
-                
+                 /* spaceCount++;
+                  cout << "\n\n\nSPaceCount = " << spaceCount<<"\n\n";*/
+                  team.jump();
                 }
-             if (spacePressed)
+             if (team.getSpacePressed())
              {
-                 team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() = UPR;
-                 team.getPlayer()[team.getPlayerIndex()][0].getStates()[UPR][0].RunAnimation();
+                 if(team.getPlayerIndex() != 1)
+                 {
+                     team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() = UPR;
+                     team.getPlayer()[team.getPlayerIndex()][0].getStates()[UPR][0].RunAnimation();
+                 }
+                 else if (team.getSpaceCount() < 10)
+                 {
+                     team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() = UPR;
+                     team.getPlayer()[team.getPlayerIndex()][0].getStates()[UPR][0].RunAnimation();
+                 }
                  leftRight = false;
              }
-			 if (!spacePressed && !leftRight)
+			 if (!team.getSpacePressed() && !leftRight)
              {
                  team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() = STILL;
                  team.getPlayer()[team.getPlayerIndex()][0].getStates()[STILL][0].RunAnimation();
              }
             if(!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
                 team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = collisionCheckWithSpikes(lvl,offset_y,hit_box_factor_y,hit_box_factor_x,team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getVelocityY());
+
              //cout << "team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = " << team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() << endl;
             if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) {
                 CollisionCheckWithCrabs(crabs, crabCount, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), 60, 44);
             }/*
             if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) {
-                CollisionCheckWithBeebots(beebots, beeCount, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY(), beebots[0]->getbeeWidth(), beebots[0]->getbeeHeight(), team.getPlayer()[team.getPlayerIndex()][0].getOnGround(), spacePressed);
+                CollisionCheckWithBeebots(beebots, beeCount, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY(), beebots[0]->getbeeWidth(), beebots[0]->getbeeHeight(), team.getPlayer()[team.getPlayerIndex()][0].getOnGround(), team.getSpacePressed());
             }*/
             if (team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() )/*|| team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedByProjectile()*/
                 {
@@ -453,7 +460,7 @@ int main()
                     team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY() += team.getPlayer()[team.getPlayerIndex()][0].getTempGravity();
                     if (team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY() >= 0)
                     {
-                        team.getPlayer()[team.getPlayerIndex()][0].playerVirtualGravity(lvl, offset_y, offset_x, cell_size,spacePressed);
+                        team.getPlayer()[team.getPlayerIndex()][0].playerVirtualGravity(lvl, offset_y, offset_x, cell_size,team.getSpacePressed());
                     }
                 }
             /* if (team.getPlayer()[team.getPlayerIndex()][0].getOnGround())
@@ -462,7 +469,7 @@ int main()
                  team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY() = -7;
              }*/
             if(!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
-                team.getPlayer()[team.getPlayerIndex()][0].player_gravity(lvl, offset_y,offset_x, cell_size, spacePressed);
+                team.getPlayer()[team.getPlayerIndex()][0].player_gravity(lvl, offset_y,offset_x, cell_size, team.getSpacePressed());
 
            // draw_bg(window, backGroundSprite, offset_x);
             team.storePath();
@@ -497,11 +504,6 @@ int main()
                 crabs[i]->movement();
                 crabs[i]->draw(window, offset_x);
             }
-
-
-            
-
-
             for (int i = 0; i < motobugCount; i++) {
                 motobugs[i]->movement(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety());
                 motobugs[i]->draw(window, offset_x);

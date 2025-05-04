@@ -145,4 +145,12 @@ public:
 	{
 		
 	}
+	virtual void moveUp(bool spacePressed,int unusedHere)
+	{
+		if(!spacePressed)
+		{
+			velocityY = -19;
+			onGround = false;
+		}
+	}
 };

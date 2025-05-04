@@ -1,91 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="Collectibles.h" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Src.cpp" />
+    <ClCompile Include="Team.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Team.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Collectibles.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Obstacle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Motobug.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Crabmeat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Beebot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Batbrain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Eggstinger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Display.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sonic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Knuckles.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TailedFox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="Level.h">
-=======
-    <ClInclude Include="Leaderboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Projectile.h">
->>>>>>> 619d1f03b73aca2e357d077f8511907c02fab523
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="Batbrain.h" />
+    <ClInclude Include="Beebot.h" />
+    <ClInclude Include="Crabmeat.h" />
+    <ClInclude Include="Display.h" />
+    <ClInclude Include="Eggstinger.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="Knuckles.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="Leaderboard.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="Motobug.h" />
+    <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Projectile.h" />
+    <ClInclude Include="Sonic.h" />
+    <ClInclude Include="TailedFox.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
 </Project>

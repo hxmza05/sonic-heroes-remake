@@ -1,6 +1,8 @@
 #pragma once
 #include<iostream>
 #include"Enemy.h"
+#include"Collectibles.h"
+#include"Obstacle.h"
 using namespace std;
 #include"Animation.h"
 #include <SFML/Graphics.hpp>
@@ -9,8 +11,8 @@ using namespace std;
 using namespace sf;
 class Level
 {
-	//Collectibles** collectibles;
-	//Obstacles** obstacles;
+	Collectible*** collectibles;
+	Obstacle** obstacles;
 	const int endMark;
 protected:
 	Texture backgorund;

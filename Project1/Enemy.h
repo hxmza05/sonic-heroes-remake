@@ -74,7 +74,8 @@ public:
 
 	}
 
-	virtual void draw(RenderWindow& window, float offset_x) {
+	virtual void draw(RenderWindow& window, float offset_x)
+	{
 
 		sprite.setPosition(x - offset_x, y);
 		window.draw(sprite);	

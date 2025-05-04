@@ -26,9 +26,7 @@ class Player
 	float y;
 	bool hasCollided;
 	bool hasKnockedBack;
-	float max_speed;
 	float velocityX;
-	float velocityY;
 	bool spacePressed;// our own defined
 	bool collisionDetectedOffGround;
 	float jumpStrength; // Initial jump velocity
@@ -40,7 +38,6 @@ class Player
 	float tempVelocityY;
 	float tempGravity;
 
-	bool onGround;
 	float terminal_Velocity;
 	float acceleration;
 	////////////////////////////
@@ -52,6 +49,9 @@ class Player
 	bool knockedByProjectile;
 
 protected:
+	float max_speed;
+	float velocityY;
+	bool onGround;
 	float scale_x = 2.5;
 	float scale_y = 2.5;
 	Animation** states;
@@ -68,7 +68,7 @@ public:
 		y = 150;
 		hasCollided = false;
 		hasKnockedBack = false;
-		max_speed = 20;
+		max_speed = 12;
 		velocityX = 0.5;
 		velocityY = 9.8;
 		//spacePressed = false;// our own defined
@@ -231,6 +231,7 @@ public:
 	void playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, const int cell_size,bool& spacePressed);
 	void moveLeft();
 	void moveRight();
+	virtual void moveUp(bool,int) = 0;
 	void checkDelayNow(int idx);
 	void executePushingLeft()
 	{
