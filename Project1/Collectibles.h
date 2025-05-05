@@ -1,14 +1,13 @@
 #pragma once
-#include<iostream>
-#include"Animation.h"
-using namespace std;
-using namespace sf;
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/System.hpp>
+#include"Animation.h"
 
-
-class Collectibles {
+class Collectibles 
+{
 
 
 protected:
@@ -30,7 +29,8 @@ protected:
 
 public:
 
-	Collectibles() {
+	Collectibles()
+	{
 		x = 0, y = 0;
 		collected = false;
 		indexAnimation = 0;
@@ -42,7 +42,9 @@ public:
 		effectClock.restart();
 	}
 
-	Collectibles(int x, int y, bool collected) {
+
+	Collectibles(int x, int y, bool collected)
+	{
 		this->x = x;
 		this->y = y;
 		this->collected = collected;
@@ -66,7 +68,8 @@ public:
 
 	virtual void collect(){}
 
-	virtual void update() {
+	virtual void update() 
+	{
 		
 		if (collected) {
 			return;

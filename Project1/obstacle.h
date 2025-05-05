@@ -1,10 +1,10 @@
 #pragma once
-class obstacle
+class Obstacle
 {
 	int x, y;
 	bool exists;
 public :
-	obstacle(int _x = -200,int  _y = -200)
+	Obstacle(int _x = -200,int  _y = -200)
 	{
 		x = _x;
 		y = _y;

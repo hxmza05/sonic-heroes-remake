@@ -16,6 +16,8 @@ class Team
 	int** leadersPath;
 	int pathIndex;
 	bool spacePressed;
+	bool spacePressedTwice;
+	int spaceCount;
 public:
 	Team()
 	{
@@ -29,8 +31,10 @@ public:
 		{
 			leadersPath[i] = new int[2];
 		}
-		pathIndex = 0;
+		pathIndex = 1;
 		spacePressed = false;
+		spacePressedTwice = false;
+		spaceCount = 0;
 	}
 	int getPlayerIndex()
 	{
@@ -61,6 +65,14 @@ public:
 	bool& getSpacePressed()
 	{
 		return spacePressed;
+	}
+	bool& getspaceTwice()
+	{
+		return spacePressedTwice;
+	}
+	int& getSpaceCount()
+	{
+		return spaceCount;
 	}
 	void switchLeader()
 	{
@@ -109,7 +121,6 @@ public:
 
 		}
 		team[playerIndex][0].draw_player(window, team[playerIndex][0].getStates()[team[playerIndex][0].getAnimationIndex()][0].getSprites()[team[playerIndex][0].getStates()[team[playerIndex][0].getAnimationIndex()][0].getIndex()], offsetx);
-
 	}
 	void storePath()
 	{
@@ -120,9 +131,17 @@ public:
 		{
 			pathIndex = 0;
 		}
-
 	}
-
+	void jump()
+	{
+		/*if (spacePressed && !spacePressedTwice)
+		{
+			spacePressedTwice = true;
+		}*/
+		spaceCount++;
+		team[playerIndex]->moveUp(spacePressed, spaceCount);
+		spacePressed = true;
+	}
 	~Team()
 	{
 		for (int i = 0; i < 3; i++)

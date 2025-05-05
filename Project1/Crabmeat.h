@@ -136,19 +136,32 @@ public:
 		return crabWidth;
 	}
 
+	float getStart() const {
+		return Start;
+	}
+
+	float getEnd() const {
+		return End;
+	}
+
+
+
+
 	bool handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
 	void drawProjectile(RenderWindow& window, float offset_x);
 	void movement(char** lvl, Player& player, int cell_size);
-	void getCrabCoordinates(char** lvl, int height, int width);
+	void getCrabCoordinates(char** lvl, int height, int width, int y_start, int y_end);
 	void move_crabs(Crabmeat** crabs, int& crabIndex, int& crabCount, const int cell_size);
 
 	bool getProjectileActive();
 
 	bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight);
 
-	bool CollisionCheckWithCrabs(Crabmeat** crabs, int& crabCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float crabWidth, const float crabHeight);
+	bool checkCollisionWithPlayer(Player& player);
 
 };
+
+
 
 void Crabmeat::movement(char** lvl, Player& player, int cell_size)
 {
@@ -182,7 +195,7 @@ void Crabmeat::movement(char** lvl, Player& player, int cell_size)
 
 		}
 
-		if (isLockedOn && lockTimer.getElapsedTime().asSeconds() >= 1.0f && !shotProjectile) {
+		if (isLockedOn && lockTimer.getElapsedTime().asSeconds() >= 0.7f && !shotProjectile) {
 
 			shotProjectile = true;
 			afterShot.restart();
@@ -215,10 +228,9 @@ void Crabmeat::movement(char** lvl, Player& player, int cell_size)
 			float vy = (dy - 0.5f * g * t * t) / t;
 
 			if (!projectile || !projectile->Active()) {
-				if (projectile) delete projectile; // prevent leak
+				if (projectile) delete projectile; 
 				projectile = new Projectile();
 			}
-
 
 			projectile->setCrabProjectileVelocity(crabCenterX, crabCenterY, vx, vy);
 
@@ -242,7 +254,7 @@ void Crabmeat::movement(char** lvl, Player& player, int cell_size)
 
 	}
 
-	if (isStoppingToShoot && shotProjectile && afterShot.getElapsedTime().asSeconds() >= 1.0f && (!projectile || !projectile->Active())) {
+	if (isStoppingToShoot && shotProjectile && afterShot.getElapsedTime().asSeconds() >= 1.0f) {
 
 		isLockedOn = false;
 		shotProjectile = false;
@@ -265,7 +277,7 @@ void Crabmeat::movement(char** lvl, Player& player, int cell_size)
 		}
 
 		else {
-
+			
 			x -= speed;
 
 			if (x <= Start) {
@@ -275,7 +287,12 @@ void Crabmeat::movement(char** lvl, Player& player, int cell_size)
 
 	}
 
-	if (attack) {
+	if (isStoppingToShoot) {
+
+		indexAnimation = 3; 
+	}
+
+	else if (attack) {
 
 		if (clock.getElapsedTime().asSeconds() >= 0.3f) {
 			attack = false;
@@ -323,9 +340,9 @@ bool Crabmeat::getProjectileActive() {
 }
 
 
-void Crabmeat::getCrabCoordinates(char** lvl, int height, int width) {
+void Crabmeat::getCrabCoordinates(char** lvl, int height, int width, int y_start, int y_end) {
 
-	for (int i = 5; i < height/2 + 2; i++) { //////////// add variables for start and end range in loop conditions
+	for (int i = y_start; i < y_end; i++) { //////////// add variables for start and end range in loop conditions
 
 		int j = 0;
 
@@ -340,7 +357,7 @@ void Crabmeat::getCrabCoordinates(char** lvl, int height, int width) {
 
 				int end = j - 1;
 
-				if (end - start + 1 >= 4 && indexCrab < crabCoordinates) {
+				if (end - start + 1 >= 3 && indexCrab < crabCoordinates) {
 					CrabStart[indexCrab] = start;
 					CrabEnd[indexCrab] = end;
 					CrabWalls[indexCrab] = i;
@@ -358,24 +375,19 @@ void Crabmeat::getCrabCoordinates(char** lvl, int height, int width) {
 
 void Crabmeat::move_crabs(Crabmeat** crabs, int& crabIndex, int& crabCount, const int cell_size){
 
-	int maxCrabs = min(indexCrab, crabCount);
+	for (int i = 0; i < crabCount; i++) {
 
-	for (int i = 0; i < maxCrabs; i++) {
+		float Start = CrabStart[i] * cell_size;
+		float crabmeatEnd = CrabEnd[i] * cell_size;
+		float crabmeatmaxEnd = Start + 12 * cell_size;
+		float End = (crabmeatEnd > crabmeatmaxEnd) ? crabmeatmaxEnd : crabmeatEnd;
 
-		if (crabIndex < 10) {
+		float crabX = (Start + End) / 2.0f;
+		float crabY = (CrabWalls[i] + 1) * cell_size - crabHeight;
 
-			float Start = CrabStart[i] * cell_size;
-			float crabmeatEnd = CrabEnd[i] * cell_size;
-			float crabmeatmaxEnd = Start + 12 * cell_size;
-			float End = (crabmeatEnd > crabmeatmaxEnd) ? crabmeatmaxEnd : crabmeatEnd;
+		crabs[i]->setPosition(crabX, crabY, Start, End);
 
-			float crabX = (Start + End) / 2.0f;
-			float crabY = (CrabWalls[i] + 1) * cell_size - crabHeight;
-
-			crabs[i]->setPosition(crabX, crabY, Start, End);
-
-			crabIndex++;
-		}
+		crabIndex++;
 	}
 
 	crabCount = crabIndex;
@@ -406,48 +418,34 @@ bool Crabmeat::PlayerCrabCollision(float player_x, float player_y, int Pwidth, i
 	return (player_x + Pwidth > enemy_x && player_x < enemy_x + enemyWidth && player_y + Pheight > enemy_y && player_y < enemy_y + enemyHeight);
 }
 
-bool Crabmeat::CollisionCheckWithCrabs(Crabmeat** crabs, int& crabCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float crabWidth, const float crabHeight)
+bool Crabmeat::checkCollisionWithPlayer(Player& player)
 {
 
-	for (int i = 0; i < crabCount; i++) {
+	if (!Alive) {
+		return false;
+	}
 
-		if (!crabs[i]->alive()) {
-			continue;
+	if (PlayerCrabCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, crabWidth, crabHeight)) {
+
+		float bottom_of_Player = player.gety() + player.getPheight();
+		float top_of_Crab = y;
+
+		if (bottom_of_Player - 10 < top_of_Crab) {
+			player.getVelocityY() = -10.0f;
 		}
 
-		if (PlayerCrabCollision(player_x, player_y, Pwidth, Pheight, crabs[i]->getX(), crabs[i]->getY(), crabWidth, crabHeight)) {
+		else {
 
-			float bottom_of_Player = player_y + Pheight;
-			float top_of_Crab = crabs[i]->getY();
-
-			if (bottom_of_Player - 10 < top_of_Crab) {
-
-				// crab ko marna hai ab becoz top collision, also add smoke effect and invincibilty 
-				cout << " Top-hit:  " << i << endl;
-
-				cout << "PlyrX: " << player_x << "crab X: " << crabs[i]->getX() << endl;
-
-				velocityY = -10.0f;
-			}
-
-			else {
-
-				hasKnockedBack = true;
-				tempVelocityY = -7;
-
-				crabs[i]->setAnimation(3);
-				crabs[i]->RunNewAnimation();
-				crabs[i]->setAttack();
-
-				//cout << "PlyrX " << centre_of_Player << " Crab CenterX " << centre_of_CRab << endl;
-
-				//cout << " Sidehit " << i << endl;
-
-				//cout << "PlyrX " << player_x << " Crab X " << crabs[i].getX() << endl;
-			}
-			return true;
+			player.getHasKnockedBack() = true;
+			player.getTempVelocityY() = -7;
+			setAnimation(3);
+			RunNewAnimation();
+			setAttack();
 		}
+
+		return true;
 	}
 
 	return false;
 }
+

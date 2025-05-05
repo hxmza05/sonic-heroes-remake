@@ -92,7 +92,7 @@ public:
 		for (int i = 0, width = 0;i < 10;i++, width += 49)
 		{
 			states[RIGHTRUN]->getSprites()[i].setTexture(rightRun);
-			states[RIGHTRUN]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49 , 50));
+			states[RIGHTRUN]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49, 50));
 			states[RIGHTRUN]->getSprites()[i].setScale(2, 2);
 
 		}
@@ -125,10 +125,10 @@ public:
 		}
 		jumpRight.loadFromFile("Data/TFlyR.png");
 		states[JUMPR] = new Animation(4);
-		for (int i = 0, width = 0;i < 4;i++, width += 54)
+		for (int i = 0, width = 0;i < 4;i++, width += 57)
 		{
 			states[JUMPR]->getSprites()[i].setTexture(jumpRight);
-			states[JUMPR]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 54, 50));
+			states[JUMPR]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 53, 50));
 			states[JUMPR]->getSprites()[i].setScale(2, 2);
 
 		}
@@ -150,5 +150,23 @@ public:
 	{
 
 	}
-	
+	virtual void moveUp(bool spacePressed,int spaceCount)
+	{
+		if (spaceCount>9)
+		{
+			cout << "\n\n\nFLying\n\n\n";
+;			velocityY = -2;
+			indexAnimation = JUMPR;
+			states[JUMPR][0].RunAnimation();
+		} 
+		else
+			if(!spacePressed)
+			{
+				cout << "\n\n\nJumping\n\n\n";
+				velocityY = -19.6;
+				onGround = false;
+				indexAnimation = UPR;
+				states[UPR][0].RunAnimation();
+			}
+	}
 };

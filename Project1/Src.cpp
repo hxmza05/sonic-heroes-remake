@@ -235,7 +235,7 @@ int main()
 
 
 
-    int crabCount = 5;
+    int crabCount = 6;
     int crabIndex = 0;
     Crabmeat** crabs = new Crabmeat*[crabCount];
 
@@ -243,11 +243,13 @@ int main()
         crabs[i] = new Crabmeat();
     }
 
-    // Only one call needed – this populates shared CrabStart/CrabEnd arrays
+    int crab_start = 5;
+    int crab_end = 9;
+
     for (int i = 0; i < crabCount; ++i) {
-        crabs[i]->getCrabCoordinates(lvl, height, width);
+        crabs[i]->getCrabCoordinates(lvl, height, width, crab_start, crab_end);
     }
-    crabs[0]->move_crabs(crabs, crabIndex, crabCount, cell_size); // only needs to be called once
+    crabs[0]->move_crabs(crabs, crabIndex, crabCount, cell_size); 
 
 
 
@@ -256,7 +258,7 @@ int main()
     /////////////////////////////////
 
 
-    int beeCount = 5;
+    int beeCount = 6;
     int beeIndex = 0;
     Beebot** beebots = new Beebot * [beeCount];
 
@@ -264,7 +266,9 @@ int main()
         beebots[i] = new Beebot();
     }
 
-    beebots[0]->getBeebotCoordinates(lvl, height, width);
+    int bee_start = 2;
+    int bee_end = 5;
+    beebots[0]->getBeebotCoordinates(lvl, height, width, bee_start, bee_end);
     beebots[0]->move_beebots(beebots, beeIndex, beeCount, cell_size);
 
 
@@ -280,7 +284,10 @@ int main()
         motobugs[i] = new Motobug();
     }
 
-    motobugs[0]->getMotobugCoordinates(lvl, height, width);
+	int motobug_start = 10;
+	int motobug_end = 12;
+
+    motobugs[0]->getMotobugCoordinates(lvl, height, width, motobug_start, motobug_end);
     motobugs[0]->move_motobugs(motobugs, motobugIndex, motobugCount, cell_size);
 
 
@@ -495,22 +502,40 @@ int main()
            
             for (int i = 0; i < beeCount; i++)
             {
-                beebots[i]->movement(lvl, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight());
-                
-                if (beebots[i]->alive()) 
-                {
-                    beebots[i]->drawProjectiles(window, offset_x);
+
+                if (!beebots[i]->alive()) {
+                    continue;
                 }
 
+                beebots[i]->movement(lvl, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight());
+                             
                 if (beebots[i]->handleProjectilesCollision(lvl, cell_size, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY()))
                 {
                     team.getPlayer()[team.getPlayerIndex()][0].getOnGround() = false;
 
                 }
-                if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) 
-                {
-                    beebots[i]->CollisionCheckWithBeebots(beebots, beeCount, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY(), beebots[0]->getbeeWidth(), beebots[0]->getbeeHeight(), team.getPlayer()[team.getPlayerIndex()][0].getOnGround(), spacePressed);
+
+                if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) {
+
+                    if (beebots[i]->PlayerBeeCollision(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), beebots[i]->getX(), beebots[i]->getY(), beebots[i]->getbeeWidth(), beebots[i]->getbeeHeight()))
+                    {
+                        if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPR || team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPL)
+                        {
+                            beebots[i]->setHp(0);
+                            beebots[i]->setAlive(false);
+                            continue;
+                        }
+
+                        else
+                        {
+                            team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = true;
+                            team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY() = -7;
+                        }
+                    }
                 }
+
+                beebots[i]->drawProjectiles(window, offset_x);
+
                 beebots[i]->draw(window, offset_x);
 
             }
@@ -522,11 +547,11 @@ int main()
 
             for (int i = 0; i < crabCount; i++) {
 
-                crabs[i]->movement(lvl, team.getPlayer()[team.getPlayerIndex()][0], cell_size);
-
-                if (crabs[i]->alive()) {
-                    crabs[i]->drawProjectile(window, offset_x);
+                if (!crabs[i]->alive()) {
+                    continue;
                 }
+
+                crabs[i]->movement(lvl, team.getPlayer()[team.getPlayerIndex()][0], cell_size);                
 
                 if (crabs[i]->handleProjectilesCollision(lvl, cell_size, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY()))
                 {
@@ -536,18 +561,53 @@ int main()
 
                 if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
                 {
-                    crabs[i]->CollisionCheckWithCrabs(crabs, crabCount, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), 60, 44);
+                    if (crabs[i]->checkCollisionWithPlayer(team.getPlayer()[team.getPlayerIndex()][0])) {
+
+                        if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPR || team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPL) {
+
+                            crabs[i]->setHp(0);
+                            crabs[i]->setAlive(false);
+                            continue;
+
+                        }
+                    }
                 }
 
-                crabs[i]->draw(window, offset_x);
+                crabs[i]->drawProjectile(window, offset_x);
 
+                crabs[i]->draw(window, offset_x);
+              
             }
          
+            for (int i = 0; i < motobugCount; i++)
+            {
+                if (!motobugs[i]->alive()) {
+                    continue;
+                }
 
-            for (int i = 0; i < motobugCount; i++) {
                 motobugs[i]->movement(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety());
+
+                if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+                {
+                    if (motobugs[i]->PlayerBugCollision(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), motobugs[i]->getX(), motobugs[i]->getY(), motobugs[i]->getMotobugWidth(), motobugs[i]->getMotobugHeight()))
+                    {
+                        if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPR || team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPL)
+                        {
+                            motobugs[i]->setHp(0);
+                            motobugs[i]->setAlive(false);
+                            continue;
+                        }
+                        else
+                        {
+                            team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = true;
+                            team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY() = -7;
+                        }
+                    }
+                }
+
                 motobugs[i]->draw(window, offset_x);
             }
+
 
             /*
             for (int i = 0; i < batCount; i++) {
@@ -555,11 +615,6 @@ int main()
                 batbrains[i].draw(window, offset_x);
             }
             
-            beebot.movement();
-            beebot.draw(window);*/
-
-			/*bat.movement(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety());
-            bat.draw(window);*/
 
             /*stinger.movement(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety());
             stinger.draw(window);
@@ -639,7 +694,6 @@ void updateAndDrawCollectibles(Collectibles*** collectibles, int height, int wid
 }
 
 void handleRingCollection(Collectibles*** collectibles, char**lvl, int height, int width, Player& player, int& ringsCollected, int cell_size) {
-
 
     for (int i = 0; i < height; ++i) {
 

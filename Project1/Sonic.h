@@ -156,9 +156,18 @@ public:
 			states[STILL]->getSprites()[i].setScale(2, 2);
 		}
 		delayInFollow = 13;
+		max_speed = 15;
 	}
 	virtual void followLeader(const int const **pathToFollow)
 	{
 		
+	}
+	virtual void moveUp(bool spacePressed,int unsedHere)
+	{
+		if(!spacePressed)
+		{
+			velocityY = -19.6;
+			onGround = false;
+		}
 	}
 };
