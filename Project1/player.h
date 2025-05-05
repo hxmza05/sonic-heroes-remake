@@ -19,6 +19,8 @@ using namespace sf;
 #define JUMPL 10
 #define JUMPR 11
 #define STILL 12
+#define GLIDEL 13
+#define GLIDER 14
 
 class Player
 {
@@ -49,6 +51,7 @@ class Player
 	bool knockedByProjectile;
 
 protected:
+
 	float max_speed;
 	float velocityY;
 	bool onGround;
@@ -225,7 +228,7 @@ public:
 			return;
 		}
 	}
-	void autoMove(int x_coord,int y_coord);
+	void autoMove(int x_coord,int y_coord,char**);
 	void draw_player(RenderWindow& window, Sprite& LstillSprite,float offset_x);
 	void player_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed);
 	void playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, const int cell_size,bool& spacePressed);
@@ -233,6 +236,8 @@ public:
 	void moveRight();
 	virtual void moveUp(bool,int) = 0;
 	void checkDelayNow(int idx);
+	bool checkFeet(char** lvl);
+	
 	void executePushingLeft()
 	{
 		indexAnimation = PUSHLEFT;

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include<SFML/Audio.hpp>
 #include"Leaderboard.h"
 using namespace sf;
 using namespace std;
@@ -39,7 +40,8 @@ private:
 
 public:
 
-    Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : title("Sonic Classic Heroes", font, 64), leaderboard(lb) {
+    Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : title("Sonic Classic Heroes", font, 64), leaderboard(lb) 
+    {
 
 
         selectedOption = 0;
@@ -208,8 +210,6 @@ public:
             }
         }
     }
-
-
     void draw(RenderWindow& window)
     {
         if (enteringName)
@@ -230,5 +230,38 @@ public:
             leaderboard->draw(window);
         }
     }
+    void work(RenderWindow& window,Event&event)
+    {
+            while (window.pollEvent(event))
+            {
+                if (event.type == Event::Closed)
+                {
+                    window.close();
+                }
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Escape))
+            {
+                window.close();
+            }
+            window.clear();
 
+            if (isEnteringName())
+            {
+                while (window.pollEvent(event)) {
+
+                    if (event.type == Event::Closed) {
+                        window.close();
+                    }
+
+                    update(window, event);
+                }
+                update(window);
+                draw(window);
+            }
+            else if (!isGameStateActive())
+            {
+                update(window);
+                draw(window);
+            }
+    }
 };

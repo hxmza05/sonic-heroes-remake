@@ -30,7 +30,8 @@ private:
 
 public:
 
-	Crabmeat() : crabHeight(44.0), crabWidth(60.0) {
+	Crabmeat() : crabHeight(44.0), crabWidth(60.0) 
+	{
 
 		this->hp = 4;
 		this->speed = 1.0;
