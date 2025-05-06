@@ -27,7 +27,7 @@ public:
         team[0] = new Sonic();
         team[1] = new TailedFox();
         team[2] = new Knuckles();
-        playerIndex = 0;
+        playerIndex = 2;
         leadersPath = new int* [100];
 		leadersVelocityY = new float[100];
         for (int i = 0; i < 100; i++)
@@ -43,7 +43,7 @@ public:
     {
         return playerIndex;
     }
-    /*void switchPlayer()
+    void switchLeader()
     {
         if (playerIndex == 2)
         {
@@ -52,7 +52,7 @@ public:
         }
         playerIndex++;
 
-    }*/
+    }
     Player** getPlayer()
     {
         return team;
@@ -77,10 +77,7 @@ public:
     {
         return spaceCount;
     }
-    void switchLeader()
-    {
-    }
-    void autoMoveFollowers(char** lvl)
+    void autoMoveFollowers(char** lvl,float offsetx)
     {
         for (int i = 0; i < 3; i++)
         {
@@ -111,7 +108,15 @@ public:
                                 }
                                 else
                                 {
-									
+                                    cout << "IN else if the they are jumping and are unable to reach\n";
+                                    //cout << "\n\n\nfollowers figuring it out\n\n\n";
+                                    if (j == 0)
+                                    {
+                                        cout << "Sonic";
+                                    }
+                                    else cout << "Knuckles";
+                                        cout << " is figuring it out\n\n\n";
+                                    team[j]->figureItOutYourself(team[playerIndex]->getx(),lvl,offsetx);
                                 }
                             }
                             else 
@@ -127,6 +132,14 @@ public:
                         }
                         else
                         {
+                            cout << "\n\nIn else if they are not jumping\n";
+                            if (j == 0)
+                            {
+                                cout << "Sonic";
+                            }
+                            else cout << "Knuckles";
+                            cout << " is figuring it out\n\n\n";
+                            team[j]->figureItOutYourself(team[playerIndex]->getx(), lvl, offsetx);
                             //team[j]->player_gravity(lvl, dummy, dummy2, 64, dummybool);
                      /*       cout << "Velcoty for ";
                             if(j == 0)
@@ -146,7 +159,7 @@ public:
                         team[i]->getAnimationIndex() = STILL;
                     }*/
                     //if()
-					//cout << "\n\n\nVelcotuy when automvoing  = " << team[i][0].getVelocityY() << "\n\n\n";
+					//cout << "\n\n\\nVelcotuy when automvoing  = " << team[i][0].getVelocityY() << "\n\n\n";
 
                 }
                 // cout << "Path index LEader's = " << pathIndex << "----- tailed fox's = " << team[1][0].getDelayinFollow() << "----- knuckel's = " << team[2][0].getDelayinFollow() << "\n";
@@ -220,6 +233,13 @@ public:
         spaceCount++;
         team[playerIndex]->moveUp(spacePressed, spaceCount);
         spacePressed = true;
+    }
+    void useSpecial(char** lvl)
+    {
+        if (playerIndex == 2)
+        {
+            team[2]->useSpecialAbilty(lvl);
+        }
     }
     ~Team()
     {

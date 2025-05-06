@@ -14,7 +14,7 @@ public:
 	Level1()
 	{
 		height = 14;
-		width = 110;
+		width = 200;
 		lvl = new char* [height];
 		for (int i = 0; i < height; i++)
 		{

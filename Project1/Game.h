@@ -564,7 +564,14 @@ public:
             team.jump();
         }
         //cout << "in the middle of play function \n\n";
-
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+        {
+            team.switchLeader();
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+        {
+            team.useSpecial(level[levelIndex]->getLvl());
+        }
         if (team.getSpacePressed())
         {
             if (team.getPlayerIndex() != 1)
@@ -619,7 +626,7 @@ public:
             team.getPlayer()[team.getPlayerIndex()][0].player_gravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed());
 
         team.storePath();
-        team.autoMoveFollowers(level[levelIndex]->getLvl());
+        team.autoMoveFollowers(level[levelIndex]->getLvl(),offset_x);
         if (level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
         {
             if(team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() != STILL)

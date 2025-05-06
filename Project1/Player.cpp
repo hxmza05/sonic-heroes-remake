@@ -63,6 +63,65 @@ void Player::player_gravity(char** lvl, float& offset_y, float& offset_x, const 
 		spacePressed = false;
 	}
 }
+void Player::player_dummy_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed)
+{
+	cout << "\n\nY beofer Func : " << y << endl;
+	cout << "VelocityY beofer Func : " << velocityY << endl;
+
+	offset_y = y;
+	offset_y += velocityY;
+
+	int headY = (int)(y + hit_box_factor_y) / cell_size;
+	int tileLeftX = (int)(x + hit_box_factor_x) / cell_size;
+	int tileRightX = (int)(x + hit_box_factor_x + Pwidth - 1) / cell_size;
+
+	bool hitsTopRow = (headY == 0 || headY == 1);
+	bool leftHit = (lvl[headY][tileLeftX] == 'w' || lvl[headY][tileLeftX] == 'q' || lvl[headY][tileLeftX] == 'e');
+	bool rightHit = (lvl[headY][tileRightX] == 'w' || lvl[headY][tileRightX] == 'q' || lvl[headY][tileRightX] == 'e');
+
+	if (velocityY < 0 && hitsTopRow && (leftHit || rightHit))
+	{
+		velocityY = 0;
+	}
+	char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(x + hit_box_factor_x) / cell_size)];
+	char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(x + hit_box_factor_x + Pwidth) / cell_size)];
+	char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+
+	char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(x + hit_box_factor_x) / cell_size)];
+	char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(x + hit_box_factor_x + Pwidth) / cell_size)];
+	char topRight = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+	bool forLeft = topLeft == 's';
+	bool forMiddle = topMiddle == 's';
+	bool forRight = topRight == 's';
+
+
+	if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w' || bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e' || bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') && velocityY > 0 && (forLeft || forMiddle || forRight))
+	{
+		onGround = true;
+		/*y = ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size) * cell_size - hit_box_factor_y - Pheight;*/
+		velocityY = 0;
+		spacePressed = false;
+	}
+	else
+	{
+		y = offset_y;
+		onGround = false;
+	}
+	if (!onGround)
+	{
+		velocityY += dummyGravity;
+		//cout << "Gravity being added correctly \n";
+		if (velocityY >= terminal_Velocity)
+			velocityY = terminal_Velocity;
+	}
+	else
+	{
+		velocityY = 0;
+		spacePressed = false;
+	}
+	cout << "VelocityY after Func : " << velocityY << endl;
+	cout << "Y after the func : " << y << "\n";
+}
 void Player::playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed)
 {
 	offset_y = y;
@@ -96,21 +155,29 @@ void Player::playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, 
 }
 void Player::moveLeft()
 {
-	x -= velocityX;
-	if (velocityX + acceleration < max_speed)
+	if (velocityX > 0)
 	{
-		velocityX += acceleration;
+		//velocityX-=
+
 	}
-	if (velocityX < 10)
 	{
-		indexAnimation = LEFT;
-		states[LEFT][0].RunAnimation();/*&& topLeft != 'q' && topLeft != 'e';*/
+		x += velocityX;
+		if (velocityX - acceleration > -max_speed)
+		{
+			velocityX -= acceleration;
+		}
+		if (velocityX > -10)
+		{
+			indexAnimation = LEFT;
+			states[LEFT][0].RunAnimation();/*&& topLeft != 'q' && topLeft != 'e';*/
+		}
+		else
+		{
+			indexAnimation = LEFTRUN;
+			states[LEFTRUN][0].RunAnimation();
+		}
 	}
-	else
-	{
-		indexAnimation = LEFTRUN;
-		states[LEFTRUN][0].RunAnimation();
-	}
+	direction = 0;
 }
 void Player::moveRight()
 {
@@ -130,6 +197,7 @@ void Player::moveRight()
 		indexAnimation = RIGHTRUN;
 		states[RIGHTRUN][0].RunAnimation();
 	}
+	direction = 1;
 }
 void Player::autoMove(int x_coord, int y_coord,char**lvl)
 {
@@ -208,13 +276,47 @@ bool Player::checkFeet(char** lvl)
 	//cout << "\n\n\nFeet not on the Ground\n\n\n";
 	return false;
 }
-void Player::detectYourself()
+//void Player::detectYourself()
+//{
+//	if ((indexAnimation == JUMPL || indexAnimation == JUMPR) && !hasDetectedItself)
+//	{
+//		hasDetectedItself = true;
+//		velocityY = 0;
+//
+//
+//	}
+//}
+void Player::figureItOutYourself(float leader_x,char**lvl,float offset_x)
 {
-	if ((indexAnimation == JUMPL || indexAnimation == JUMPR) && !hasDetectedItself)
+	if (x < leader_x)
 	{
-		hasDetectedItself = true;
-		velocityY = 0;
-
-
+		if (x + 3 > leader_x)
+		{
+			x = leader_x;
+		}
+		else
+		{
+			x += 3;
+		}
 	}
+	else if (x > leader_x)
+	{
+		if (x - 3 < leader_x)
+		{
+			x = leader_x;
+		}
+		{
+			x -= 3;
+		}
+	}
+	if (!spacePressed)
+	{
+		spacePressed = true;
+		onGround = false;
+		velocityY = -19.6;
+	}
+	indexAnimation = JUMPR;
+	states[JUMPR][0].RunAnimation();
+	float o_y = 0;
+	player_dummy_gravity(lvl,o_y,offset_x,64,spacePressed);
 }

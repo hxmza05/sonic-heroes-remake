@@ -169,4 +169,12 @@ public:
 				states[UPR][0].RunAnimation();
 			}
 	}
+	/*void useSpecialAbilty(char** lvl)
+	{
+	}*/
+	virtual void useSpecialAbilty(char**)
+	{
+
+	}
+
 };

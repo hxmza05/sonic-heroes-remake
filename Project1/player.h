@@ -24,11 +24,9 @@ using namespace sf;
 
 class Player
 {
-	float x;
-	float y;
+	
 	bool hasCollided;
 	bool hasKnockedBack;
-	float velocityX;
 	bool spacePressed;// our own defined
 	bool collisionDetectedOffGround;
 	float jumpStrength; // Initial jump velocity
@@ -41,7 +39,6 @@ class Player
 	float tempGravity;
 
 	float terminal_Velocity;
-	float acceleration;
 	////////////////////////////
 	int Pheight;
 	int Pwidth;
@@ -51,6 +48,11 @@ class Player
 	bool knockedByProjectile;
 
 protected:
+	float acceleration;
+	float velocityX;
+	bool direction;
+	float x;
+	float y;
 	bool hasDetectedItself;
 	float max_speed;
 	float velocityY;
@@ -64,9 +66,17 @@ protected:
 	virtual void followLeader(const int const ** pathToFollow) = 0;
 	int delayInFollow;
 	bool hasStartedFollowing;
+	bool isEven;
+	float dummyGravity;
+	bool figuringOut;
 public:
 	Player()
 	{
+		 direction = 1;
+
+		figuringOut = false;
+		dummyGravity = 0.8;
+		isEven = 0;
 		x = 150;
 		y = 150;
 		hasCollided = false;
@@ -229,6 +239,7 @@ public:
 			return;
 		}
 	}
+	void player_dummy_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed);
 	void autoMove(int x_coord,int y_coord,char**);
 	void draw_player(RenderWindow& window, Sprite& LstillSprite,float offset_x);
 	void player_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed);
@@ -236,9 +247,11 @@ public:
 	void moveLeft();
 	void moveRight();
 	virtual void moveUp(bool,int) = 0;
+	virtual void useSpecialAbilty(char**) = 0;
 	void checkDelayNow(int idx);
 	bool checkFeet(char** lvl);
-	void detectYourself();
+	//void detectYourself();
+	void figureItOutYourself(float,char**,float);
 	void executePushingLeft()
 	{
 		indexAnimation = PUSHLEFT;
