@@ -3,9 +3,11 @@
 #include"Level.h"
 #include"Crabmeat.h"
 #include"Beebot.h"
+#include"MoveablePlatform.h"
 
 class Level1 : public Level
 {
+	MoveablePlatform* moveable;
 	Crabmeat** crabs;
 	Beebot** bees;
 public:
@@ -26,7 +28,12 @@ public:
 			crabs[i] = new Crabmeat();
 			bees[i] = new Beebot();
 		}
+		moveable = new MoveablePlatform(1000,450,850,1500);
 		designlvl("lvl1.txt");
+	}
+	MoveablePlatform* getMoveable() override
+	{
+		return moveable;
 	}
 	char  getMapValues(int val)
 	{

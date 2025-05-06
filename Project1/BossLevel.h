@@ -1,11 +1,20 @@
 #pragma once
 #include<fstream>
 #include"Level.h"
+#include"MoveablePlatform.h"
+
 class BossLevel : public Level
 {
+	MoveablePlatform* moveable;
+	//Enemy** enemies;
+	//Collectibles** collectibles;
+	//Obstacle** obstacles;
+	//int height;
+	//int width;
 public:
 	BossLevel(char** level = nullptr, Enemy*** e = nullptr)
 	{
+		 moveable = new MoveablePlatform(0,0,0,0) ;
 		height = 14;
 		width = 110;
 		lvl = new char* [height];
@@ -31,4 +40,8 @@ public:
 		}
 		file.close();
 	}
+	/*MoveablePlatform* getMoveable() override
+	{
+		return moveable;
+	}*/
 };

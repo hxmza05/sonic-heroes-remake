@@ -618,10 +618,19 @@ public:
         if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             team.getPlayer()[team.getPlayerIndex()][0].player_gravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed());
 
-        // draw_bg(window, backGroundSprite, offset_x);
         team.storePath();
         team.autoMoveFollowers(level[levelIndex]->getLvl());
+        if (level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
+        {
+            if(team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() != STILL)
+            {
+                team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() = STILL;
+                team.getPlayer()[team.getPlayerIndex()][0].getStates()[STILL]->RunAnimation();
+            }
+            //team.
+        }
         draw_bg(window, backGroundSprite, offset_x);
+        level[levelIndex]->getMoveable()->draw(window, offset_x);
 
         display_level(window, level[levelIndex][0].getHeight(), level[levelIndex][0].getWidth(), level[levelIndex][0].getLvl(), walls, 64, offset_x);
 

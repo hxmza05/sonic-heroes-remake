@@ -80,7 +80,7 @@ public:
 					stateIndex = 1;
 				}
 			}
-			cout << "State Index : " << stateIndex << endl;
+			//cout << "State Index : " << stateIndex << endl;
 
 
 			if (stateIndex == 1)
@@ -91,8 +91,6 @@ public:
 		}
 
 	}
-
-
 	//{
 	//	screen_x = 1200;
 	//	screen_y = 900;

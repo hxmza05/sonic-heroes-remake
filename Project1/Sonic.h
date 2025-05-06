@@ -177,7 +177,7 @@ public:
 			states[GLIDER]->getSprites()[i].setScale(2, 2);
 		}
 
-		delayInFollow = 13;
+		delayInFollow = 5;
 		max_speed = 15;
 	}
 

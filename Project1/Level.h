@@ -3,6 +3,7 @@
 #include"Enemy.h"
 #include"Collectibles.h"
 #include"Obstacle.h"
+#include"MoveablePlatform.h"
 
 using namespace std;
 #include"Animation.h"
@@ -28,6 +29,7 @@ public:
 
 	}
 	virtual void designlvl(const char* filename) = 0;
+	
 	void drawLevel(RenderWindow& window, const int height, const int width, char** lvl, Sprite walls[], const int cell_size, int offset_x)
 	{
 		for (int i = 0; i < height; i += 1)
@@ -71,6 +73,11 @@ public:
 	{
 		return width;
 	}
+	virtual MoveablePlatform* getMoveable()
+	{
+		return nullptr;
+	}
+
 	//{
 	//	for (int i = 0; i < height; i += 1)
 	//	{

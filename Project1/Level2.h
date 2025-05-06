@@ -4,11 +4,14 @@
 #include"Crabmeat.h"
 #include"Beebot.h"
 #include"Motobug.h"
+#include"MoveablePlatform.h"
 class Level2 : public Level
 {
+	MoveablePlatform* moveable;
 	Crabmeat** crabs;
 	Beebot** bees;
 	Motobug** MotoBugs;
+
 public:
 	Level2(char** level = nullptr, Enemy*** e = nullptr) 
 	{
@@ -28,6 +31,7 @@ public:
 			bees[i] = new Beebot();
 			MotoBugs[i] = new Motobug();
 		}
+		moveable = new MoveablePlatform(0,0,0,0);
 		designlvl("lvl2.txt");
 	}
 	void designlvl(const char* filename)
@@ -46,5 +50,9 @@ public:
 			}
 		}
 		file.close();
+	}
+	MoveablePlatform* getMoveable() override
+	{
+		return moveable;
 	}
 };

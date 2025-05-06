@@ -154,7 +154,7 @@ public:
 	{
 		if (spaceCount>9)
 		{
-			cout << "\n\n\nFLying\n\n\n";
+			//cout << "\n\n\nFLying\n\n\n";
 ;			velocityY = -2;
 			indexAnimation = JUMPR;
 			states[JUMPR][0].RunAnimation();
@@ -162,7 +162,7 @@ public:
 		else
 			if(!spacePressed)
 			{
-				cout << "\n\n\nJumping\n\n\n";
+				//cout << "\n\n\nJumping\n\n\n";
 				velocityY = -19.6;
 				onGround = false;
 				indexAnimation = UPR;

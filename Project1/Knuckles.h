@@ -160,7 +160,7 @@ public:
 			states[GLIDER]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
 			states[GLIDER]->getSprites()[i].setScale(2, 2);
 		}
-		delayInFollow = 20;
+		delayInFollow = 7;
 	}
 
 	virtual void followLeader(const int const** pathToFollow)

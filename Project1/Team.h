@@ -14,6 +14,7 @@ class Team
     int playerIndex;
     // stores x and y coordinates of the leader
     int** leadersPath;
+    float *leadersVelocityY;
     int pathIndex;
     bool spacePressed;
     bool spacePressedTwice;
@@ -26,8 +27,9 @@ public:
         team[0] = new Sonic();
         team[1] = new TailedFox();
         team[2] = new Knuckles();
-        playerIndex = 1;
+        playerIndex = 0;
         leadersPath = new int* [100];
+		leadersVelocityY = new float[100];
         for (int i = 0; i < 100; i++)
         {
             leadersPath[i] = new int[2];
@@ -94,6 +96,9 @@ public:
                 //    JUMPR is for flying here
                 if (playerIndex == 1 && team[1]->getAnimationIndex() == JUMPR)
                 {
+                    float dummy = 0;
+                    float dummy2 = 0;
+                    bool dummybool = true;
                     for (int j = 0, h = team[1]->getPheight(); j < 3; j += 2, h += 40)
                     {
                         if (team[j]->getAnimationIndex() == JUMPL || team[j]->getAnimationIndex() == JUMPR || team[j]->getAnimationIndex() == GLIDEL || team[j]->getAnimationIndex() == GLIDER)
@@ -106,51 +111,43 @@ public:
                                 }
                                 else
                                 {
-									/*if (team[j]->getVelocityY() > 0)
-									{*/
-										float dummy = 0;
-                                        float dummy2 = 0;
-                                        bool dummybool = true;
-                                        cout << "\n\n\ndummy gravity function running\n\n\n";
-                                        team[j]->player_gravity(lvl, dummy, dummy2, 64, dummybool);
-										//team[j]->getVelocityY() = 0;
-                                        //team[j]
-									//}
-                                    /*int factor = 1;
-                                    if (team[j]->getx() < team[1]->getx())
-                                    {
-                                        team[j]->getAnimationIndex() = JUMPR;
-                                    }
-                                    else if (team[j]->getx() > team[1]->getx())
-                                    {
-                                        team[j]->getAnimationIndex() = JUMPL;
-                                        factor = -1;
-                                    }
-                                    cout << "\n\nJUMPNG\n\n";
-                                    team[j]->getVelocityY() = -19;
-                                    team[j]->getx() += factor * 4;
-                                    cout << "HAsJUMPED\n\n";*/
+									
                                 }
                             }
                             else 
                             {
                                 makeThemGlide(j, h);
                             }
-                            if (team[j]->checkFeet(lvl))
+                            if (team[j]->checkFeet(lvl)  && team[j]->getAnimationIndex() != STILL)
                             {
                                 team[j]->getAnimationIndex() = STILL;
                                 team[j]->getStates()[STILL][0].RunAnimation();
                             }
                             // team[i]->glideAndFollowTails();
                         }
-                    
+                        else
+                        {
+                            //team[j]->player_gravity(lvl, dummy, dummy2, 64, dummybool);
+                     /*       cout << "Velcoty for ";
+                            if(j == 0)
+								cout << "Sonic";
+							else cout << "Knuckles";
+                            cout << " is = " << team[j]->getVelocityY()<<"\n\n\n";*/
+                        }
                     }
                 }
                 else
                 {
                     // team[i]->updateDelay();
                     team[i][0].autoMove(leadersPath[team[i][0].getDelayinFollow()][0] - 16, leadersPath[team[i][0].getDelayinFollow()][1], lvl);
-					team[i][0].getVelocityY() = team[playerIndex]->getVelocityY();
+					team[i][0].getVelocityY() = -19;
+                   /* if (team[playerIndex]->getAnimationIndex() == STILL)
+                    {
+                        team[i]->getAnimationIndex() = STILL;
+                    }*/
+                    //if()
+					//cout << "\n\n\nVelcotuy when automvoing  = " << team[i][0].getVelocityY() << "\n\n\n";
+
                 }
                 // cout << "Path index LEader's = " << pathIndex << "----- tailed fox's = " << team[1][0].getDelayinFollow() << "----- knuckel's = " << team[2][0].getDelayinFollow() << "\n";
             }
@@ -184,7 +181,6 @@ public:
         //cout << "\n\nCan Glide  = " << cond;
         return cond;
     }
-
     /*void runAnimation()
     {
         for (int i = 0;i < 3;i++)
@@ -208,6 +204,7 @@ public:
     {
         leadersPath[pathIndex][0] = team[playerIndex]->getx();
         leadersPath[pathIndex][1] = team[playerIndex]->gety();
+		leadersVelocityY[pathIndex] = team[playerIndex]->getVelocityY();
         pathIndex++;
         if (pathIndex == 100)
         {
