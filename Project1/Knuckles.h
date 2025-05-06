@@ -18,12 +18,15 @@ class Knuckles :public Player
 	Texture jumpLeft;
 	Texture jumpRight;
 	Texture still;
+	Texture glideLeft;
+	Texture glideRight;
 public:
 	Knuckles()
 	{
-		states = new Animation * [13];
+		//isGliding = false;
+		states = new Animation * [15];
 		indexAnimation = 0;
-		totalAnimations = 13;
+		totalAnimations = 15;
 		jogLeft.loadFromFile("Data/KLeftWalk.png");
 		states[LEFT] = new Animation(12);
 		for (int i = 0,  width = 0;i < 12;i++,  width += 49)
@@ -139,8 +142,27 @@ public:
 			states[STILL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
 			states[STILL]->getSprites()[i].setScale(2, 2);
 		}
+
+		glideLeft.loadFromFile("Data/KEdgeL.png");
+		states[GLIDEL] = new Animation(6);
+		for (int i = 0, width = 0;i < 6;i++, width += 49)
+		{
+			states[GLIDEL]->getSprites()[i].setTexture(edgeLeft);
+			states[GLIDEL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[GLIDEL]->getSprites()[i].setScale(2, 2);
+
+		}
+		glideRight.loadFromFile("Data/KEdgeR.png");
+		states[GLIDER] = new Animation(6);
+		for (int i = 0, width = 0;i < 6;i++, width += 49)
+		{
+			states[GLIDER]->getSprites()[i].setTexture(edgeRight);
+			states[GLIDER]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[GLIDER]->getSprites()[i].setScale(2, 2);
+		}
 		delayInFollow = 20;
 	}
+
 	virtual void followLeader(const int const** pathToFollow)
 	{
 		
@@ -152,5 +174,9 @@ public:
 			velocityY = -19;
 			onGround = false;
 		}
+	}
+	void glideAndFollowTails()
+	{
+
 	}
 };

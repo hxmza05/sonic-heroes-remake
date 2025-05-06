@@ -1,4 +1,9 @@
+#pragma once
 #include"Player.h"
+//#include"Game.h"
+#include"GlobalFunctions.h"
+
+//#include"Src.cpp"
 void Player::draw_player(RenderWindow& window, Sprite& LstillSprite, float offset_x)
 {
 	LstillSprite.setPosition(x - offset_x, y);
@@ -87,7 +92,7 @@ void Player::playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, 
 		tempVelocityY += tempGravity;
 		onGround = false;
 	}
-	cout << "tempVelocityY ------" << tempVelocityY << endl;
+	cout << "tempVelocityY ------ (" << tempVelocityY << endl;
 }
 void Player::moveLeft()
 {
@@ -126,8 +131,12 @@ void Player::moveRight()
 		states[RIGHTRUN][0].RunAnimation();
 	}
 }
-void Player::autoMove(int x_coord, int y_coord)
+void Player::autoMove(int x_coord, int y_coord,char**lvl)
 {
+	if (!checkCollision(lvl, x_coord, y_coord))
+	{
+		return;
+	}
 	if (y_coord == y && x_coord == x)
 	{
 		if(indexAnimation != STILL)
@@ -159,6 +168,7 @@ void Player::autoMove(int x_coord, int y_coord)
 			states[LEFTRUN][0].RunAnimation();
 		}
 	}
+	cout << "\n\nthe differnece  is : " << x_coord - x << endl<<endl<<endl;
 	 x = x_coord;
 	 y = y_coord;
 	 //updateDelay();
@@ -171,4 +181,29 @@ void Player::checkDelayNow(int idx)
 		delayInFollow = 0;
 		hasStartedFollowing = true;
 	}
+}
+bool Player::checkFeet(char** lvl)
+{
+	int cell_size = 64;
+	float offset_y = y;
+	//offset_y += velocityY;
+
+	char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(x + hit_box_factor_x) / cell_size)];
+	char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(x + hit_box_factor_x + Pwidth) / cell_size)];
+	char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+
+	char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(x + hit_box_factor_x) / cell_size)];
+	char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(x + hit_box_factor_x + Pwidth) / cell_size)];
+	char topRight = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+	bool forLeft = topLeft == 's';
+	bool forMiddle = topMiddle == 's';
+	bool forRight = topRight == 's';
+	if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w' || bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e' || bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') /*&& tempVelocityY > 0*/ && (forLeft || forMiddle || forRight))
+	{
+		cout << "\n\n\nFeet on the Ground\n\n\n";
+		onGround = true;
+		return true;
+	}
+	cout << "\n\n\nFeet not on the Ground\n\n\n";
+	return false;
 }

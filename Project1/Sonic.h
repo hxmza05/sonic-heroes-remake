@@ -17,6 +17,8 @@ using namespace sf;
 #define JUMPL 10
 #define JUMPR 11
 #define STILL 12
+#define GLIDEL 13
+#define GLIDER 14
 
 class Sonic :public Player
 {
@@ -33,13 +35,16 @@ class Sonic :public Player
 	Texture jumpLeft;
 	Texture jumpRight;
 	Texture still;
+	Texture glideLeft;
+	Texture glideRight;
 
 public:
 	Sonic()
 	{
-		states = new Animation*[13];
+		//isGliding = false;
+		states = new Animation*[15];
 		indexAnimation = 0;
-		totalAnimations = 13;
+		totalAnimations = 15;
 		jogLeft.loadFromFile("Data/0jog_left.png");
 		states[LEFT] = new Animation(10);
 		for (int i = 0,width = 0;i < 10;i++,width+=40)
@@ -155,9 +160,27 @@ public:
 			states[STILL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
 			states[STILL]->getSprites()[i].setScale(2, 2);
 		}
+		glideLeft.loadFromFile("Data/0edgeL.png");
+		states[GLIDEL] = new Animation(7);
+		for (int i = 0, width = 0;i < 7;i++, width += 40)
+		{
+			states[GLIDEL]->getSprites()[i].setTexture(glideLeft);
+			states[GLIDEL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[GLIDEL]->getSprites()[i].setScale(2, 2);
+		}
+		glideRight.loadFromFile("Data/sonic_hang.png");
+		states[GLIDER] = new Animation(8);
+		for (int i = 0, width = 0;i < 8;i++, width += 49)
+		{
+			states[GLIDER]->getSprites()[i].setTexture(glideRight);
+			states[GLIDER]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49, 50));
+			states[GLIDER]->getSprites()[i].setScale(2, 2);
+		}
+
 		delayInFollow = 13;
 		max_speed = 15;
 	}
+
 	virtual void followLeader(const int const **pathToFollow)
 	{
 		
@@ -170,4 +193,8 @@ public:
 			onGround = false;
 		}
 	}
+	/*void glideAndFollowTails()
+	{
+
+	}*/
 };

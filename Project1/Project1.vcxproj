@@ -145,12 +145,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GlobalFunctions.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Src.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="BossLevel.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GlobalFunctions.h" />
+    <ClInclude Include="Level1.h" />
+    <ClInclude Include="Level2.h" />
+    <ClInclude Include="Level3.h" />
     <ClInclude Include="Rings.h" />
+    <ClInclude Include="StateManager.h" />
     <ClInclude Include="Team.h" />
     <ClInclude Include="Collectibles.h" />
     <ClInclude Include="Batbrain.h" />
