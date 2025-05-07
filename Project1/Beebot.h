@@ -51,7 +51,7 @@ public:
 	Beebot() : bee_height(37.5), bee_width(88.5) {
 
 		hp = 5;
-		speed = 1.2;
+		speed = 2.2;
 		Alive = true;
 		Moving = true;
 		x = 0;
@@ -215,12 +215,15 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 
 				else {
 					sprite = states[1]->getSprites()[3]; // fire
+
 					if (!shotProjectile) {
+
 						shotProjectile = true;
 
 						float projectileX = targetX - beeCenterX;
 						float projectileY = targetY - (y + getbeeHeight() / 2.0f);
 						float magnitude = sqrt(projectileX * projectileX + projectileY * projectileY);
+
 						if (magnitude != 0) {
 							projectileX /= magnitude;
 							projectileY /= magnitude;
@@ -313,7 +316,7 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 
 		indexAnimation = 0;
 
-		if (animClock.getElapsedTime().asSeconds() >= 0.2f) {
+		if (animClock.getElapsedTime().asSeconds() >= 0.175f) {
 			states[0]->RunAnimation();
 			animClock.restart();
 		}
@@ -390,7 +393,7 @@ void Beebot::getBeebotCoordinates(char** lvl, int height, int width, int y_start
 
 				int end = j - 1;
 
-				if (end - start + 1 >= 6 && indexBee < beeCoordintes) {
+				if (end - start + 1 >= 7 && indexBee < beeCoordintes) {
 
 					int midpoint = (start + end) / 2;
 					int patrolStart = max(0, midpoint - 2);

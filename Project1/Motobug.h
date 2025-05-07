@@ -217,13 +217,19 @@ void Motobug::movement(float player_x, float player_y) {
 		if (Moving) {
 			x += speed;
 			facingRight = true;
-			if (x >= End) Moving = false;
+
+			if (x >= End) {
+				Moving = false;
+			}
 		}
 
 		else {
 			x -= speed;
 			facingRight = false;
-			if (x <= Start) Moving = true;
+
+			if (x <= Start) {
+				Moving = true;
+			}
 		}
 	}
 

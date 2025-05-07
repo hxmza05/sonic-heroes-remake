@@ -51,7 +51,7 @@ class Player
 	bool knockedByProjectile;
 
 protected:
-
+	bool hasDetectedItself;
 	float max_speed;
 	float velocityY;
 	bool onGround;
@@ -97,6 +97,7 @@ public:
 		delayInFollow = 0;
 		hasStartedFollowing = false;
 		knockedByProjectile = false;
+		hasDetectedItself = false;
 	}
 	float& getx()
 	{
@@ -237,7 +238,7 @@ public:
 	virtual void moveUp(bool,int) = 0;
 	void checkDelayNow(int idx);
 	bool checkFeet(char** lvl);
-	
+	void detectYourself();
 	void executePushingLeft()
 	{
 		indexAnimation = PUSHLEFT;

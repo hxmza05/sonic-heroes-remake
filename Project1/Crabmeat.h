@@ -390,7 +390,6 @@ void Crabmeat::move_crabs(Crabmeat** crabs, int& crabIndex, int& crabCount, cons
 
 		crabIndex++;
 	}
-
 	crabCount = crabIndex;
 }
 
@@ -431,8 +430,9 @@ bool Crabmeat::checkCollisionWithPlayer(Player& player)
 		float bottom_of_Player = player.gety() + player.getPheight();
 		float top_of_Crab = y;
 
-		if (bottom_of_Player - 10 < top_of_Crab) {
-			player.getVelocityY() = -10.0f;
+		if (bottom_of_Player - 10 < top_of_Crab) 
+		{
+			//player.getVelocityY() = -10.0f;
 		}
 
 		else {

@@ -96,8 +96,6 @@ public:
 		}
 
 	}
-
-
 	//{
 	//	screen_x = 1200;
 	//	screen_y = 900;

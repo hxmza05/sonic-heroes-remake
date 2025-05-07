@@ -154,6 +154,7 @@ void Player::autoMove(int x_coord, int y_coord,char**lvl)
 	{
 		indexAnimation = JUMPR;
 		states[JUMPR][0].RunAnimation();
+		onGround = false;
 	}
 	else if (y <= y_coord && x != x_coord)
 	{
@@ -168,7 +169,7 @@ void Player::autoMove(int x_coord, int y_coord,char**lvl)
 			states[LEFTRUN][0].RunAnimation();
 		}
 	}
-	cout << "\n\nthe differnece  is : " << x_coord - x << endl<<endl<<endl;
+	//cout << "\n\nthe differnece  is : " << x_coord - x << endl<<endl<<endl;
 	 x = x_coord;
 	 y = y_coord;
 	 //updateDelay();
@@ -200,10 +201,20 @@ bool Player::checkFeet(char** lvl)
 	bool forRight = topRight == 's';
 	if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w' || bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e' || bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') /*&& tempVelocityY > 0*/ && (forLeft || forMiddle || forRight))
 	{
-		cout << "\n\n\nFeet on the Ground\n\n\n";
+		//cout << "\n\n\nFeet on the Ground\n\n\n";
 		onGround = true;
 		return true;
 	}
-	cout << "\n\n\nFeet not on the Ground\n\n\n";
+	//cout << "\n\n\nFeet not on the Ground\n\n\n";
 	return false;
+}
+void Player::detectYourself()
+{
+	if ((indexAnimation == JUMPL || indexAnimation == JUMPR) && !hasDetectedItself)
+	{
+		hasDetectedItself = true;
+		velocityY = 0;
+
+
+	}
 }

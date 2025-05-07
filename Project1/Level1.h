@@ -3,30 +3,37 @@
 #include"Level.h"
 #include"Crabmeat.h"
 #include"Beebot.h"
+#include"MoveablePlatform.h"
 
 class Level1 : public Level
 {
+	MoveablePlatform* moveable;
 	Crabmeat** crabs;
 	Beebot** bees;
 public:
 	Level1()
 	{
 		height = 14;
-		width = 220;
+		width = 200;
 		lvl = new char* [height];
 		for (int i = 0; i < height; i++)
 		{
 			lvl[i] = new char[width];
 		}
 		//enemies = new Enemy**[2];
-		crabs = new Crabmeat * [5];
-		bees = new Beebot * [5];
-		for (int i = 0; i < 5; i++)
-		{
-			crabs[i] = new Crabmeat();
-			bees[i] = new Beebot();
-		}
+		//crabs = new Crabmeat * [5];
+		//bees = new Beebot * [5];
+		//for (int i = 0; i < 5; i++)
+		//{
+		//	crabs[i] = new Crabmeat();
+		//	bees[i] = new Beebot();
+		//}
+		moveable = new MoveablePlatform(1000,450,850,1500);
 		designlvl("lvl1.txt");
+	}
+	MoveablePlatform* getMoveable() override
+	{
+		return moveable;
 	}
 	char  getMapValues(int val)
 	{
@@ -39,6 +46,7 @@ public:
 		case 4: return 'p';
 		case 5: return 'r';
 		case 6: return 'p';
+		case 9: return 'b';
 		default: return 's';
 		}
 	}
@@ -58,7 +66,7 @@ public:
 				int wall;
 				file >> wall;
 				lvl[i][j] = getMapValues(wall);
-				//cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
+				cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
 			}
 			cout << endl;
 		}
