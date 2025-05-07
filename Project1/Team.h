@@ -50,6 +50,27 @@ public:
     }
     void switchLeader()
     {
+        pathIndex = 0;
+        for (int i = 0;i < 3;i++)
+        {
+            if (i == playerIndex)
+                continue;
+            switch (i)
+            {
+            case 0:
+                team[0]->getDelayinFollow() = 25;
+                break;
+            case 1:
+                team[1]->getDelayinFollow() = 28;
+                break;
+            case 2:
+                team[2]->getDelayinFollow() = 30;
+            }
+            team[i]->setHasStartedFollowing(false);
+            team[i]->getVelocityX() = 0;
+            team[i]->getVelocityY() = 0;
+            team[i]->getOnGround() = true;
+        }
         if (playerIndex == 2)
         {
             playerIndex = 0;
@@ -100,7 +121,7 @@ public:
             {
                 team[i]->updateDelay();
                 //    JUMPR is for flying here
-                if (playerIndex == 1 && team[1]->getAnimationIndex() == JUMPR)
+                if (playerIndex == 1 && (team[1]->getAnimationIndex() == JUMPR || (team[1]->getAnimationIndex() == JUMPL)))
                 {
                     //taile
                     isFlying = true;
@@ -121,14 +142,14 @@ public:
                                 }
                                 else
                                 {
-                                    cout << "IN else if the they are jumping and are unable to reach\n";
-                                    //cout << "\n\n\nfollowers figuring it out\n\n\n";
-                                    if (j == 0)
-                                    {
-                                        cout << "Sonic";
-                                    }
-                                    else cout << "Knuckles";
-                                        cout << " is figuring it out\n\n\n";
+                                    //cout << "IN else if the they are jumping and are unable to reach\n";
+                                    ////cout << "\n\n\nfollowers figuring it out\n\n\n";
+                                    //if (j == 0)
+                                    //{
+                                    //    cout << "Sonic";
+                                    //}
+                                    //else cout << "Knuckles";
+                                    //    cout << " is figuring it out\n\n\n";
                                         //if (team[j]->getAnimationIndex() != STILL)
                                             team[j]->figureItOutYourself(team[playerIndex]->getx(),lvl,offsetx);
                                 }
@@ -148,13 +169,13 @@ public:
                         else
                         {
 
-                            cout << "\n\nIn else if they are not jumping\n";
+                            /*cout << "\n\nIn else if they are not jumping\n";
                             if (j == 0)
                             {
                                 cout << "Sonic";
                             }
                             else cout << "Knuckles";
-                            cout << " is figuring it out\n\n\n";
+                            cout << " is figuring it out\n\n\n";*/
                             //if (team[j]->getAnimationIndex() != STILL)
                             if (team[j]->getHaveBeenPutDown().getElapsedTime().asSeconds() > 1)
                             {
@@ -166,11 +187,12 @@ public:
                 }
                 else
                 {
+                    cout << "\n\n\n\n\n\nIts not Flying NOW\n\n\n\n";
                     //bool wo
-                    if (isNotFlyingCount == 0 && isFlying /*&& team[1]->getAnimationIndex() == STILL*/)
+                    if (isNotFlyingCount == 0 && isFlying/* && team[1]->getOnGround() *//*&& team[1]->getAnimationIndex() == STILL*/)
                     {
-                        team[0]->setTailedCoords(team[1]->getx(), team[1]->gety());
-                        team[2]->setTailedCoords(team[1]->getx(), team[1]->gety());
+                        team[0]->setTailedCoords(team[1]->getx() - 5, team[1]->gety() + 10);
+                        team[2]->setTailedCoords(team[1]->getx() - 5, team[1]->gety()+ 10);
                         team[2]->getAnimationIndex() = BREAKR;
                         isNotFlyingCount++;
 
@@ -192,8 +214,8 @@ public:
                         {
                             isFlying = false;
                             isNotFlyingCount = 0;
-                            team[0]->setTailedCoords(team[1]->getx(), team[1]->gety());
-                            team[2]->setTailedCoords(team[1]->getx(), team[1]->gety());
+                            team[0]->setTailedCoords(team[1]->getx() - 5, team[1]->gety());
+                            team[2]->setTailedCoords(team[1]->getx() - 5, team[1]->gety());
                             team[0]->getDelayinFollow() = 25;
                             team[2]->getDelayinFollow() = 30;
                             team[0]->setHasStartedFollowing(false);
@@ -294,6 +316,13 @@ public:
         if (playerIndex == 2)
         {
             team[2]->useSpecialAbilty(lvl);
+        }
+    }
+    void animate()
+    {
+        for (int i = 0;i < 3;i++)
+        {
+            team[i]->getStates()[team[i]->getAnimationIndex()]->RunAnimation();
         }
     }
     ~Team()

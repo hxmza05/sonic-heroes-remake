@@ -72,9 +72,11 @@ protected:
 	bool isEven;
 	float dummyGravity;
 	bool figuringOut;
+	bool tempOnground;
 public:
 	Player()
 	{
+		tempOnground = true;
 		tailed_x = -999;
 		tailed_y = -999;
 		haveBeenPutDown.restart();
@@ -114,6 +116,7 @@ public:
 		hasStartedFollowing = false;
 		knockedByProjectile = false;
 		hasDetectedItself = false;
+
 	}
 	float& getx()
 	{
@@ -261,10 +264,15 @@ public:
 	void checkDelayNow(int idx);
 	bool checkFeet(char** lvl);
 	bool teleportToTailed();
+	bool& getTempOnGround()
+	{
+		return tempOnground;
+	}
 	void setTailedCoords(float x, float y)
 	{
 		tailed_x = x;
 		tailed_y = y;
+		tempOnground = true;
 	}
 	//void detectYourself();
 	void figureItOutYourself(float,char**,float);
