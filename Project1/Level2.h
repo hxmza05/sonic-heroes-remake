@@ -9,22 +9,41 @@
 
 class Level2 : public Level
 {
+    FallingPlatform** falling;
 	MoveablePlatform* moveable;
+	int crabCount;
+	int crabIndex;
+	int crab_start;
+	int crab_end;
 	Crabmeat** crabs;
-	Beebot** bees;
-	Motobug** MotoBugs;
+
+	int beeCount;
+	int beeIndex;
+	int bee_start;
+	int bee_end;
+	Beebot** beebots;
+
+	int motobugCount;
+	int motobugIndex;
+	int motobug_start;
+	int motobug_end;
+	Motobug** motobugs;
+
+	int cell_size;
 
 public:
 	Level2(char** level = nullptr, Enemy*** e = nullptr) 
 	{
 		height = 14;
-		width = 110;
+		width = 200;
 		lvl = new char* [height];
 		for (int i = 0; i < height; i++)
 		{
 			lvl[i] = new char[width];
 		}
-		crabs = new Crabmeat * [5];
+        designlvl("lvl1.txt");
+
+		/*crabs = new Crabmeat * [5];
 		bees = new Beebot * [5];
 		MotoBugs = new Motobug * [5];
 		for (int i = 0; i < 5; i++)
@@ -32,39 +51,251 @@ public:
 			crabs[i] = new Crabmeat();
 			bees[i] = new Beebot();
 			MotoBugs[i] = new Motobug();
+		}*/
+		crabCount = 5;
+		crabIndex = 0;
+		crabs = new Crabmeat * [crabCount];
+
+		for (int i = 0; i < crabCount; i++)
+		{
+			crabs[i] = new Crabmeat();
 		}
+
+		crab_start = 5;
+		crab_end = 9;
+
+		for (int i = 0; i < crabCount; ++i)
+		{
+			crabs[i]->getCrabCoordinates(lvl, height, width, crab_start, crab_end);
+		}
+
+		crabs[0]->move_crabs(crabs, crabIndex, crabCount, cell_size);
+
+		beeCount = 5;
+		beeIndex = 0;
+		beebots = new Beebot * [beeCount];
+
+		for (int i = 0; i < beeCount; i++)
+		{
+			beebots[i] = new Beebot();
+		}
+
+		bee_start = 5;
+		bee_end = 8;
+		beebots[0]->getBeebotCoordinates(lvl, height, width, bee_start, bee_end);
+		beebots[0]->move_beebots(beebots, beeIndex, beeCount, cell_size);
+
+		motobugCount = 5;
+		motobugIndex = 0;
+		motobugs = new Motobug * [motobugCount];
+
+		for (int i = 0; i < motobugCount; i++)
+		{
+			motobugs[i] = new Motobug();
+		}
+
+		motobug_start = 10;
+		motobug_end = 12;
+
+		motobugs[0]->getMotobugCoordinates(lvl, height, width, motobug_start, motobug_end);
+		motobugs[0]->move_motobugs(motobugs, motobugIndex, motobugCount, cell_size);
+        falling = new FallingPlatform * [8];
+        for (int i = 0, f = 32; i < 8; i++, f++)
+            falling[i] = new FallingPlatform(64 * f, 500);
 		moveable = new MoveablePlatform(0,0,0,0);
-		designlvl("lvl2.txt");
+        levelEnd = 195 * 64;
 	}
-	void designlvl(const char* filename)
-	{
-		ifstream file(filename);
-		if (!file.is_open())
-		{
-			cerr << "Error opening file: " << filename << endl;
-			return;
-		}
-		for (int i = 0; i < height; i++)
-		{
-			for (int j = 0; j < width; j++)
-			{
-				file >> lvl[i][j];
-			}
-		}
-		file.close();
-	}
+    char  getMapValues(int val)
+    {
+        switch (val)
+        {
+        case 0: return 's';
+        case 1: return 'q';
+        case 2: return 'w';
+        case 3: return 'e';
+        case 4: return 'p';
+        case 5: return 'r';
+        case 6: return 'p';
+        default: return 's';
+        }
+    }
+    void designlvl(const char* filename)
+    {
+        cout << "\n\n\nIn desgin function for level 3\n\n\n";
+        ifstream file(filename);
+        if (!file.is_open())
+        {
+            cerr << "Error opening file: " << filename << endl;
+            return;
+        }
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                int wall;
+                file >> wall;
+                lvl[i][j] = getMapValues(wall);
+                //cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
+            }
+            cout << endl;
+        }
+        file.close();
+    }
 	MoveablePlatform* getMoveable() override
 	{
 		return moveable;
 	}
 	virtual FallingPlatform* *getFalling()
 	{
-		return nullptr;
+		return falling;
 	}
-	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD& hud) 
-	{
+    void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud)
+    {
+        for (int i = 0; i < beeCount; i++)
+        {
+            if (!beebots[i]->alive())
+            {
+                continue;
+            }
+            beebots[i]->movement(lvl, x, y, cell_size, Pwidth, Pheight);
+            if (beebots[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity))
+            {
+                hud.getLives()--;
+                if (hud.getLives() == 0)
+                {
+                    return;
+                }
+                onGround = false;
+            }
+            if (hasKnockedBack)
+            {
+                if (beebots[i]->PlayerBeeCollision(x, y, Pwidth, Pheight, beebots[i]->getX(), beebots[i]->getY(), beebots[i]->getbeeWidth(), beebots[i]->getbeeHeight()))
+                {
+                    if (indexAnimation == UPR || indexAnimation == UPL)
+                    {
+                        beebots[i]->setHp(0);
+                        beebots[i]->setAlive(false);
+                        hud.getScore() += 200;
+                        continue;
+                    }
+                    else
+                    {
+                        hud.getLives()--;
+                        if (hud.getLives() == 0)
+                        {
+                            return;
+                        }
+                        hasKnockedBack = true;
+                        tempVelocity = -7;
+                    }
+                }
+            }
+            beebots[i]->drawProjectiles(window, offset_x);
+            //beebots[i]->draw(window, offset_x);
+        }
 
-	}
+        for (int i = 0; i < crabCount; i++)
+        {
 
+            if (!crabs[i]->alive())
+            {
+                continue;
+            }
+            crabs[i]->movement(lvl, player, cell_size);
+            if (crabs[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity))
+            {
+                onGround = false;
+                hud.getLives()--;
+                if (hud.getLives() == 0)
+                {
+                    return;
+                }
+            }
+            if (!hasKnockedBack)
+            {
+                if (crabs[i]->checkCollisionWithPlayer(player))
+                {
 
+                    if (indexAnimation == UPR || indexAnimation == UPL)
+                    {
+
+                        crabs[i]->setHp(0);
+                        crabs[i]->setAlive(false);
+                        hud.getScore() += 150;
+                        continue;
+                    }
+                    else
+                    {
+                        hud.getLives()--;
+                        if (hud.getLives() == 0)
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+            crabs[i]->drawProjectile(window, offset_x);
+            //crabs[i]->draw(window, offset_x);
+        }
+
+        for (int i = 0; i < motobugCount; i++)
+        {
+
+            if (!motobugs[i]->alive())
+            {
+                continue;
+            }
+
+            motobugs[i]->movement(x, y);
+
+            if (!hasKnockedBack)
+            {
+                if (motobugs[i]->PlayerBugCollision(x, y, Pwidth, Pheight, motobugs[i]->getX(), motobugs[i]->getY(), motobugs[i]->getMotobugWidth(), motobugs[i]->getMotobugHeight()))
+                {
+                    if (indexAnimation == UPR || indexAnimation == UPL)
+                    {
+                        motobugs[i]->setHp(0);
+                        motobugs[i]->setAlive(false);
+                        hud.getScore() += 100;
+                        continue;
+                    }
+                    else
+                    {
+                        hud.getLives()--;
+                        if (hud.getLives() == 0)
+                        {
+                            return;
+                        }
+                        hasKnockedBack = true;
+                        tempVelocity = -7;
+                    }
+                }
+            }
+            //motobugs[i]->draw(window, offset_x);
+        }
+    }
+    /* void handleBees()
+     {
+
+     }*/
+
+    void drawEnemies(RenderWindow& window, float offset_x)
+    {
+        for (int i = 0;i < motobugCount;i++)
+        {
+            cout << "Drawig for LEVEL 2";
+            if (motobugs[i]->alive())
+                motobugs[i]->draw(window, offset_x);
+        }
+        for (int i = 0;i < crabCount;i++)
+        {
+            if (crabs[i]->alive())
+                crabs[i]->draw(window, offset_x);
+        }
+        for (int i = 0;i < beeCount;i++)
+        {
+            if (beebots[i]->alive())
+                beebots[i]->draw(window, offset_x);
+        }
+    }
 };

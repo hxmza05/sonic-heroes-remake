@@ -200,7 +200,7 @@ public:
                 }
             }
             beebots[i]->drawProjectiles(window, offset_x);
-            beebots[i]->draw(window, offset_x);
+            //beebots[i]->draw(window, offset_x);
         }
 
         for (int i = 0; i < crabCount; i++)
@@ -244,7 +244,7 @@ public:
                 }
             }
             crabs[i]->drawProjectile(window, offset_x);
-            crabs[i]->draw(window, offset_x);
+            //crabs[i]->draw(window, offset_x);
         }
 
         for (int i = 0; i < motobugCount; i++)
@@ -280,11 +280,30 @@ public:
                     }
                 }
             }
-            motobugs[i]->draw(window, offset_x);
+            //motobugs[i]->draw(window, offset_x);
         }
     }
     /* void handleBees()
      {
 
      }*/
+  
+    void drawEnemies(RenderWindow&window,float offset_x)
+    {
+        for (int i = 0;i < motobugCount;i++)
+        {
+            if(motobugs[i]->alive())
+                motobugs[i]->draw(window, offset_x);
+        }
+        for (int i = 0;i < crabCount;i++)
+        {
+            if(crabs[i]->alive())
+                crabs[i]->draw(window, offset_x);
+        }
+        for (int i = 0;i < beeCount;i++)
+        {
+            if(beebots[i]->alive())
+                beebots[i]->draw(window, offset_x);
+        }
+    }
 };

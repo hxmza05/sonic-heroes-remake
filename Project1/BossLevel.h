@@ -77,4 +77,10 @@ public:
 	{
 
 	}
+	void drawEnemies(RenderWindow& window, float offset_x)
+	{
+
+	}
+	bool hasLevelEnded(float x) { return true; }
+
 };

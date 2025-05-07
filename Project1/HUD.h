@@ -16,7 +16,7 @@ public:
 	{
 		score = 0;
 		ringsCollected = 0;
-		lives = 5;
+		lives = 100;
 	}
 	int&getScore()
 	{
