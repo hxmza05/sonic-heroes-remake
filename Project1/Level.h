@@ -5,6 +5,7 @@
 #include"Obstacle.h"
 #include"MoveablePlatform.h"
 #include"FallingPlatform.h"
+#include"HUD.h"
 
 using namespace std;
 #include"Animation.h"
@@ -15,6 +16,7 @@ using namespace sf;
 class Level
 {
 protected:
+	float levelEnd;
 	//Collectible*** collectibles;
 	//Obstacle** obstacles;
 	const int endMark;
@@ -80,7 +82,7 @@ public:
 	}
 	virtual FallingPlatform**getFalling() = 0;
 	//virtual void handleEnemies() = 0;
-	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player) = 0;
+	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD& hud) = 0;
 
 	//{
 	//	for (int i = 0; i < height; i += 1)

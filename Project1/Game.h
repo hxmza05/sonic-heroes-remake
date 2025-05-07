@@ -11,12 +11,18 @@
 #include "Level3.h"
 #include "BossLevel.h"
 #include "Rings.h"
-#include"GlobalFunctions.h"
-//#include"FallingPlatform.h"
+#include "GlobalFunctions.h"
+#include"HUD.h"
+// #include"FallingPlatform.h"
 class Game
 {
-    int spaceCount;
+    //some score and other stuff
+    HUD hud;
+    bool gameOver;
 
+
+
+    int spaceCount;
     int buffer_start;
     int buffer_end;
     Texture buffer;
@@ -28,30 +34,28 @@ class Game
     int hit_box_factor_x;
     int hit_box_factor_y;
 
- //   int crabCount;
- //   int crabIndex;
- //   int crab_start;
- //   int crab_end;
- //   Crabmeat** crabs;
+    //   int crabCount;
+    //   int crabIndex;
+    //   int crab_start;
+    //   int crab_end;
+    //   Crabmeat** crabs;
 
- //   int beeCount;
- //   int beeIndex;
- //   int bee_start;
- //   int bee_end;
- //   Beebot** beebots;
+    //   int beeCount;
+    //   int beeIndex;
+    //   int bee_start;
+    //   int bee_end;
+    //   Beebot** beebots;
 
- //   int motobugCount;
- //   int motobugIndex;
- //   int motobug_start;
- //   int motobug_end;
- //   Motobug** motobugs;
+    //   int motobugCount;
+    //   int motobugIndex;
+    //   int motobug_start;
+    //   int motobug_end;
+    //   Motobug** motobugs;
 
+    //   int batCount;
+    // int batIndex;
 
- //   int batCount;
-	//int batIndex;
-
-	//Batbrain** batbrains;
-
+    // Batbrain** batbrains;
 
     int stingerCount;
     bool eggStingerSpawn;
@@ -90,14 +94,6 @@ class Game
 
 
 
-    int ringsCollected;
-    int score;
-    Clock gameClock;
-	float levelTime;
-
-    Texture hudTexture;
-    Font scoreFont;
-
 
 
 
@@ -109,6 +105,7 @@ class Game
 public:
     Game()
     {
+        gameOver = false;
         cell_size = 64;
         // team = Team();
         // level = new * Level();
@@ -131,116 +128,35 @@ public:
 
 
 
-        ////////////////////////////////////
-        /////////////////HUD//////////////
-        ////////////////////////////////////
-
-
-        score;
-        ringsCollected;
-        gameClock.restart(); 
-        levelTime = 0;
-
-        hudTexture.loadFromFile("Data/hud.png");
-        scoreFont.loadFromFile("Fonts/scoreFont.ttf");
-
-
-
-
-
-
-
 
         ////////////////////////////////////
         /////////////////Bosss//////////////
         ////////////////////////////////////
 
-
         stingerCount = 1;
         eggStingerSpawn = false;
-		stinger = new Eggstinger();
+        stinger = new Eggstinger();
 
-
-        ////////////////////////////////////
-        /////////////////Crabs///////////////
-        /////////////////////////////////////
-
-
-      /*crabCount = 5;
-        crabIndex = 0;
-        crabs = new Crabmeat * [crabCount];
-
-        for (int i = 0; i < crabCount; i++) {
-            crabs[i] = new Crabmeat();
-        }
-
-        crab_start = 6;
-        crab_end = 9;
-
-        for (int i = 0; i < crabCount; ++i) {
-            crabs[i]->getCrabCoordinates(level[levelIndex]->getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), crab_start, crab_end);
-        }
-
-        crabs[0]->move_crabs(crabs, crabIndex, crabCount, cell_size);*/
-
-
-        ///////////////////////////////////
-        //////////////bees
-        ////////////////////////////////////
-
-
-   /*    beeCount = 5;
-        beeIndex = 0;
-        beebots = new Beebot * [beeCount];
-
-        for (int i = 0; i < beeCount; i++) {
-            beebots[i] = new Beebot();
-        }
-
-        bee_start = 5;
-        bee_end = 8;
-        beebots[0]->getBeebotCoordinates(level[levelIndex]->getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), bee_start, bee_end);
-        beebots[0]->move_beebots(beebots, beeIndex, beeCount, cell_size);*/
-
-
-        ///////////////////////////////////
-        //////////////motobugs
-        ////////////////////////////////////
-
-
-      /* motobugCount = 5;
-         motobugIndex = 0;
-         motobugs = new Motobug * [motobugCount];
-
-         for (int i = 0; i < motobugCount; i++) {
-             motobugs[i] = new Motobug();
-         }
-
-         motobug_start = 10;
-         motobug_end = 12;
-
-         motobugs[0]->getMotobugCoordinates(level[levelIndex]->getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), motobug_start, motobug_end);
-         motobugs[0]->move_motobugs(motobugs, motobugIndex, motobugCount, cell_size);*/
-
-
-
-         ///////////////////////////////////
-         //////////////batbrain
-         ////////////////////////////////////
-
-        /* 
-        
-         batCount = 4;
-         batIndex = 0;
-         batbrains = new Batbrain * [batCount];
-
-         for (int i = 0; i < batCount; ++i) {
-             batbrains[i] = new Batbrain();
-         }
-
-         batbrains[0]->getBatbrainCoordinates(batbrains,level[levelIndex]->getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), batIndex, batCount, cell_size);
     
-        */
+
+
+           ///////////////////////////////////
+           //////////////batbrain
+           ////////////////////////////////////
+
+          /*
+
+           batCount = 4;
+           batIndex = 0;
+           batbrains = new Batbrain * [batCount];
+
+           for (int i = 0; i < batCount; ++i) {
+               batbrains[i] = new Batbrain();
+           }
+
+           batbrains[0]->getBatbrainCoordinates(batbrains,level[levelIndex]->getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), batIndex, batCount, cell_size);
+
+          */
 
         backGround.loadFromFile("Data/bg1.png");
         backGroundSprite.setTexture(backGround);
@@ -264,10 +180,10 @@ public:
         walls[3] = spikes;
 
         spaceCount = 0;
-        levelIndex = 0;
+        // levelIndex = 0;
         int height = level[levelIndex]->getHeight();
         int width = level[levelIndex]->getWidth();
-         collectibles = new Collectibles **[level[levelIndex]->getHeight()];
+        collectibles = new Collectibles * *[level[levelIndex]->getHeight()];
 
         for (int i = 0; i < height; i++)
         {
@@ -285,14 +201,12 @@ public:
         placeRingsFromMap(level[levelIndex]->getLvl(), collectibles, level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), &rings, &ring_effect);
         if (!collectibles)
         {
-            //cout << "collecitbles didnt work null h constructor m";
+            // cout << "collecitbles didnt work null h constructor m";
         }
-        //else cout << "collecitbles  worked null nai h constructor m";
-        
+        // else cout << "collecitbles  worked null nai h constructor m";
 
         // placeRingsFromMap(lvl, collectibles, height, width, &rings, &ring_effect);
 
-        ringsCollected = 0;
     }
     void setLevelIndex(int index)
     {
@@ -338,41 +252,6 @@ public:
 
 
 
-    void DrawHUD(sf::RenderWindow& window)
-    {
-        sf::Sprite hudIcon;
-        hudIcon.setTexture(hudTexture);
-        hudIcon.setScale(4.f, 4.f); 
-
-        sf::Text label;
-        label.setFont(scoreFont);
-        label.setCharacterSize(24);
-        label.setFillColor(sf::Color::Yellow);
-
-        for (int i = 0; i < 3; i++) {
-
-            int iconY = (i == 0) ? 0 : (i == 1) ? 10 : 21;
-            int iconH = (i == 0) ? 10 : 11;
-
-            hudIcon.setTextureRect(sf::IntRect(0, iconY, 38, iconH));
-            hudIcon.setPosition(20, 20 + i * 30);
-            window.draw(hudIcon);
-
-            label.setString(":");
-            label.setPosition(70, 20 + i * 30);
-            window.draw(label);
-
-            if (i == 0)
-                label.setString(std::to_string(score));
-            else if (i == 1)
-                label.setString(std::to_string((int)levelTime));
-            else if (i == 2)
-                label.setString(std::to_string(ringsCollected));
-
-            label.setPosition(95, 20 + i * 30);
-            window.draw(label);
-        }
-    }
 
 
 
@@ -449,17 +328,17 @@ public:
             }
         }
     }
-    void updateAndDrawCollectibles( int height, int width, RenderWindow& window)
-    {/*
-        if (!collectibles)
-        {
-            cout << "null h bhaiiyya\n\n";
-        }*/
+    void updateAndDrawCollectibles(int height, int width, RenderWindow& window)
+    { /*
+         if (!collectibles)
+         {
+             cout << "null h bhaiiyya\n\n";
+         }*/
         for (int i = 0; i < height; ++i)
         {
             for (int j = 0; j < width; ++j)
             {
-                //cout << "i = " << i << "---- j = " << j << endl;
+                // cout << "i = " << i << "---- j = " << j << endl;
                 if (collectibles[i][j])
                 {
                     collectibles[i][j]->update();
@@ -552,12 +431,12 @@ public:
     //     in.close();
     // }
 
-    //bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight)
+    // bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight)
     //{
-    //    return (player_x + Pwidth > enemy_x && player_x < enemy_x + enemyWidth && player_y + Pheight > enemy_y && player_y < enemy_y + enemyHeight);
-    //}
+    //     return (player_x + Pwidth > enemy_x && player_x < enemy_x + enemyWidth && player_y + Pheight > enemy_y && player_y < enemy_y + enemyHeight);
+    // }
 
-    //bool CollisionCheckWithCrabs(Crabmeat** crabs, int& crabCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float crabWidth, const float crabHeight)
+    // bool CollisionCheckWithCrabs(Crabmeat** crabs, int& crabCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float crabWidth, const float crabHeight)
     //{
 
     //    for (int i = 0; i < crabCount; i++)
@@ -602,9 +481,7 @@ public:
     //    return false;
     //}
 
-  
-
-    //bool CollisionCheckWithBeebots(Beebot** beebots, int& beeCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float beeWidth, const float beeHeight, bool onGround, bool spacePressed)
+    // bool CollisionCheckWithBeebots(Beebot** beebots, int& beeCount, float& player_x, float& player_y, int Pwidth, int Pheight, float& velocityY, bool& hasKnockedBack, float& tempVelocityY, const float beeWidth, const float beeHeight, bool onGround, bool spacePressed)
     //{
 
     //    for (int i = 0; i < beeCount; i++)
@@ -647,8 +524,6 @@ public:
     /////////////////////////////////
     void play(RenderWindow& window)
     {
-
-        levelTime = gameClock.getElapsedTime().asSeconds();
 
         if (team.getPlayer()[team.getPlayerIndex()][0].getOnGround())
         {
@@ -752,45 +627,36 @@ public:
         if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             team.getPlayer()[team.getPlayerIndex()][0].player_gravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed());
         team.storePath();
-        team.autoMoveFollowers(level[levelIndex]->getLvl(),offset_x);
+        team.autoMoveFollowers(level[levelIndex]->getLvl(), offset_x);
         if (level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
         {
-            if(team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() != STILL)
+            if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() != STILL)
             {
                 team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() = STILL;
-                //team.getPlayer()[team.getPlayerIndex()][0].getStates()[STILL]->RunAnimation();
+                // team.getPlayer()[team.getPlayerIndex()][0].getStates()[STILL]->RunAnimation();
             }
-            //team.
+            // team.
         }
         draw_bg(window, backGroundSprite, offset_x);
         level[levelIndex]->getMoveable()->draw(window, offset_x);
 
         display_level(window, level[levelIndex][0].getHeight(), level[levelIndex][0].getWidth(), level[levelIndex][0].getLvl(), walls, 64, offset_x);
-        for(int i = 0;i < 8;i++)
+        for (int i = 0; i < 8; i++)
             level[levelIndex]->getFalling()[i]->draw(window, offset_x);
 
-        updateAndDrawCollectibles( level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), window);
-        handleRingCollection(collectibles, level[levelIndex][0].getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), team.getPlayer()[team.getPlayerIndex()][0], ringsCollected, cell_size);
-        // team.getPlayer()[team.getPlayerIndex()][0].draw_player(window, team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()][0].getSprites()[team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()]->getIndex()],offset_x);
-
-
-
-        //cout << "Ongground = " << team.getPlayer()[team.getPlayerIndex()][0].getOnGround();
-        //cout << "\n";
+        updateAndDrawCollectibles(level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), window);
+        handleRingCollection(collectibles, level[levelIndex][0].getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), team.getPlayer()[team.getPlayerIndex()][0], hud.getRings(), cell_size);
         team.draw(window, offset_x);
-
-
-        
         /*
-        
-        if (!eggStingerSpawn) 
+
+        if (!eggStingerSpawn)
         {
-            stinger->setPosition(12 * cell_size, 2*cell_size, 0, 0); 
+            stinger->setPosition(12 * cell_size, 2*cell_size, 0, 0);
             eggStingerSpawn = true;
         }
 
 
-        if (stinger->alive()) 
+        if (stinger->alive())
         {
 
             stinger->movement(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), level[levelIndex]->getLvl(), cell_size);
@@ -804,20 +670,20 @@ public:
             if (stinger->PlayerStingerCollision(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), stinger->getX(), stinger->getY(), stinger->getStingerWidth(), stinger->getStingerHeight()))
             {
 
-				if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPR || team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPL)
-				{
+                if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPR || team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPL)
+                {
 
                     if (stinger->getHp() == 0)
                     {
-						stinger->setAlive(false);
+                        stinger->setAlive(false);
                     }
-					stinger->setHp(--(stinger->getHp()));
-				}
+                    stinger->setHp(--(stinger->getHp()));
+                }
 
-				else
-				{
-					/// yahan par player loosess hp aye ga
-				}
+                else
+                {
+                    /// yahan par player loosess hp aye ga
+                }
 
             }
 
@@ -864,52 +730,23 @@ public:
 
 
 
-        for (int i = 0; i < beeCount; i++)
+       */
+        for (int i = 0; i < 8; i++)
         {
-
-            if (!beebots[i]->alive()) {
-                continue;
-            }
-
-            beebots[i]->movement(level[levelIndex]->getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight());
-
-            if (beebots[i]->handleProjectilesCollision(level[levelIndex]->getLvl(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY()))
+            level[levelIndex]->getFalling()[i]->shouldItActivate(team.getPlayer()[team.getPlayerIndex()]->getx());
+            if (level[levelIndex]->getFalling()[i]->getActivated())
             {
-                team.getPlayer()[team.getPlayerIndex()][0].getOnGround() = false;
-
+                level[levelIndex]->getFalling()[i]->fall();
             }
-
-            if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) {
-
-                if (beebots[i]->PlayerBeeCollision(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), beebots[i]->getX(), beebots[i]->getY(), beebots[i]->getbeeWidth(), beebots[i]->getbeeHeight()))
-                {
-                    if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPR || team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPL)
-                    {
-
-                        // player velocity Y - 10;
-                        team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() = -7.0f;
-                        beebots[i]->setHp(0);
-                        beebots[i]->setAlive(false);
-                        continue;
-                    }
-
-                    else
-                    {
-                        team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = true;
-                        team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY() = -7;
-                    }
-                }
-            }
-
-            beebots[i]->drawProjectiles(window, offset_x);
-
-            beebots[i]->draw(window, offset_x);
-
         }
+        level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0],hud);
+        cout << "Score is : " << hud.getScore();
+        cout << "\nLives are : " << hud.getLives() << "\n\n\n";
+        team.animate();
+        team.draw(window, offset_x);
+        hud.draw(window);
 
 
-        for (int i = 0; i < crabCount; i++) {
-=======
            /* for (int i = 0; i < beeCount; i++)
             {
 
@@ -957,11 +794,10 @@ public:
                     level[levelIndex]->getFalling()[i]->fall();
                 }
             }
-            level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0]);
+            level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud);
             //team.animate();
             team.draw(window, offset_x);
 
-            DrawHUD(window);
 
 
         // change these according to the movement logic of motobug, for now it moves with player

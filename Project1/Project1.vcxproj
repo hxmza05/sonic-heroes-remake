@@ -156,6 +156,7 @@
     <ClInclude Include="FallingPlatform.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GlobalFunctions.h" />
+    <ClInclude Include="HUD.h" />
     <ClInclude Include="Level1.h" />
     <ClInclude Include="Level2.h" />
     <ClInclude Include="Level3.h" />

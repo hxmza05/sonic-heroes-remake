@@ -38,5 +38,6 @@
     <ClInclude Include="Team.h" />
     <ClInclude Include="Collectibles.h" />
     <ClInclude Include="FallingPlatform.h" />
+    <ClInclude Include="HUD.h" />
   </ItemGroup>
 </Project>
