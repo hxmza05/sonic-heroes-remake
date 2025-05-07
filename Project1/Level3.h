@@ -49,7 +49,7 @@ public:
 		case 3: return 'e';
 		case 4: return 'p';
 		case 5: return 'r';
-		case 6: return 'p';
+		case 6: return 'i'; // ultay spikes 
 		default: return 's';
 		}
 	}

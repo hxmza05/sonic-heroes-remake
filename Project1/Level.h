@@ -61,6 +61,13 @@ public:
 					walls[3].setPosition(j * cell_size - offset_x, i * cell_size);
 					window.draw(walls[3]);
 				}
+				else if (lvl[i][j] == 'i') 
+				{
+					walls[3].setScale(1.f, -1.f); 
+					walls[3].setPosition(j * cell_size - offset_x, (i + 1) * cell_size);
+					window.draw(walls[3]);
+					walls[3].setScale(1.f, 1.f); 
+				}
 			}
 		}
 	}

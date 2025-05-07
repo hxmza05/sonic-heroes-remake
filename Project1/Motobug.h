@@ -214,23 +214,39 @@ void Motobug::movement(float player_x, float player_y) {
 
 		indexAnimation = 0;
 
-		if (Moving) {
-			x += speed;
-			facingRight = true;
+		if (Moving) 
+		{
 
-			if (x >= End) {
+			if (x + speed >= End/* - MotobugWidth*/) 
+			{
+				x = End/* - MotobugWidth*/;
 				Moving = false;
 			}
+
+			else 
+			{
+				x += speed;
+			}
+
+			facingRight = true;
 		}
 
-		else {
-			x -= speed;
-			facingRight = false;
+		else 
+			{
 
-			if (x <= Start) {
+			if (x - speed <= Start + MotobugWidth) 
+			{
+				x = Start + MotobugWidth;
 				Moving = true;
 			}
+
+			else 
+			{
+				x -= speed;
+			}
+			facingRight = false;
 		}
+
 	}
 
 	states[indexAnimation]->RunAnimation();
@@ -244,7 +260,21 @@ void Motobug::movement(float player_x, float player_y) {
 		sprite.setScale(facingRight ? -0.451f : 0.451f, 0.428f);
 	}
 
-	sprite.setPosition(x, y);
+	if (facingRight) 
+	{
+		if (indexAnimation == 0) 
+		{
+			sprite.setPosition(x + 167.f * 0.452f, y);
+		}
+		else
+		{
+			sprite.setPosition(x + 169.6f * 0.451f, y);
+		}
+	}
+
+	else {
+		sprite.setPosition(x, y);
+	}
 }
 
 

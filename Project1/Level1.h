@@ -128,7 +128,7 @@ public:
         case 5:
             return 'r';
         case 6:
-            return 'p';
+            return 'i';
         case 9:
             return 'b';
 

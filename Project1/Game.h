@@ -77,6 +77,7 @@ class Game
     Texture spikesTexture;
     Sprite spikes;
 
+
     Sprite* walls;
 
     Collectibles*** collectibles;
@@ -291,16 +292,21 @@ public:
         char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
         char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
 
+        char top_left_up = lvl[(offset_y + hit_box_factor_y) / cell_size][(player_x + hit_box_factor_x) / cell_size];
+        char top_right_up = lvl[(offset_y + hit_box_factor_y) / cell_size][(player_x + hit_box_factor_x + Pwidth) / cell_size];
+        char top_mid_up = lvl[(offset_y + hit_box_factor_y) / cell_size][(player_x + hit_box_factor_x + Pwidth / 2) / cell_size];
+
         char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
         char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
         char topRight = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+        
         bool forLeft = topLeft != 'w' && topLeft != 'q' && topLeft != 'e';
         bool forMiddle = topMiddle != 'w' && topMiddle != 'q' && topMiddle != 'e';
         bool forRight = topRight != 'w' && topRight != 'q' && topRight != 'e';
 
         // cout << "Left : " << bottom_left_down << " ---- Mid : " << bottom_mid_down << " -------" << "Right : " << bottom_right_down << "----";
 
-        return ((bottom_left_down == 'p' || bottom_mid_down == 'p' || bottom_right_down == 'p') && velocityY > 0 && (forLeft || forMiddle || forRight));
+        return ((bottom_left_down == 'p' || bottom_mid_down == 'p' || bottom_right_down == 'p') && velocityY > 0 && (forLeft || forMiddle || forRight)) || ((top_left_up == 'i' || top_mid_up == 'i' || top_right_up == 'i') && velocityY < 0);
     }
     void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord)
     {
@@ -411,6 +417,13 @@ public:
                 {
                     walls[3].setPosition(j * cell_size - offset_x, i * cell_size);
                     window.draw(walls[3]);
+                }
+                else if (lvl[i][j] == 'i')
+                {
+                    walls[3].setScale(1.f, -1.f);
+                    walls[3].setPosition(j * cell_size - offset_x, (i + 1) * cell_size);
+                    window.draw(walls[3]);
+                    walls[3].setScale(1.f, 1.f);
                 }
             }
         }
