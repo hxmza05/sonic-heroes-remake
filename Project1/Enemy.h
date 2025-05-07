@@ -56,10 +56,19 @@ public:
 	}
 
 	void setHp(float x) {
+
+		if (hp == 0)
+		{
+			Alive = false;
+			hp = 0;
+		}
+
 		hp = x;
 	}
 
-	void setAlive(bool status) { this->Alive = status; }
+	void setAlive(bool status) { 
+		this->Alive = status; 
+	}
 
 	void setAnimation(int animationIndex) {
 		indexAnimation = animationIndex;
@@ -69,6 +78,7 @@ public:
 		states[indexAnimation]->RunAnimation();
 		sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
 	}
+
 
 	void setPosition(float startX, float startY, float Start, float End) {
 

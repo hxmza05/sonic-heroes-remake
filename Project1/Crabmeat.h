@@ -364,7 +364,7 @@ void Crabmeat::getCrabCoordinates(char** lvl, int height, int width, int y_start
 					CrabWalls[indexCrab] = i;
 					indexCrab++;
 				}
-				//cout << "Found platform from tile " << start << " to " << end << " at row " << i << endl;
+				cout << "Found platform from tile " << start << " to " << end << " at row " << i << endl;
 			}
 
 			else { 
@@ -388,9 +388,10 @@ void Crabmeat::move_crabs(Crabmeat** crabs, int& crabIndex, int& crabCount, cons
 
 		crabs[i]->setPosition(crabX, crabY, Start, End);
 
+		cout << "placed crab " << crabIndex << ": " << crabX << ", " << crabY << endl;
+
 		crabIndex++;
 	}
-
 	crabCount = crabIndex;
 }
 
@@ -431,8 +432,9 @@ bool Crabmeat::checkCollisionWithPlayer(Player& player)
 		float bottom_of_Player = player.gety() + player.getPheight();
 		float top_of_Crab = y;
 
-		if (bottom_of_Player - 10 < top_of_Crab) {
-			player.getVelocityY() = -10.0f;
+		if (bottom_of_Player - 10 < top_of_Crab) 
+		{
+			//player.getVelocityY() = -10.0f;
 		}
 
 		else {

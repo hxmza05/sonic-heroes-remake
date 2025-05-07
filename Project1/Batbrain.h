@@ -1,10 +1,7 @@
 #pragma once
 #include <iostream>
 #include <cmath>
-#include<ctime>
-#include<cstdlib>
 #include <SFML/Graphics.hpp>
-#include "Beebot.h"
 using namespace sf;
 using namespace std;
 
@@ -14,190 +11,307 @@ class Batbrain : public Enemy {
 private:
 
 	bool chasingPlayer;   
+	bool facingRight; 
+
 	float StartX, StartY; 
-	float range_chase;
 
-	int* BatStart;
-	int* BatEnd;
-	int* BatHeights;
+	const float Batheight;
+	const float BatWidth;
 
-	int batCoordinates;
-	int indexBat;
+	Clock chaseCooldownClock;
+	bool isCooldown;
 
-	const float Batheight = 95;
-	const float BatWidth = 97;
+
+	Texture spawn;
+	Texture initial_move;
+	Texture move;
+	Texture accel;
+
+
+	Clock animationClock;
+	Clock animationPhaseClock;  
+	Clock frameClock;
+
+	int animationFrame;
+
+
+
 
 public:
 
-	Batbrain() {
+	Batbrain() : Batheight(71.25), BatWidth(72.75f) {
 
 		this->hp = 3;
 		this->speed = 2.0f;
 		Alive = true;
 		Moving = true;
 		chasingPlayer = false;
-		range_chase = 300.0f;
+		facingRight = false;  
 		StartX = x;
 		StartY = y;
+		indexAnimation = 0;
+		totalAnimations = 4;
+		animationClock.restart();
+		animationPhaseClock.restart();
+		frameClock.restart();
+		animationFrame = 0;
 
 
-		batCoordinates = 10;
-		indexBat = 0;
-		BatStart = new int[batCoordinates];
-		BatEnd = new int[batCoordinates];
-		BatHeights = new int[batCoordinates];
-		
+		chaseCooldownClock.restart();
+		isCooldown = false;
 
-		texture.loadFromFile("Sprites/batbrain.png");
-		sprite.setTexture(texture);
-		sprite.setTextureRect(IntRect(0, 0, 97, 95));
-		sprite.setPosition(x, y);
-		sprite.setScale(0.75f, 0.75f);
+
+		states = new Animation * [totalAnimations];
+
+		//  spawn
+
+		states[0] = new Animation(1);
+		spawn.loadFromFile("Sprites/bat_sleep.png");
+		states[0]->getSprites()[0].setTexture(spawn);
+		states[0]->getSprites()[0].setTextureRect(IntRect(0, 0, 36, 60));
+		//states[0]->getSprites()[0].setScale(BatWidth / 36, Batheight / 60);
+
+
+		// move 0 
+
+		const int frameWidths[4] = { 77, 66, 80, 86 };
+		initial_move.loadFromFile("Sprites/bat_move.png");
+		states[1] = new Animation(4);
+		int offsetX = 0;
+
+		for (int i = 0; i < 4; i++)
+		{
+			states[1]->getSprites()[i].setTexture(initial_move);
+			states[1]->getSprites()[i].setTextureRect(IntRect(offsetX, 0, frameWidths[i], 79));
+			states[1]->getSprites()[i].setScale(BatWidth / frameWidths[i], Batheight / 79.0f);
+			states[1]->getSprites()[i].setOrigin(frameWidths[i] / 2.0f, 0);
+			offsetX += frameWidths[i];
+		}
+
+
+
+		// move 1
+		const int move1Widths[4] = { 77, 76, 82, 91 };
+		const int move1Offsets[4] = { 0, 82, 158, 240 };
+
+		move.loadFromFile("Sprites/bat_move1.png");
+		states[2] = new Animation(4);
+		offsetX = 0;
+
+		for (int i = 0; i < 4; ++i) 
+		{
+			states[2]->getSprites()[i].setTexture(move);
+			states[2]->getSprites()[i].setTextureRect(IntRect(move1Offsets[i], 0, move1Widths[i], 69));
+			states[2]->getSprites()[i].setScale(BatWidth / float(move1Widths[i]), Batheight / 69.0f);
+			states[2]->getSprites()[i].setOrigin(move1Widths[i] / 2.0f, 0);
+		}
+
+
+		accel.loadFromFile("Sprites/bat_accel.png");
+		states[3] = new Animation(1);
+		states[3]->getSprites()[0].setTexture(accel);
+		states[3]->getSprites()[0].setTextureRect(IntRect(0, 0, 95, 53));
+		//states[3]->getSprites()[0].setScale(BatWidth / 95, Batheight / 53);
+		states[3]->getSprites()[0].setOrigin(95.0f / 2.0f, 0);
+
+
 
 	}
 
-	float getX() {
 
-		return x;
+	float getBatBrainHeight() const {
+		return Batheight;
 	}
 
-	float getY() {
-
-		return y;
+	float getBatBrainWidth() const {
+		return BatWidth;
 	}
 
-	int getHp() {
-
-		return hp;
-	}
-
-	bool alive() {
-
-		return Alive;
-	}
-
-	float& getStartX() {
-		return StartX;
-	}
-
-	float& getStartY() {
-		return StartY;
-	}
 
 	void movement(char** lvl, float player_x, float player_y, const int cell_size);
-	void getBatbrainCoordinates(char** lvl, int height, int width);
-	void move_Batbrain(Batbrain batbrains[], int& batIndex, int& batCount, const int cell_size);
+	void getBatbrainCoordinates(Batbrain** batbrains, char** lvl, int height, int width, int& batIndex, int batCount, int cell_size);
+	void setPosition(float startX, float startY, float patrolStart, float patrolEnd);
+	bool PlayerBatCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight);
+
 
 };
 
 
-void Batbrain::movement(char** lvl, float player_x, float player_y, const int cell_size) {
+void Batbrain::movement(char** lvl, float player_x, float player_y, const int cell_size)
+{
+	float distanceX = player_x - x;
+	float distanceY = player_y - y;
+	float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
 
-	float bat_x = player_x - x;
-	float bat_y = player_y - y;
+	float batCenter = x + BatWidth / 2.0f;
+	float playerCenter = player_x + 10.0f;
 
-	float distance = sqrt(bat_x * bat_x + bat_y * bat_y);
+	if (playerCenter < batCenter - 10.0f) {
+		facingRight = false;
+	}
+	else if (playerCenter > batCenter + 10.0f) {
+		facingRight = true;
+	}
 
-	if (distance < 250.0f) {
+
+	if (isCooldown && chaseCooldownClock.getElapsedTime().asSeconds() < 1.0f) 
+	{
+		sprite.setPosition(x, y);
+		return;
+	}
+
+	else if (isCooldown && chaseCooldownClock.getElapsedTime().asSeconds() >= 1.0f) 
+	{
+		isCooldown = false;
+	}
+
+	bool withinVerticalRange = player_y >= StartY - 128;
+	bool withinHorizontalRange = (distanceX < cell_size*7 && distanceX > cell_size * -7);
+
+	if (!chasingPlayer && !isCooldown && withinHorizontalRange && withinVerticalRange) 
+	{
 		chasingPlayer = true;
+		animationFrame = 0;
+		frameClock.restart();
+		animationPhaseClock.restart(); 
+
 	}
 
-	else {
+	else if (chasingPlayer && (!withinVerticalRange || (distanceX > 450 || distanceX < -450))) 
+	{
 		chasingPlayer = false;
+		isCooldown = true;
+		chaseCooldownClock.restart();
 	}
 
-	if (chasingPlayer) {
+	if (chasingPlayer)
+	{
+		if (distance != 0)
+		{
+			distanceX /= distance;
+			distanceY /= distance;
 
-		if (distance != 0) {
+			float move_x = x + distanceX * speed;
+			float move_y = y + distanceY * speed;
 
-			bat_x /= distance;
-			bat_y /= distance;
+			if (move_x < Start) {
+				move_x = Start;
+			}
 
-			float move_x = x + bat_x * speed;
-			float move_y = y + bat_y * speed;
+			if (move_x > End) {
+				move_x = End;
+			}
 
-			if (!checkWallCollisionWithEnemy(lvl, move_x, move_y, cell_size)) {
-
+			if (!checkWallCollisionWithEnemy(lvl, move_x + (facingRight ? -6.0f : 6.0f), move_y + 6.0f, cell_size))
+			{
 				x = move_x;
 				y = move_y;
 			}
 		}
-	}
 
-	else
-	{
+		float elapsed = animationPhaseClock.getElapsedTime().asSeconds();
+		float cycleDuration = 4.5f; 
 
-		x += speed;
-
-		if (x >= End) {
-			speed = -abs(speed);
-		}
-		if (x <= Start) {
-			speed = abs(speed);
+		if (elapsed >= cycleDuration) {
+			animationPhaseClock.restart();
+			elapsed = 0;
 		}
 
-	}
+		if (elapsed < 3.0f) {
 
-	sprite.setPosition(x, y);
+			indexAnimation = 2;  // move1
 
+			if (frameClock.getElapsedTime().asSeconds() >= 0.15f) 
+			{
+				frameClock.restart();
+				animationFrame++;
 
-}
-
-void Batbrain::getBatbrainCoordinates(char** lvl, int height, int width) {
-
-	srand(time(0)); // random seed once
-
-	for (int i = 4; i < height / 2 + 1; i++) {
-
-		int j = 0;
-
-		while (j < width - 1) {
-
-			if (lvl[i][j] == 's' && lvl[i + 1][j] == 's' && lvl[i - 1][j] == 's') {
-
-				int start = j;
-
-				while (j < width && lvl[i][j] == 's' && lvl[i + 1][j] == 's' && lvl[i - 1][j] == 's')
-					j++;
-
-				int end = j - 1;
-
-				if(end-start >= 8)
-					end = start + 8;
-
-				if ((end - start + 1) >= 4 && indexBat < batCoordinates)
-				{
-					BatStart[indexBat] = start;
-					BatEnd[indexBat] = end;
-					BatHeights[indexBat] = i;
-					indexBat++;
+				if (animationFrame >= 4) {
+					animationFrame = 0;
 				}
 			}
-			else {
-				j++;
+		}
+		else {
+			indexAnimation = 3;  // accel
+			animationFrame = 0;
+		}
+
+	}
+
+	else {
+
+		animationFrame = 0;
+
+		if (y == StartY) {
+			indexAnimation = 0; 
+		}
+
+		else {
+			indexAnimation = 3;  
+		}
+	}
+
+	if (indexAnimation == 2) {
+		sprite = states[2]->getSprites()[animationFrame];
+	}
+
+	else {
+		sprite = states[indexAnimation]->getSprites()[0]; 
+	}
+
+
+	sprite.setScale((facingRight ? -1.0f : 1.0f), Batheight / 69.0f);
+
+
+}
+
+
+
+
+
+void Batbrain::getBatbrainCoordinates(Batbrain** batbrains, char** lvl, int height, int width, int& batIndex, int batCount, int cell_size)
+{
+	for (int i = 0; i < height && batIndex < batCount; i++)
+	{
+		for (int j = 0; j < width && batIndex < batCount; j++)
+		{
+			if (lvl[i][j] == 'b')
+			{
+				float bat_x = j * cell_size;
+				float bat_y = i * cell_size;
+
+				int patrolStartTile = (j - 7 < 0) ? 0 : j - 7;
+				int patrolEndTile = (j + 7 >= width) ? (width - 1) : (j + 7);
+
+				float patrolStart = patrolStartTile * cell_size;
+				float patrolEnd = patrolEndTile * cell_size;
+
+				batbrains[batIndex]->setPosition(bat_x, bat_y, patrolStart, patrolEnd);
+				lvl[i][j] = 's';
+				batIndex++;
 			}
 		}
 	}
 }
 
 
-void Batbrain::move_Batbrain(Batbrain batbrains[], int& batIndex, int& batCount, const int cell_size) {
 
-	for (int i = 0; i < batCount; i++) {
 
-		float Start = BatStart[i] * cell_size;
-		float End = BatEnd[i] * cell_size;
 
-		float bat_X = (Start + End) / 2.0f;
-		float bat_Y = (BatHeights[i]+1) * cell_size - Batheight / 2;
-
-		batbrains[batIndex].setPosition(bat_X, bat_Y, Start, End);
-
-		batIndex++;
-	}
-
-	batCount = batIndex;
+void Batbrain::setPosition(float startX, float startY, float patrolStart, float patrolEnd) 
+{
+	x = startX;
+	y = startY;
+	StartX = startX;
+	StartY = startY;
+	Start = patrolStart;
+	End = patrolEnd;
+	sprite.setPosition(x, y);
 }
 
 
 
+bool Batbrain::PlayerBatCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight)
+{
+	return (player_x + Pwidth > enemy_x && player_x < enemy_x + enemyWidth && player_y + Pheight > enemy_y && player_y < enemy_y + enemyHeight);
+}

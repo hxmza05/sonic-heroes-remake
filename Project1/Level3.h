@@ -6,6 +6,8 @@
 #include"Motobug.h"
 #include"Batbrain.h"
 #include"MoveablePlatform.h"
+#include"HUD.h"
+
 class Level3 : public Level
 {
 	MoveablePlatform* moveable;
@@ -81,8 +83,10 @@ public:
 	{
 		return nullptr;
 	}
-	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player)
+
+	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD&)
 	{
 
 	}
+
 };

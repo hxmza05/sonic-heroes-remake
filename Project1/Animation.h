@@ -42,6 +42,10 @@ public:
 	{
 		index = 0;
 	}
+	int getLength() {
+		return totalSprites;
+	}
+
 	~Animation()
 	{
 		delete[] sprites;
