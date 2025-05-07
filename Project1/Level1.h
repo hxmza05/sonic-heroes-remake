@@ -172,7 +172,7 @@ public:
 			 {
 				 onGround = false;
 			 }
-			 if (hasKnockedBack) 
+			 if (hasKnockedBack)  // change this to ! but after adding the condition that the player isnt flying
 			 {
 				 if (beebots[i]->PlayerBeeCollision(x, y, Pwidth, Pheight, beebots[i]->getX(), beebots[i]->getY(), beebots[i]->getbeeWidth(), beebots[i]->getbeeHeight()))
 				 {

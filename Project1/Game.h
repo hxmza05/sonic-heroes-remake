@@ -58,13 +58,6 @@ class Game
     Eggstinger* stinger;
 
 
-
-
-
-
-
-
-
     Texture backGround;
     Sprite backGroundSprite;
 
@@ -88,13 +81,30 @@ class Game
 
     Texture ring_effect;
 
-    int ringsCollected;
 
     Team team;
     Level** level;
     int levelIndex;
     int cell_size;
     Clock Akey;
+
+
+
+    int ringsCollected;
+    int score;
+    Clock gameClock;
+	float levelTime;
+
+    Texture hudTexture;
+    Font scoreFont;
+
+
+
+
+
+
+
+
 
 public:
     Game()
@@ -118,6 +128,25 @@ public:
         leftRight = false;
         hit_box_factor_x = 8 * 2.5;
         hit_box_factor_y = 5 * 2.5;
+
+
+
+        ////////////////////////////////////
+        /////////////////HUD//////////////
+        ////////////////////////////////////
+
+
+        score;
+        ringsCollected;
+        gameClock.restart(); 
+        levelTime = 0;
+
+        hudTexture.loadFromFile("Data/hud.png");
+        scoreFont.loadFromFile("Fonts/scoreFont.ttf");
+
+
+
+
 
 
 
@@ -306,6 +335,64 @@ public:
     // #include<iostream>
     // using namespace std;
     // using namespace sf;
+
+
+
+    void DrawHUD(sf::RenderWindow& window)
+    {
+        sf::Sprite hudIcon;
+        hudIcon.setTexture(hudTexture);
+        hudIcon.setScale(4.f, 4.f); 
+
+        sf::Text label;
+        label.setFont(scoreFont);
+        label.setCharacterSize(24);
+        label.setFillColor(sf::Color::Yellow);
+
+        for (int i = 0; i < 3; i++) {
+
+            int iconY = (i == 0) ? 0 : (i == 1) ? 10 : 21;
+            int iconH = (i == 0) ? 10 : 11;
+
+            hudIcon.setTextureRect(sf::IntRect(0, iconY, 38, iconH));
+            hudIcon.setPosition(20, 20 + i * 30);
+            window.draw(hudIcon);
+
+            label.setString(":");
+            label.setPosition(70, 20 + i * 30);
+            window.draw(label);
+
+            if (i == 0)
+                label.setString(std::to_string(score));
+            else if (i == 1)
+                label.setString(std::to_string((int)levelTime));
+            else if (i == 2)
+                label.setString(std::to_string(ringsCollected));
+
+            label.setPosition(95, 20 + i * 30);
+            window.draw(label);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY)
     {
         offset_y = player_y;
@@ -560,6 +647,9 @@ public:
     /////////////////////////////////
     void play(RenderWindow& window)
     {
+
+        levelTime = gameClock.getElapsedTime().asSeconds();
+
         if (team.getPlayer()[team.getPlayerIndex()][0].getOnGround())
         {
             team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = false;
@@ -870,6 +960,10 @@ public:
             level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0]);
             //team.animate();
             team.draw(window, offset_x);
+
+            DrawHUD(window);
+
+
         // change these according to the movement logic of motobug, for now it moves with player
       /*  for (int i = 0; i < crabCount; i++) {
 
