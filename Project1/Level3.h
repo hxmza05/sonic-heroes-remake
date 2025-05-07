@@ -58,5 +58,8 @@ public:
 	{
 		return moveable;
 	}
-
+	virtual FallingPlatform** getFalling()
+	{
+		return nullptr;
+	}
 };

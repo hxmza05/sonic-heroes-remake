@@ -55,6 +55,12 @@ public:
 		return Alive;
 	}
 
+	void setHp(float x) {
+		hp = x;
+	}
+
+	void setAlive(bool status) { this->Alive = status; }
+
 	void setAnimation(int animationIndex) {
 		indexAnimation = animationIndex;
 	}
@@ -78,7 +84,7 @@ public:
 	{
 
 		sprite.setPosition(x - offset_x, y);
-		window.draw(sprite);	
+		window.draw(sprite);
 
 	}
 

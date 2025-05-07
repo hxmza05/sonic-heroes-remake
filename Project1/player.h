@@ -46,8 +46,11 @@ class Player
 	int hit_box_factor_x;
 	int hit_box_factor_y;
 	bool knockedByProjectile;
+	Clock haveBeenPutDown;
 
 protected:
+	float tailed_x;
+	float tailed_y;
 	float acceleration;
 	float velocityX;
 	bool direction;
@@ -72,6 +75,9 @@ protected:
 public:
 	Player()
 	{
+		tailed_x = -999;
+		tailed_y = -999;
+		haveBeenPutDown.restart();
 		 direction = 1;
 
 		figuringOut = false;
@@ -201,11 +207,15 @@ public:
 	{
 		return onGround;
 	}
+	Clock& getHaveBeenPutDown()
+	{
+		return haveBeenPutDown;
+	}
 	int& getAnimationIndex()
 	{
 		return indexAnimation;
 	}
-	int getDelayinFollow()
+	int &getDelayinFollow()
 	{
 		return delayInFollow;
 	}
@@ -250,6 +260,12 @@ public:
 	virtual void useSpecialAbilty(char**) = 0;
 	void checkDelayNow(int idx);
 	bool checkFeet(char** lvl);
+	bool teleportToTailed();
+	void setTailedCoords(float x, float y)
+	{
+		tailed_x = x;
+		tailed_y = y;
+	}
 	//void detectYourself();
 	void figureItOutYourself(float,char**,float);
 	void executePushingLeft()

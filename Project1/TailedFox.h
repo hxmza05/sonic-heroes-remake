@@ -158,6 +158,7 @@ public:
 ;			velocityY = -2;
 			indexAnimation = JUMPR;
 			states[JUMPR][0].RunAnimation();
+			onGround = false;
 		} 
 		else
 			if(!spacePressed)

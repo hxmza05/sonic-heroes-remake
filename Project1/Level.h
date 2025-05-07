@@ -4,6 +4,7 @@
 #include"Collectibles.h"
 #include"Obstacle.h"
 #include"MoveablePlatform.h"
+#include"FallingPlatform.h"
 
 using namespace std;
 #include"Animation.h"
@@ -77,7 +78,7 @@ public:
 	{
 		return nullptr;
 	}
-
+	virtual FallingPlatform**getFalling() = 0;
 	//{
 	//	for (int i = 0; i < height; i += 1)
 	//	{

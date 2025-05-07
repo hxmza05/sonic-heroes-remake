@@ -12,6 +12,8 @@ private:
 
 	float x, y;
 	float speed_x, speed_y;
+	float gravity;
+	float terminalVelocityY;
 	bool active;
 	bool wallCollision;
 	bool playerCollision;
@@ -33,7 +35,8 @@ public:
 		speed_x = 0, speed_y = 0;
 		active = false, wallCollision = false;
 		playerCollision = false;
-
+		gravity = 0.6f;
+		terminalVelocityY = 15.0f;
 
 		//texture.loadFromFile("Sprites/projectile.png");
 		//sprite.setTexture(texture);
@@ -43,8 +46,8 @@ public:
 		//sprite.setScale(0.1f, 0.1f);
 
 		circle.setRadius(9.0f);
-		circle.setFillColor(Color::White); 
-		circle.setOrigin(9.0f, 9.0f);
+		circle.setFillColor(Color::White);
+		//circle.setOrigin(9.0f, 9.0f);
 
 		//circle.setOutlineColor(Color::Yellow);
 		//circle.setOutlineThickness(2.0f);
@@ -76,6 +79,9 @@ public:
 	bool checkCollisionWithWall(char** lvl, int cell_size);
 	bool handleCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
 
+
+	void moveCrabProjectile();
+	void setCrabProjectileVelocity(float startX, float startY, float vx, float vy);
 
 
 };
@@ -118,9 +124,6 @@ void Projectile::move() {
 
 		circle.setPosition(x, y);
 
-		if (x < -100 || x > 2200 || y < -100 || y > 1200) {
-			active = false;
-		}
 	}
 }
 
@@ -129,6 +132,7 @@ void Projectile::draw(RenderWindow& window, float offset_x) {
 
 	if (active) {
 		circle.setPosition(x - offset_x, y);
+		cout << "Projectile draw: (" << x << " - " << offset_x << ", " << y << ") = (" << x - offset_x << ", " << y << ")\n";
 		window.draw(circle);
 	}
 }
@@ -180,4 +184,44 @@ bool Projectile::handleCollision(char** lvl, int cell_size, float player_x, floa
 
 bool Projectile::Active() const {
 	return active;
+}
+
+
+void Projectile::moveCrabProjectile() {
+
+	cout << "Projectile moved to x: " << x << ", y: " << y << endl;
+
+	if (active == false) {
+		cout << "Projectile deactivated immediately for crab at X: " << x << ", Y: " << y << endl;
+		return;
+	}
+
+	if (active) {
+
+		x += speed_x;
+
+		speed_y += gravity;
+
+		if (speed_y > terminalVelocityY) {
+			speed_y = terminalVelocityY;
+		}
+
+		y += speed_y;
+
+		circle.setPosition(x, y);
+	}
+}
+
+void Projectile::setCrabProjectileVelocity(float startX, float startY, float vx, float vy) {
+
+	x = startX;
+	y = startY;
+
+	speed_x = vx;
+	speed_y = vy;
+
+	active = true;
+
+	circle.setPosition(x, y);
+
 }

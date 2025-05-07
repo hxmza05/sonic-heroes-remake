@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="BossLevel.h" />
+    <ClInclude Include="FallingPlatform.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GlobalFunctions.h" />
     <ClInclude Include="Level1.h" />

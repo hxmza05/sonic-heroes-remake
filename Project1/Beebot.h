@@ -1,10 +1,7 @@
 #pragma once
 #include <iostream>
 #include<cmath>
-//#include "Enemy.h"
-//#include "Animation.h"
 #include "Projectile.h"
-//#include "Player.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -22,15 +19,14 @@ private:
 	int indexBee;
 	int air_Row;
 
-	const float bee_height = 37.5;
-	const float bee_width = 88.5;
+	const float bee_height;
+	const float bee_width;
 
 	Texture move_bee;
-	//Texture wings;
-	//Sprite wings_sprites;
 
 	Clock moveClock;
 	Clock attackClock;
+	Clock animClock;
 
 	bool ZigZag;
 	bool shotProjectile;
@@ -42,17 +38,17 @@ private:
 	int projectileCount;
 
 
-	Clock lockTimer;
 	Clock cooldownClock;
 	bool isLockedOn;
 	bool canLock; 
 
+	float prevX;
 
 
 
 public:
 
-	Beebot() {
+	Beebot() : bee_height(37.5), bee_width(88.5) {
 
 		hp = 5;
 		speed = 1.2;
@@ -60,6 +56,7 @@ public:
 		Moving = true;
 		x = 0;
 		y = 0;
+		prevX = 0;
 		Start = 0;
 		End = 0;
 		beeBaseY = 0;
@@ -84,32 +81,54 @@ public:
 
 		isLockedOn = false;
 		canLock = true;
-		lockTimer.restart();
 		cooldownClock.restart();
+		animClock.restart();
 
 
-		move_bee.loadFromFile("Sprites/beebot.png");
-		//wings.loadFromFile("Sprites/bee_wings0.png");
+
+		move_bee.loadFromFile("Sprites/bees.png");
 
 		totalAnimations = 2;
 		indexAnimation = 0;
+
 		states = new Animation * [totalAnimations];
 
-		states[0] = new Animation(1);
+		states[0] = new Animation(2);
 
-		for (int i = 0, height = 0; i < 1; i++) {
-			states[0]->getSprites()[i].setTexture(move_bee);
-			states[0]->getSprites()[i].setTextureRect(IntRect(0, 0, 118, 50));
-			states[0]->getSprites()[i].setScale(0.75f, 0.75f);
-		}
+		// Move 1: y = 4, h = 30
+		states[0]->getSprites()[0].setTexture(move_bee);
+		states[0]->getSprites()[0].setTextureRect(IntRect(0, 4, 47, 30));
+		states[0]->getSprites()[0].setScale(1.88f, 1.25f); 
 
-		/*states[7] = new Animation(3);
+		// Move 2: y = 34, h = 26
+		states[0]->getSprites()[1].setTexture(move_bee);
+		states[0]->getSprites()[1].setTextureRect(IntRect(0, 34, 47, 26));
+		states[0]->getSprites()[1].setScale(1.88f, 1.4423077f);
 
-		for (int i = 0, height = 0; i < 3; i++, height += 33) {
-			states[7]->getSprites()[i].setTexture(wings);
-			states[7]->getSprites()[i].setTextureRect(IntRect(0, height, 150, 33));
-			states[7]->getSprites()[i].setScale(0.35f, 0.75f);
-		}*/
+
+		states[1] = new Animation(4);
+
+		// Stop: y = 60, h = 30
+		states[1]->getSprites()[0].setTexture(move_bee);
+		states[1]->getSprites()[0].setTextureRect(IntRect(0, 60, 47, 30));
+		states[1]->getSprites()[0].setScale(1.88f, 1.25f);
+
+		// Lock: y = 90, h = 26
+		states[1]->getSprites()[1].setTexture(move_bee);
+		states[1]->getSprites()[1].setTextureRect(IntRect(0, 90, 47, 26));
+		states[1]->getSprites()[1].setScale(1.88f, 1.4423077f);
+
+		// Charge: y = 116, h = 40
+		states[1]->getSprites()[2].setTexture(move_bee);
+		states[1]->getSprites()[2].setTextureRect(IntRect(0, 116, 47, 40));
+		states[1]->getSprites()[2].setScale(1.88f, 0.9375f);
+
+		// Fire: y = 156, h = 32
+		states[1]->getSprites()[3].setTexture(move_bee);
+		states[1]->getSprites()[3].setTextureRect(IntRect(0, 152, 47, 32));
+		states[1]->getSprites()[3].setScale(1.88f, 1.171875f);
+
+
 
 	}
 
@@ -136,11 +155,11 @@ public:
 
 
 	void movement(char** lvl, float player_x, float player_y, const int cell_size, int player_width, int player_height);
-	void getBeebotCoordinates(char** lvl, int height, int width);
+	void getBeebotCoordinates(char** lvl, int height, int width, int y_start, int y_end);
 	void move_beebots(Beebot** beebots, int& beeIndex, int& beeCount, const int cell_size);
 	bool handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
 	void drawProjectiles(RenderWindow& window, float offset_x);
-
+	bool PlayerBeeCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight);
 
 };
 
@@ -173,7 +192,7 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 				isLockedOn = true;
 				canLock = false;
 				cooldownClock.restart();
-				lockTimer.restart();
+				attackClock.restart();
 				targetX = playerCenterX;
 				targetY = player_y + player_height / 2.0f;
 				//cout << "Bee Locking on to player"<<endl;
@@ -183,38 +202,50 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 
 				y = beeBaseY;
 
-				if (lockTimer.getElapsedTime().asSeconds() >= 1.0f && !shotProjectile) {
+				float time = attackClock.getElapsedTime().asSeconds();
 
-					shotProjectile = true;
+				indexAnimation = 1;
 
-					float projectileX = targetX - beeCenterX;
-					float projectileY = (targetY)-(y + getbeeHeight() / 2.0f);
+				if (time < 0.2f)
+					sprite = states[1]->getSprites()[0]; // stop
+				else if (time < 0.4f)
+					sprite = states[1]->getSprites()[1]; // lock-on
+				else if (time < 0.6f)
+					sprite = states[1]->getSprites()[2]; // charge
 
-					float magnitude = sqrt(projectileX * projectileX + projectileY * projectileY);
+				else {
+					sprite = states[1]->getSprites()[3]; // fire
+					if (!shotProjectile) {
+						shotProjectile = true;
 
-					if (magnitude != 0) {
-						projectileX /= magnitude;
-						projectileY /= magnitude;
+						float projectileX = targetX - beeCenterX;
+						float projectileY = targetY - (y + getbeeHeight() / 2.0f);
+						float magnitude = sqrt(projectileX * projectileX + projectileY * projectileY);
+						if (magnitude != 0) {
+							projectileX /= magnitude;
+							projectileY /= magnitude;
+						}
+
+						if (!projectiles)
+							projectiles = new Projectile();
+
+						projectiles->setPosition(beeCenterX, y + getbeeHeight() / 2.0f, projectileX, projectileY, 4.0f);
 					}
-
-					if (!projectiles) {
-						projectiles = new Projectile();
-					}
-
-					projectiles->setPosition(beeCenterX, y + getbeeHeight() / 2.0f, projectileX, projectileY, 4.0f);
-
-					//cout << "Bee Fired projectile at player"<<endl;
-
 				}
 
-				if (shotProjectile) {
+				if (time > 1.0f && shotProjectile) {
 					isLockedOn = false;
-					shotProjectile = false;
 					attackingPlayer = false;
 					canLock = true;
-					//cout << "Bee Resuming patrol" << endl;
+					shotProjectile = false;
 				}
 
+			}
+
+			if(isLockedOn && (player_x < Start || player_x > End || distanceX > 60.0f || (player_y - beeBaseY) > 256.0f || (player_y - beeBaseY) < -100.0f)) {
+				isLockedOn = false;
+				shotProjectile = false;
+				attackClock.restart();
 			}
 
 		}
@@ -277,19 +308,48 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 		y += (ZigZag ? speed : -speed);
 
 	}
-	states[indexAnimation]->RunAnimation();
-	sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
+
+	if (!attackingPlayer || !isLockedOn) {
+
+		indexAnimation = 0;
+
+		if (animClock.getElapsedTime().asSeconds() >= 0.2f) {
+			states[0]->RunAnimation();
+			animClock.restart();
+		}
+
+		sprite = states[0]->getSprites()[states[0]->getIndex()];
+	}
+
+	if (x > prevX) {
+		sprite.setScale(-sprite.getScale().x, sprite.getScale().y);
+		sprite.setOrigin(sprite.getLocalBounds().width, 0);
+	}
+
+	else if (x < prevX) {
+		sprite.setScale(sprite.getScale().x, sprite.getScale().y);
+		sprite.setOrigin(0, 0);
+	}
+
+	prevX = x;
+
 	sprite.setPosition(x, y);
+
 
 	if (projectiles && projectiles->Active()) {
 		projectiles->move();
 	}
+
 }
 
 
 void Beebot::move_beebots(Beebot** beebots, int& beeIndex, int& beeCount, const int cell_size)
 {
 	for (int i = 0; i < beeCount; i++) {
+
+		if (beeIndex >= beeCount) {
+			break;
+		}
 
 		float patrolStart = BeebotStart[i] * cell_size;
 		float beebot_End = BeebotEnd[i] * cell_size;
@@ -302,17 +362,19 @@ void Beebot::move_beebots(Beebot** beebots, int& beeIndex, int& beeCount, const 
 		beebots[beeIndex]->setPosition(bee_X, bee_Y, patrolStart, patrolEnd);
 		beebots[beeIndex]->beeBaseY = bee_Y;
 
-
 		cout << "placed bee " << beeIndex << ": " << bee_X << ", " << bee_Y << endl;
 		beeIndex++;
+
 	}
 
 	beeCount = beeIndex;
 }
-
-void Beebot::getBeebotCoordinates(char** lvl, int height, int width)
+void Beebot::getBeebotCoordinates(char** lvl, int height, int width, int y_start, int y_end)
 {
-	for (int i = 5; i < height / 2 + 1; i++) { //////////// add variables for start and end range in loop conditions
+
+	bool* occupiedColumns = new bool[width](false); 
+
+	for (int i = y_start; i < y_end; i++) {
 
 		int j = 0;
 
@@ -328,13 +390,36 @@ void Beebot::getBeebotCoordinates(char** lvl, int height, int width)
 
 				int end = j - 1;
 
-				if (end - start + 1 >= 4 && indexBee < beeCoordintes) {
-					BeebotStart[indexBee] = start;
-					BeebotEnd[indexBee] = end;
-					BeebotHeights[indexBee] = i;
-					indexBee++;
+				if (end - start + 1 >= 6 && indexBee < beeCoordintes) {
 
-					cout << "Found air zone from tile " << start << " to " << end << " at row " << i << endl;
+					int midpoint = (start + end) / 2;
+					int patrolStart = max(0, midpoint - 2);
+					int patrolEnd = min(width - 1, midpoint + 2);
+
+					bool conflict = false;
+
+					for (int col = patrolStart; col <= patrolEnd; col++) {
+
+						if (occupiedColumns[col]) {
+							conflict = true;
+							break;
+						}
+					}
+
+					if (!conflict) {
+
+						BeebotStart[indexBee] = patrolStart;
+						BeebotEnd[indexBee] = patrolEnd;
+						BeebotHeights[indexBee] = i;
+
+						for (int col = patrolStart; col <= patrolEnd; col++) {
+							occupiedColumns[col] = true;
+						}
+
+						indexBee++;
+
+						cout << "Found air zone from tile " << start << " to " << end << " at row " << i << endl;
+					}
 				}
 			}
 
@@ -343,8 +428,10 @@ void Beebot::getBeebotCoordinates(char** lvl, int height, int width)
 			}
 		}
 	}
-}
 
+	delete[] occupiedColumns; 
+
+}
 
 void Beebot::drawProjectiles(RenderWindow& window, float offset_x) {
 
@@ -354,12 +441,10 @@ void Beebot::drawProjectiles(RenderWindow& window, float offset_x) {
 
 }
 
-
 bool Beebot::handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY)
 {
 	if (projectiles && projectiles->Active()) 
 	{
-
 		if (projectiles->handleCollision(lvl, cell_size, player_x, player_y, player_width, player_height, hasKnockedBack, tempVelocityY))
 		{
 			if (!projectiles->Active())
@@ -373,5 +458,11 @@ bool Beebot::handleProjectilesCollision(char** lvl, int cell_size, float player_
 	}
 	return false;
 }
+
+bool Beebot::PlayerBeeCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight)
+{
+	return (player_x + Pwidth > enemy_x && player_x < enemy_x + enemyWidth && player_y + Pheight > enemy_y && player_y < enemy_y + enemyHeight);
+}
+
 
 

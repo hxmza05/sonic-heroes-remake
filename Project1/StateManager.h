@@ -25,6 +25,7 @@
 #include"Team.h"
 #include"Game.h"
 #include"StateManager.h"
+
 class StateManager
 {
 	Menu *menu;
@@ -66,11 +67,15 @@ public:
 				{
 					window.close();
 				}
+				if (!menu->isGameStateActive()) 
+				{
+					menu->update(window, event);
+				}
 			}
-			if (Keyboard::isKeyPressed(Keyboard::Escape))
+			/*if (Keyboard::isKeyPressed(Keyboard::Escape))
 			{
 				window.close();
-			}
+			}*/
 			window.clear();
 			if (!stateIndex)
 			{

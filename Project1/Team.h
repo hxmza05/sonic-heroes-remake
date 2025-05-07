@@ -19,15 +19,19 @@ class Team
     bool spacePressed;
     bool spacePressedTwice;
     int spaceCount;
-
+    bool isFlying;
+    int isNotFlyingCount;
 public:
     Team()
     {
+        isNotFlyingCount = 0;
+        //haveBeenPutDown.restart();
+        isFlying = false;
         team = new Player * [3];
         team[0] = new Sonic();
         team[1] = new TailedFox();
         team[2] = new Knuckles();
-        playerIndex = 2;
+        playerIndex = 1;
         leadersPath = new int* [100];
 		leadersVelocityY = new float[100];
         for (int i = 0; i < 100; i++)
@@ -38,6 +42,7 @@ public:
         spacePressed = false;
         spacePressedTwice = false;
         spaceCount = 0;
+        //reset = false;
     }
     int getPlayerIndex()
     {
@@ -56,6 +61,10 @@ public:
     Player** getPlayer()
     {
         return team;
+    }
+    int& getIsnotFlyingcount()
+    {
+        return isNotFlyingCount;
     }
     int** getLeadersPath()
     {
@@ -93,6 +102,9 @@ public:
                 //    JUMPR is for flying here
                 if (playerIndex == 1 && team[1]->getAnimationIndex() == JUMPR)
                 {
+                    //taile
+                    isFlying = true;
+                    pathIndex = 0;
                     float dummy = 0;
                     float dummy2 = 0;
                     bool dummybool = true;
@@ -104,7 +116,8 @@ public:
                             {
                                 if(canFollowerGlide(team[j]->getx(), team[j]->gety(), team[j]->getPwidth(), team[1]->getx(), team[1]->gety(), team[1]->getPheight(), team[1]->getPwidth()))
                                 {
-                                    makeThemGlide(j, h);
+                                    
+                                        makeThemGlide(j, h);
                                 }
                                 else
                                 {
@@ -116,7 +129,8 @@ public:
                                     }
                                     else cout << "Knuckles";
                                         cout << " is figuring it out\n\n\n";
-                                    team[j]->figureItOutYourself(team[playerIndex]->getx(),lvl,offsetx);
+                                        //if (team[j]->getAnimationIndex() != STILL)
+                                            team[j]->figureItOutYourself(team[playerIndex]->getx(),lvl,offsetx);
                                 }
                             }
                             else 
@@ -127,11 +141,13 @@ public:
                             {
                                 team[j]->getAnimationIndex() = STILL;
                                 team[j]->getStates()[STILL][0].RunAnimation();
+                                team[j]->getHaveBeenPutDown().restart();
                             }
                             // team[i]->glideAndFollowTails();
                         }
                         else
                         {
+
                             cout << "\n\nIn else if they are not jumping\n";
                             if (j == 0)
                             {
@@ -139,19 +155,53 @@ public:
                             }
                             else cout << "Knuckles";
                             cout << " is figuring it out\n\n\n";
-                            team[j]->figureItOutYourself(team[playerIndex]->getx(), lvl, offsetx);
-                            //team[j]->player_gravity(lvl, dummy, dummy2, 64, dummybool);
-                     /*       cout << "Velcoty for ";
-                            if(j == 0)
-								cout << "Sonic";
-							else cout << "Knuckles";
-                            cout << " is = " << team[j]->getVelocityY()<<"\n\n\n";*/
+                            //if (team[j]->getAnimationIndex() != STILL)
+                            if (team[j]->getHaveBeenPutDown().getElapsedTime().asSeconds() > 1)
+                            {
+                                team[j]->figureItOutYourself(team[playerIndex]->getx(), lvl, offsetx);
+
+                            }
                         }
                     }
                 }
                 else
                 {
-                    // team[i]->updateDelay();
+                    //bool wo
+                    if (isNotFlyingCount == 0 && isFlying /*&& team[1]->getAnimationIndex() == STILL*/)
+                    {
+                        team[0]->setTailedCoords(team[1]->getx(), team[1]->gety());
+                        team[2]->setTailedCoords(team[1]->getx(), team[1]->gety());
+                        team[2]->getAnimationIndex() = BREAKR;
+                        isNotFlyingCount++;
+
+                        //team[2]
+                    }
+                    if (playerIndex == 1 && isFlying && playerIndex == 1 && isNotFlyingCount > 0 )
+                    {
+                        pathIndex = 0;
+                        int tempCount = 0;
+                        if (team[0]->teleportToTailed())
+                        {
+                            tempCount++;
+                        }
+                        if (team[2]->teleportToTailed())
+                        {
+                            tempCount++;
+                        }
+                        if(tempCount == 2)
+                        {
+                            isFlying = false;
+                            isNotFlyingCount = 0;
+                            team[0]->setTailedCoords(team[1]->getx(), team[1]->gety());
+                            team[2]->setTailedCoords(team[1]->getx(), team[1]->gety());
+                            team[0]->getDelayinFollow() = 25;
+                            team[2]->getDelayinFollow() = 30;
+                            team[0]->setHasStartedFollowing(false);
+                            team[2]->setHasStartedFollowing(false);
+                            break;
+                        }
+                        break;
+                    }
                     team[i][0].autoMove(leadersPath[team[i][0].getDelayinFollow()][0] - 16, leadersPath[team[i][0].getDelayinFollow()][1], lvl);
 					team[i][0].getVelocityY() = -19;
                    /* if (team[playerIndex]->getAnimationIndex() == STILL)
@@ -178,7 +228,12 @@ public:
         team[j]->getx() = team[1]->getx();
         team[j]->gety() = team[1]->gety() + h;
     }
-    bool canFollowerGlide( int playerLeft, int playerTop, int playerWidth, int tailed_x, int tailed_y, int tailedHeight, int tailedWidth)
+   /* bool getReset()
+    {
+        return reset;
+    }*/
+
+        bool canFollowerGlide( int playerLeft, int playerTop, int playerWidth, int tailed_x, int tailed_y, int tailedHeight, int tailedWidth)
     {
         int playerRight = playerLeft + playerWidth;
         int tailedBottom = tailed_y + tailedHeight;

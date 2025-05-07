@@ -290,33 +290,74 @@ void Player::figureItOutYourself(float leader_x,char**lvl,float offset_x)
 {
 	if (x < leader_x)
 	{
-		if (x + 3 > leader_x)
+		if (x + 1 > leader_x)
 		{
 			x = leader_x;
 		}
 		else
 		{
-			x += 3;
+			x += 1;
 		}
 	}
 	else if (x > leader_x)
 	{
-		if (x - 3 < leader_x)
+		if (x - 1 < leader_x)
 		{
 			x = leader_x;
 		}
 		{
-			x -= 3;
+			x -= 1;
 		}
 	}
 	if (!spacePressed)
 	{
 		spacePressed = true;
 		onGround = false;
-		velocityY = -19.6;
+		velocityY = -18;
 	}
 	indexAnimation = JUMPR;
 	states[JUMPR][0].RunAnimation();
 	float o_y = 0;
 	player_dummy_gravity(lvl,o_y,offset_x,64,spacePressed);
+}
+bool Player::teleportToTailed()
+{
+	/*if (tailed_x == -999 && tailed_y == -999)
+	{
+		tailed_x = target_x;
+		target_y = target_y;
+	}*/
+	cout << "Tailed_x = " << tailed_x;
+	cout << " ---- Tailed_y = " << tailed_y << endl;
+	if (x < tailed_x)
+	{
+		if (x + 5 <= tailed_x)
+			x += 5;
+		else x = tailed_x;
+	}
+	else if (x > tailed_x)
+	{
+		if (x - 5 >= tailed_x)
+			x -= 5;
+		else x = tailed_x;
+	}
+	if (y < tailed_y)
+	{
+		if (y + 5 <= tailed_y)
+			y += 5;
+		else y = tailed_y;
+	}
+	else if (y > tailed_y)
+	{
+		if (y - 5 >= tailed_y)
+			y -= 5;
+		else y = tailed_y;
+	}
+	if (x == tailed_x && y == tailed_y)
+	{
+		/*tailed_x = -999;
+		tailed_y = -999;*/
+		return true;
+	}
+	return false;
 }
