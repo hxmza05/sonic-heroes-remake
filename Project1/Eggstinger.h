@@ -17,7 +17,6 @@ private:
 	float rangeStartX;
 	float rangeEndX;
 
-
 	bool isDiving;
 	bool isRising;
     bool right;
@@ -49,7 +48,7 @@ private:
 
 public:
 
-	Eggstinger() : stingerHeight(98), stingerWidth(120){
+	Eggstinger() : stingerHeight(98), stingerWidth(120) {
 
 		this->hp = 15;
 		this->speed = 3.0;
@@ -58,7 +57,6 @@ public:
 		this->x = 0;
 		this->y = 0;
 
-
 		hoverHeight = 2 * 64;
 		targetY = 8 * 64/* - 97.6f + 5.f*/;
         targetX = 0;
@@ -66,7 +64,6 @@ public:
 		raiseSpeed = 2.5f;
 		rangeStartX = 3 * 64;
 		rangeEndX = 12 * 64;
-
 
 		isDiving = false;
 		isRising = false;
@@ -84,18 +81,17 @@ public:
         spikeHold = false;
 
 
-
         stingerspikeTexture.loadFromFile("Data/spike.png");
         stingerspikeSprite.setTexture(stingerspikeTexture);
         sprite.setTextureRect(IntRect(0, 0, 12.f, 64.f));
         stingerspikeSprite.setScale(1.5f, -0.5f);
 
 
-
 		texture.loadFromFile("Sprites/eggstinger.png");
 		sprite.setTexture(texture);
 		sprite.setTextureRect(IntRect(0, 0, 150, 122));
 		sprite.setScale(0.8f, 0.8f);
+
 
 	}
 

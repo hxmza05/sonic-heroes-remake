@@ -83,6 +83,7 @@ void Player::player_dummy_gravity(char** lvl, float& offset_y, float& offset_x, 
 	{
 		velocityY = 0;
 	}
+
 	char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(x + hit_box_factor_x) / cell_size)];
 	char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(x + hit_box_factor_x + Pwidth) / cell_size)];
 	char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(x + hit_box_factor_x + Pwidth / 2) / cell_size)];
