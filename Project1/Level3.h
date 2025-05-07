@@ -17,7 +17,7 @@ public:
 	Level3(char** level = nullptr, Enemy*** e = nullptr)
 	{
 		height = 14;
-		width = 110;
+		width = 300;
 		lvl = new char* [height];
 		for (int i = 0; i < height; i++)
 		{
@@ -37,8 +37,23 @@ public:
 		moveable = new MoveablePlatform(0, 0, 0, 0);
 		designlvl("lvl3.txt");
 	}
+	char  getMapValues(int val)
+	{
+		switch (val)
+		{
+		case 0: return 's';
+		case 1: return 'q';
+		case 2: return 'w';
+		case 3: return 'e';
+		case 4: return 'p';
+		case 5: return 'r';
+		case 6: return 'p';
+		default: return 's';
+		}
+	}
 	void designlvl(const char* filename)
 	{
+		cout << "\n\n\nIn desgin function for level 3\n\n\n";
 		ifstream file(filename);
 		if (!file.is_open())
 		{
@@ -49,8 +64,12 @@ public:
 		{
 			for (int j = 0; j < width; j++)
 			{
-				file >> lvl[i][j];
+				int wall;
+				file >> wall;
+				lvl[i][j] = getMapValues(wall);
+				//cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
 			}
+			cout << endl;
 		}
 		file.close();
 	}

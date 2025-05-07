@@ -104,7 +104,7 @@ public:
         ////////////////////////////Crabs
 
 
-      /*  crabCount = 5;
+       crabCount = 5;
         crabIndex = 0;
         crabs = new Crabmeat * [crabCount];
 
@@ -119,7 +119,7 @@ public:
             crabs[i]->getCrabCoordinates(level[levelIndex]->getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), crab_start, crab_end);
         }
 
-        crabs[0]->move_crabs(crabs, crabIndex, crabCount, cell_size);*/
+        crabs[0]->move_crabs(crabs, crabIndex, crabCount, cell_size);
 
 
         ///////////////////////////////////
@@ -127,7 +127,7 @@ public:
         ////////////////////////////////////
 
 
-   /*     beeCount = 5;
+       beeCount = 5;
         beeIndex = 0;
         beebots = new Beebot * [beeCount];
 
@@ -138,14 +138,14 @@ public:
         bee_start = 2;
         bee_end = 5;
         beebots[0]->getBeebotCoordinates(level[levelIndex]->getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), bee_start, bee_end);
-        beebots[0]->move_beebots(beebots, beeIndex, beeCount, cell_size);*/
+        beebots[0]->move_beebots(beebots, beeIndex, beeCount, cell_size);
 
 
         ///////////////////////////////////
         //////////////motobugs
         ////////////////////////////////////
 
-      /*   motobugCount = 5;
+       motobugCount = 5;
          motobugIndex = 0;
          motobugs = new Motobug * [motobugCount];
 
@@ -157,7 +157,7 @@ public:
          motobug_end = 12;
 
          motobugs[0]->getMotobugCoordinates(level[levelIndex]->getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), motobug_start, motobug_end);
-         motobugs[0]->move_motobugs(motobugs, motobugIndex, motobugCount, cell_size);*/
+         motobugs[0]->move_motobugs(motobugs, motobugIndex, motobugCount, cell_size);
 
 
         backGround.loadFromFile("Data/bg1.png");
@@ -182,7 +182,7 @@ public:
         walls[3] = spikes;
 
         spaceCount = 0;
-        levelIndex = 0;
+        //levelIndex = 0;
         int height = level[levelIndex]->getHeight();
         int width = level[levelIndex]->getWidth();
          collectibles = new Collectibles **[level[levelIndex]->getHeight()];
@@ -544,7 +544,7 @@ public:
             if (checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() - 1) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() / 2))
             {
                 team.getPlayer()[team.getPlayerIndex()][0].moveRight();
-                if (buffer_end < 216 * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() >= buffer_end)
+                if (buffer_end < 294 * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() >= buffer_end)
                 {
                     buffer_end = team.getPlayer()[team.getPlayerIndex()][0].getx();
                     buffer_start = buffer_end - 576;
@@ -633,7 +633,7 @@ public:
         handleRingCollection(collectibles, level[levelIndex][0].getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), team.getPlayer()[team.getPlayerIndex()][0], ringsCollected, cell_size);
         // team.getPlayer()[team.getPlayerIndex()][0].draw_player(window, team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()][0].getSprites()[team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()]->getIndex()],offset_x);
 
-           /* for (int i = 0; i < beeCount; i++)
+            for (int i = 0; i < beeCount; i++)
             {
 
                 if (!beebots[i]->alive()) {
@@ -671,7 +671,7 @@ public:
 
                 beebots[i]->draw(window, offset_x);
 
-            }*/
+            }
             for(int i = 0;i < 8;i++)
             {
                 level[levelIndex]->getFalling()[i]->shouldItActivate(team.getPlayer()[team.getPlayerIndex()]->getx());
@@ -680,11 +680,11 @@ public:
                     level[levelIndex]->getFalling()[i]->fall();
                 }
             }
-            level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0]);
+            //level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0]);
             team.animate();
             team.draw(window, offset_x);
         // change these according to the movement logic of motobug, for now it moves with player
-      /*  for (int i = 0; i < crabCount; i++) {
+        for (int i = 0; i < crabCount; i++) {
 
             if (!crabs[i]->alive()) {
                 continue;
@@ -710,8 +710,8 @@ public:
             }
             crabs[i]->drawProjectile(window, offset_x);
             crabs[i]->draw(window, offset_x);
-        }*/
-      /*  for (int i = 0; i < motobugCount; i++)
+        }
+       for (int i = 0; i < motobugCount; i++)
         {
 
             if (!motobugs[i]->alive()) {
@@ -738,7 +738,8 @@ public:
                 }
             }
             motobugs[i]->draw(window, offset_x);
-        }*/
+        }
+       cout << "Player cell" << team.getPlayer()[team.getPlayerIndex()]->getx()<<endl;
          // draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
          // draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);
     }
