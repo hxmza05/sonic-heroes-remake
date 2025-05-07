@@ -1,10 +1,16 @@
 #pragma once
 //#include"Player.h"
+#include"GlobalFunctions.h"
 using namespace sf;
+#define BREAKR 15
+#define BREAKL 16
+
 
 
 class Knuckles :public Player
 {
+	int GlideCount;
+	Clock coolDown;
 	Texture jogLeft;
 	Texture jogRight;
 	Texture upLeft;
@@ -20,13 +26,17 @@ class Knuckles :public Player
 	Texture still;
 	Texture glideLeft;
 	Texture glideRight;
+	Texture breakR;
+	Texture breakL;
 public:
 	Knuckles()
 	{
+		 GlideCount = 0;
+
 		//isGliding = false;
 		states = new Animation * [15];
 		indexAnimation = 0;
-		totalAnimations = 15;
+		totalAnimations = 17;
 		jogLeft.loadFromFile("Data/KLeftWalk.png");
 		states[LEFT] = new Animation(12);
 		for (int i = 0,  width = 0;i < 12;i++,  width += 49)
@@ -160,7 +170,24 @@ public:
 			states[GLIDER]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
 			states[GLIDER]->getSprites()[i].setScale(2, 2);
 		}
-		delayInFollow = 7;
+		breakL.loadFromFile("Data/KBreakL.png");
+		states[BREAKL] = new Animation(5);
+		for (int i = 0, width = 0;i <5;i++, width += 49)
+		{
+			states[BREAKL]->getSprites()[i].setTexture(breakL);
+			states[BREAKL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[BREAKL]->getSprites()[i].setScale(2, 2);
+		}
+		breakR.loadFromFile("Data/KBreakR.png");
+		states[BREAKR] = new Animation(5);
+		for (int i = 0, width = 0;i < 5;i++, width += 49)
+		{
+			states[BREAKR]->getSprites()[i].setTexture(breakR);
+			states[BREAKR]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[BREAKR]->getSprites()[i].setScale(2, 2);
+		}
+		coolDown.restart();
+		delayInFollow = 30;
 	}
 
 	virtual void followLeader(const int const** pathToFollow)
@@ -178,5 +205,121 @@ public:
 	void glideAndFollowTails()
 	{
 
+	}
+	void coolingDownCount()
+	{
+		if (GlideCount >= 11 && coolDown.getElapsedTime().asSeconds()>1)
+		{
+			GlideCount = 0;
+			coolDown.restart();
+		}
+	}
+	void useSpecialAbilty(char**lvl)
+	{
+		cout << coolDown.getElapsedTime().asSeconds()<<"\n";
+		if(GlideCount <=10)
+		{
+			cout << "inside";
+				if (direction == 1)
+			{
+				indexAnimation = BREAKR;
+			}
+			if (direction == 0)
+			{
+				indexAnimation = BREAKL;
+			}
+			cout << "BreakCalled";
+			Break(lvl);
+			//coolDown.restart();
+		}
+		states[indexAnimation]->RunAnimation();
+		coolingDownCount();
+	}
+	void Break(char**lvl)
+	{
+		int glidePixels = 5;
+		int checkX = (indexAnimation == BREAKR) ? x + getPwidth() + glidePixels : x - glidePixels;
+		int checkY = y + getPheight() / 2; // Middle of player vertically for more accurate collision
+		int tileX = checkX / 64;
+		int tileY = checkY / 64;
+
+		//  checking bounds here firstxly
+		if (tileX < 0 || tileX >= 200 || tileY < 0 || tileY >= 14)
+			return;
+		if (checkCollisionSpikes(lvl, checkX, checkY))
+		{
+			return;
+		}
+		// If block is breakable
+		if (checkCollisionExceptSpikes(lvl, checkX, checkY))
+		{
+			lvl[tileY][tileX] = 's'; // Mark it as emptyspace pwnow
+			cout << "Collision Detected and Block Broken\n";
+		}
+		checkY = y - 5;
+		tileY = checkY / 64;
+		if (checkCollisionExceptSpikes(lvl, checkX, checkY))
+		{
+			lvl[tileY][tileX] = 's'; // Mark it as emptyspace pwnow
+			cout << "Collision Detected and Block Broken\n";
+		}
+		// Glide movement
+		if (indexAnimation == BREAKR)
+			x += glidePixels;
+		else
+			x -= glidePixels;
+		GlideCount++;
+	}
+	void moveLeft()
+	{
+		if(indexAnimation != BREAKL && indexAnimation != BREAKR)
+		{
+			if (velocityX > 0)
+			{
+				//velocityX-=
+
+			}
+			{
+				x += velocityX;
+				if (velocityX - acceleration > -max_speed)
+				{
+					velocityX -= acceleration;
+				}
+				if (velocityX > -10)
+				{
+					indexAnimation = LEFT;
+					states[LEFT][0].RunAnimation();/*&& topLeft != 'q' && topLeft != 'e';*/
+				}
+				else
+				{
+					indexAnimation = LEFTRUN;
+					states[LEFTRUN][0].RunAnimation();
+				}
+			}
+			direction = 0;
+		}
+	}
+	void moveRight()
+	{
+		if(indexAnimation != BREAKL && indexAnimation != BREAKR)
+		{
+			x += velocityX;
+			if (velocityX + acceleration < max_speed)
+			{
+				velocityX += acceleration;
+			}
+			if (velocityX < 10)
+			{
+				indexAnimation = RIGHT;
+				states[RIGHT][0].RunAnimation();/*&& topLeft != 'q' && topLeft != 'e';*/
+				//cout<<"right  animation running";
+			}
+			else
+			{
+				indexAnimation = RIGHTRUN;
+				states[RIGHTRUN][0].RunAnimation();
+			}
+			direction = 1;
+		}
 	}
 };

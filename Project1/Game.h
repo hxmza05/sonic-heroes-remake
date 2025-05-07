@@ -12,6 +12,7 @@
 #include "BossLevel.h"
 #include "Rings.h"
 #include"GlobalFunctions.h"
+//#include"FallingPlatform.h"
 class Game
 {
     int spaceCount;
@@ -125,23 +126,9 @@ public:
         ////////////////////////////////////
 
 
-        stingerCount = 0;
+        stingerCount = 1;
         eggStingerSpawn = false;
 		stinger = new Eggstinger();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         ////////////////////////////////////
@@ -149,7 +136,7 @@ public:
         /////////////////////////////////////
 
 
-        crabCount = 2;
+        crabCount = 6;
         crabIndex = 0;
         crabs = new Crabmeat * [crabCount];
 
@@ -172,7 +159,7 @@ public:
         ////////////////////////////////////
 
 
-        beeCount = 2;
+        beeCount = 4;
         beeIndex = 0;
         beebots = new Beebot * [beeCount];
 
@@ -190,7 +177,7 @@ public:
         //////////////motobugs
         ////////////////////////////////////
 
-         motobugCount = 2;
+         motobugCount = 4;
          motobugIndex = 0;
          motobugs = new Motobug * [motobugCount];
 
@@ -210,7 +197,7 @@ public:
          //////////////batbrain
          ////////////////////////////////////
 
-         batCount = 1;
+         batCount = 4;
          batIndex = 0;
          batbrains = new Batbrain * [batCount];
 
@@ -586,7 +573,7 @@ public:
                 {
                     buffer_start = team.getPlayer()[team.getPlayerIndex()][0].getx();
                     buffer_end = buffer_start + 576;
-                    offset_x -= team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
+                    offset_x += team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
                 }
                 leftRight = true;
             }
@@ -645,7 +632,14 @@ public:
             team.jump();
         }
         //cout << "in the middle of play function \n\n";
-
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+        {
+            team.switchLeader();
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+        {
+            team.useSpecial(level[levelIndex]->getLvl());
+        }
         if (team.getSpacePressed())
         {
             if (team.getPlayerIndex() != 1)
@@ -698,9 +692,9 @@ public:
          }*/
         if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             team.getPlayer()[team.getPlayerIndex()][0].player_gravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed());
-
-        team.storePath();
-        team.autoMoveFollowers(level[levelIndex]->getLvl());
+        //if(!team.getReset())
+            team.storePath();
+        team.autoMoveFollowers(level[levelIndex]->getLvl(),offset_x);
         if (level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
         {
             if(team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() != STILL)
@@ -714,6 +708,8 @@ public:
         level[levelIndex]->getMoveable()->draw(window, offset_x);
 
         display_level(window, level[levelIndex][0].getHeight(), level[levelIndex][0].getWidth(), level[levelIndex][0].getLvl(), walls, 64, offset_x);
+        for(int i = 0;i < 8;i++)
+            level[levelIndex]->getFalling()[i]->draw(window, offset_x);
 
         updateAndDrawCollectibles( level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), window);
         handleRingCollection(collectibles, level[levelIndex][0].getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), team.getPlayer()[team.getPlayerIndex()][0], ringsCollected, cell_size);
@@ -724,6 +720,8 @@ public:
         //cout << "Ongground = " << team.getPlayer()[team.getPlayerIndex()][0].getOnGround();
         //cout << "\n";
         team.draw(window, offset_x);
+
+
         
         /*
         
@@ -770,10 +768,6 @@ public:
 
         }
 
-        */
-
-
-
 
         for (int i = 0; i < batCount; ++i) {
 
@@ -809,7 +803,6 @@ public:
             batbrains[i]->draw(window, offset_x);
 
         }
-
 
 
 
@@ -922,24 +915,10 @@ public:
 
         }
 
-
-         /*
-         for (int i = 0; i < batCount; i++) {
-             batbrains[i].movement(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size);
-             batbrains[i].draw(window, offset_x);
-         }
-
-         beebot.movement();
-         beebot.draw(window);*/
-
-         /*bat.movement(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety());
-         bat.draw(window);*/
-
-         /*stinger.movement(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety());
-         stinger.draw(window);
-         */
+        */
 
          // draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
          // draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);
+
     }
 };

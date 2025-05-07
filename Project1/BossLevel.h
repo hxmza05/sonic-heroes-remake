@@ -65,9 +65,10 @@ public:
 		file.close();
 	}
 
-
-
-
+	virtual FallingPlatform** getFalling()
+	{
+		return nullptr;
+	}
 	/*MoveablePlatform* getMoveable() override
 	{
 		return moveable;

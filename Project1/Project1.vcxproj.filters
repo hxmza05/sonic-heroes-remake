@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Collectibles.h" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Src.cpp" />
-    <ClCompile Include="Team.h" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GlobalFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -26,5 +26,17 @@
     <ClInclude Include="Sonic.h" />
     <ClInclude Include="TailedFox.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="BossLevel.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GlobalFunctions.h" />
+    <ClInclude Include="Level1.h" />
+    <ClInclude Include="Level2.h" />
+    <ClInclude Include="Level3.h" />
+    <ClInclude Include="MoveablePlatform.h" />
+    <ClInclude Include="Rings.h" />
+    <ClInclude Include="StateManager.h" />
+    <ClInclude Include="Team.h" />
+    <ClInclude Include="Collectibles.h" />
+    <ClInclude Include="FallingPlatform.h" />
   </ItemGroup>
 </Project>

@@ -61,7 +61,7 @@ public:
 			returnState = true;
 			onGround = true;
 			
-			cout << "player on the moveable wall now\n\n";
+			//cout << "player on the moveable wall now\n\n";
 		}
 		if (x <= rangeLeft && direction == 0)
 		{
@@ -91,7 +91,7 @@ public:
 	}
 	void draw(RenderWindow& window,float offset_x)
 	{
-		cout << "Drawing moveable at  "<<x-offset_x<<"and "<<y<<"\n";
+		//cout << "Drawing moveable at  "<<x-offset_x<<"and "<<y<<"\n";
 
 		moveableSprite.setPosition(x - offset_x, y);
 		window.draw(moveableSprite);

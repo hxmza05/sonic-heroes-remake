@@ -177,7 +177,7 @@ public:
 			states[GLIDER]->getSprites()[i].setScale(2, 2);
 		}
 
-		delayInFollow = 5;
+		delayInFollow = 25;
 		max_speed = 15;
 	}
 
@@ -192,6 +192,9 @@ public:
 			velocityY = -19.6;
 			onGround = false;
 		}
+	}
+	void useSpecialAbilty(char**lvl)
+	{
 	}
 	/*void glideAndFollowTails()
 	{

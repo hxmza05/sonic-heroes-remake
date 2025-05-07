@@ -4,9 +4,11 @@
 #include"Crabmeat.h"
 #include"Beebot.h"
 #include"MoveablePlatform.h"
+#include"FallingPlatform.h"
 
 class Level1 : public Level
 {
+	FallingPlatform **falling;
 	MoveablePlatform* moveable;
 	Crabmeat** crabs;
 	Beebot** bees;
@@ -20,21 +22,30 @@ public:
 		{
 			lvl[i] = new char[width];
 		}
-		//enemies = new Enemy**[2];
-		//crabs = new Crabmeat * [5];
-		//bees = new Beebot * [5];
-		//for (int i = 0; i < 5; i++)
-		//{
-		//	crabs[i] = new Crabmeat();
-		//	bees[i] = new Beebot();
-		//}
+
+		crabs = new Crabmeat * [5];
+		bees = new Beebot * [5];
+		for (int i = 0; i < 5; i++)
+		{
+			crabs[i] = new Crabmeat();
+			bees[i] = new Beebot();
+		}
+		falling = new FallingPlatform * [8];
+		for(int i = 0,f = 32;i < 8;i++,f++)
+			falling[i] = new FallingPlatform(64 * f, 500);
 		moveable = new MoveablePlatform(1000,450,850,1500);
 		designlvl("lvl1.txt");
+
 	}
 	MoveablePlatform* getMoveable() override
 	{
 		return moveable;
 	}
+	virtual FallingPlatform** getFalling()
+	{
+		return falling;
+	}
+
 	char  getMapValues(int val)
 	{
 		switch (val)
@@ -47,6 +58,7 @@ public:
 		case 5: return 'r';
 		case 6: return 'p';
 		case 9: return 'b';
+
 		default: return 's';
 		}
 	}
