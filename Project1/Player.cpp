@@ -357,6 +357,7 @@ bool Player::teleportToTailed()
 	{
 		/*tailed_x = -999;
 		tailed_y = -999;*/
+		indexAnimation = STILL;
 		return true;
 	}
 	return false;

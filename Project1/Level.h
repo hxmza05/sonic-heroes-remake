@@ -79,6 +79,9 @@ public:
 		return nullptr;
 	}
 	virtual FallingPlatform**getFalling() = 0;
+	//virtual void handleEnemies() = 0;
+	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player) = 0;
+
 	//{
 	//	for (int i = 0; i < height; i += 1)
 	//	{

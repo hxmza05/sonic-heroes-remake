@@ -157,7 +157,7 @@ public:
 			//cout << "\n\n\nFLying\n\n\n";
 ;			velocityY = -2;
 			indexAnimation = JUMPR;
-			states[JUMPR][0].RunAnimation();
+			//states[JUMPR][0].RunAnimation();
 			onGround = false;
 		} 
 		else
@@ -167,7 +167,7 @@ public:
 				velocityY = -19.6;
 				onGround = false;
 				indexAnimation = UPR;
-				states[UPR][0].RunAnimation();
+				//states[UPR][0].RunAnimation();
 			}
 	}
 	/*void useSpecialAbilty(char** lvl)
