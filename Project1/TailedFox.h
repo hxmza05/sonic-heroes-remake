@@ -173,7 +173,7 @@ public:
 	/*void useSpecialAbilty(char** lvl)
 	{
 	}*/
-	virtual void useSpecialAbilty(char**)
+	void useSpecialAbilty(char** lvl, int h, int w)
 	{
 
 	}

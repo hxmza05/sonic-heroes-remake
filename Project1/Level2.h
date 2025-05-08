@@ -33,6 +33,7 @@ class Level2 : public Level
 public:
 	Level2(char** level = nullptr, Enemy*** e = nullptr) 
 	{
+		cell_size = 64;
         cout << "LEVEL 2 COnstructor being loaded : " << endl;
 		height = 14;
 		width = 250;
@@ -122,7 +123,7 @@ public:
     }
     void designlvl(const char* filename)
     {
-        cout << "\n\n\nIn desgin function for level 3\n\n\n";
+        //cout << "\n\n\nIn desgin function for level 3\n\n\n";
         ifstream file(filename);
         if (!file.is_open())
         {
@@ -138,7 +139,7 @@ public:
                 lvl[i][j] = getMapValues(wall);
                 //cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
             }
-            cout << endl;
+            //cout << endl;
         }
         file.close();
     }
@@ -152,7 +153,6 @@ public:
 	}
     void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool& gameOver)
     {
-        cout << "Level 2 ENemeis being handled" << endl;
         for (int i = 0; i < beeCount; i++)
         {
             if (!beebots[i]->alive())
@@ -161,7 +161,7 @@ public:
             }
             if (!gameOver)
                 beebots[i]->movement(lvl, x, y, cell_size, Pwidth, Pheight);
-            if (beebots[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity))
+            if (beebots[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity, height, width))
             {
                 hud.getLives()--;
                 if (hud.getLives() == 0)
@@ -206,7 +206,7 @@ public:
             }
             if (!gameOver)
                 crabs[i]->movement(lvl, player, cell_size);
-            if (crabs[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity))
+            if (crabs[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity, height, width))
             {
                 onGround = false;
                 hud.getLives()--;
@@ -289,8 +289,8 @@ public:
         {
             if (motobugs[i]->alive())
             {
-                cout << "Drawig for LEVEL 2 motobugs";
-                cout << "\noffset_x" << offset_x << endl;
+                /*cout << "Drawig for LEVEL 2 motobugs";
+                cout << "\noffset_x" << offset_x << endl;*/
 
                 motobugs[i]->draw(window, offset_x);
             }

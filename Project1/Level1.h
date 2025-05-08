@@ -138,7 +138,7 @@ public:
     }
     void designlvl(const char* filename)
     {
-        cout << "\n\n\nIn desgin function\n\n\n";
+        //cout << "\n\n\nIn desgin function\n\n\n";
         ifstream file(filename);
         if (!file.is_open())
         {
@@ -152,9 +152,9 @@ public:
                 int wall;
                 file >> wall;
                 lvl[i][j] = getMapValues(wall);
-                cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
+                //cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
             }
-            cout << endl;
+            //cout << endl;
         }
         file.close();
     }
@@ -168,7 +168,7 @@ public:
             }
             if(!gameOver)
                 beebots[i]->movement(lvl, x, y, cell_size, Pwidth, Pheight);
-            if (beebots[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity))
+            if (beebots[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity,height,width))
             {
                 hud.getLives()--;
                 if (hud.getLives() == 0)
@@ -213,7 +213,7 @@ public:
             }
 			if (!gameOver)
              crabs[i]->movement(lvl, player, cell_size);
-            if (crabs[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity))
+            if (crabs[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity,height,width))
             {
                 onGround = false;
                 hud.getLives()--;

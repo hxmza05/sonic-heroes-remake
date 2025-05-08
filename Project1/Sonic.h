@@ -193,7 +193,7 @@ public:
 			onGround = false;
 		}
 	}
-	void useSpecialAbilty(char**lvl)
+	void useSpecialAbilty(char**lvl,int h,int w)
 	{
 	}
 	/*void glideAndFollowTails()

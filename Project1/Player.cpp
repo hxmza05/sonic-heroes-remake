@@ -331,9 +331,9 @@ void Player::moveRight()
     }
     direction = 1;
 }
-void Player::autoMove(int x_coord, int y_coord, char** lvl)
+void Player::autoMove(int x_coord, int y_coord, char** lvl,int height,int width)
 {
-    if (!checkCollision(lvl, x_coord, y_coord))
+    if (!checkCollision(lvl, x_coord, y_coord,height,width))
     {
         return;
     }
@@ -383,31 +383,57 @@ void Player::checkDelayNow(int idx)
         hasStartedFollowing = true;
     }
 }
-bool Player::checkFeet(char** lvl)
+bool Player::checkFeet(char** lvl, int height, int width)
 {
-    int cell_size = 64;
+    const int cell_size = 64;
     float offset_y = y;
-    // offset_y += velocityY;
 
-    char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(x + hit_box_factor_x) / cell_size)];
-    char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(x + hit_box_factor_x + Pwidth) / cell_size)];
-    char bottom_mid_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+    int row_bottom = (int)(offset_y + hit_box_factor_y + Pheight) / cell_size;
+    int col_left = (int)(x + hit_box_factor_x) / cell_size;
+    int col_right = (int)(x + hit_box_factor_x + Pwidth) / cell_size;
+    int col_mid = (int)(x + hit_box_factor_x + Pwidth / 2) / cell_size;
 
-    char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(x + hit_box_factor_x) / cell_size)];
-    char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(x + hit_box_factor_x + Pwidth) / cell_size)];
-    char topRight = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(x + hit_box_factor_x + Pwidth / 2) / cell_size)];
+    int row_top = (int)(offset_y + hit_box_factor_y + 39) / cell_size;
+
+    if (row_bottom < 0) row_bottom = 0;
+    else if (row_bottom >= height) row_bottom = height - 1;
+
+    if (row_top < 0) row_top = 0;
+    else if (row_top >= height) row_top = height - 1;
+
+    if (col_left < 0) col_left = 0;
+    else if (col_left >= width) col_left = width - 1;
+
+    if (col_right < 0) col_right = 0;
+    else if (col_right >= width) col_right = width - 1;
+
+    if (col_mid < 0) col_mid = 0;
+    else if (col_mid >= width) col_mid = width - 1;
+
+    char bottom_left_down = lvl[row_bottom][col_left];
+    char bottom_right_down = lvl[row_bottom][col_right];
+    char bottom_mid_down = lvl[row_bottom][col_mid];
+
+    char topLeft = lvl[row_top][col_left];
+    char topMiddle = lvl[row_top][col_right];
+    char topRight = lvl[row_top][col_mid];
+
     bool forLeft = topLeft == 's';
     bool forMiddle = topMiddle == 's';
     bool forRight = topRight == 's';
-    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w' || bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e' || bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') /*&& tempVelocityY > 0*/ && (forLeft || forMiddle || forRight))
+
+    if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w' ||
+        bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e' ||
+        bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') &&
+        (forLeft || forMiddle || forRight))
     {
-        // cout << "\n\n\nFeet on the Ground\n\n\n";
         onGround = true;
         return true;
     }
-    // cout << "\n\n\nFeet not on the Ground\n\n\n";
+
     return false;
 }
+
 // void Player::detectYourself()
 //{
 //	if ((indexAnimation == JUMPL || indexAnimation == JUMPR) && !hasDetectedItself)
@@ -459,8 +485,8 @@ bool Player::teleportToTailed()
         tailed_x = target_x;
         target_y = target_y;
     }*/
-    cout << "Tailed_x = " << tailed_x;
-    cout << " ---- Tailed_y = " << tailed_y << endl;
+    /*cout << "Tailed_x = " << tailed_x;
+    cout << " ---- Tailed_y = " << tailed_y << endl;*/
     if (x < tailed_x)
     {
         if (x + 5 <= tailed_x)

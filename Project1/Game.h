@@ -60,7 +60,6 @@ class Game
     bool eggStingerSpawn;
     Eggstinger* stinger;
 
-
     Texture backGround;
     Sprite backGroundSprite;
 
@@ -76,7 +75,6 @@ class Game
     Texture spikesTexture;
     Sprite spikes;
 
-
     Sprite* walls;
 
     Collectibles*** collectibles;
@@ -85,22 +83,11 @@ class Game
 
     Texture ring_effect;
 
-
     Team team;
     Level** level;
     int levelIndex;
     int cell_size;
     Clock Akey;
-
-
-
-
-
-
-
-
-
-
 
 public:
     Game()
@@ -108,8 +95,8 @@ public:
         font.loadFromFile("Fonts/scoreFont.ttf");
         gameover.setFont(font);
         gameover.setString("GAME OVER");
-        gameover.setScale(3, 3);
-        gameover.setPosition(340, 350);
+        gameover.setScale(4.3, 4.3);
+        gameover.setPosition(320, 350);
         gameover.setFillColor(Color::Red);
 
         gameOver = false;
@@ -206,7 +193,6 @@ public:
         // else cout << "collecitbles  worked null nai h constructor m";
 
         // placeRingsFromMap(lvl, collectibles, height, width, &rings, &ring_effect);
-
     }
     void setLevelIndex(int index)
     {
@@ -216,26 +202,16 @@ public:
     {
         return levelIndex;
     }
-    bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY,int height,int width)
+    bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY, int height, int width)
     {
         offset_y = player_y;
         offset_y += velocityY;
 
-         if ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size >= height)
-         {
-             gameOver = true;
-             return false;
-         }
-
-        // cout<<"offsety = "<<offse
-        /*std::cout << "player_x: " << player_x << ", player_y: " << player_y << ", offset_y: " << offset_y << ", velocityY: " << velocityY << std::endl;
-        std::cout << "hit_box_factor_x: " << hit_box_factor_x << ", hit_box_factor_y: " << hit_box_factor_y << std::endl;
-        std::cout << "Pwidth: " << Pwidth << ", Pheight: " << Pheight << ", cell_size: " << cell_size << std::endl;
-        cout << "Row : " << (int)(offset_y + hit_box_factor_y + Pheight) / cell_size;
-        cout << "--------Columnleftdown : " << ((int)(player_x + hit_box_factor_x) / cell_size);
-        cout << "-----ColumnRightdown : " << (int)((player_x + hit_box_factor_x + Pwidth) / cell_size);
-        cout << "-------ColumnMidDown : " << ((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size);
-        cout << "\n\n\n";*/
+        if ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size >= height)
+        {
+            gameOver = true;
+            return false;
+        }
 
         char bottom_left_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
         char bottom_right_down = lvl[(int)(offset_y + hit_box_factor_y + Pheight) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
@@ -248,12 +224,12 @@ public:
         char topLeft = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x) / cell_size)];
         char topMiddle = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth) / cell_size)];
         char topRight = lvl[((int)(offset_y + hit_box_factor_y + 39)) / cell_size][((int)(player_x + hit_box_factor_x + Pwidth / 2) / cell_size)];
-        
+
         bool forLeft = topLeft != 'w' && topLeft != 'q' && topLeft != 'e';
         bool forMiddle = topMiddle != 'w' && topMiddle != 'q' && topMiddle != 'e';
         bool forRight = topRight != 'w' && topRight != 'q' && topRight != 'e';
 
-        // cout << "Left : " << bottom_left_down << " ---- Mid : " << bottom_mid_down << " -------" << "Right : " << bottom_right_down << "----";
+         //cout << "Left : " << bottom_left_down << " ---- Mid : " << bottom_mid_down << " -------" << "Right : " << bottom_right_down << "----";
 
         return ((bottom_left_down == 'p' || bottom_mid_down == 'p' || bottom_right_down == 'p') && velocityY > 0 && (forLeft || forMiddle || forRight)) || ((top_left_up == 'i' || top_mid_up == 'i' || top_right_up == 'i') && velocityY < 0);
     }
@@ -284,7 +260,7 @@ public:
         }
     }
     void updateAndDrawCollectibles(int height, int width, RenderWindow& window)
-    { 
+    {
         for (int i = 0; i < height; ++i)
         {
             for (int j = 0; j < width; ++j)
@@ -386,7 +362,6 @@ public:
         buffer_start = 4 * 64;
         buffer_end = 13 * 64;
         offset_x = 0;
-
     }
     void play(RenderWindow& window)
     {
@@ -400,7 +375,7 @@ public:
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
-                if (checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() - 1) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() - 15, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() / 2) && team.getPlayer()[team.getPlayerIndex()][0].getx() > 0)
+                if (checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(),14,level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() - 1, 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() - 15, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() / 2, 14, level[levelIndex]->getWidth()) && team.getPlayer()[team.getPlayerIndex()][0].getx() > 0)
                 {
                     team.getPlayer()[team.getPlayerIndex()][0].moveLeft();
                     if (buffer_start > 4 * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() <= buffer_start)
@@ -413,7 +388,7 @@ public:
                 }
                 else
                 {
-                    if (!checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety()))
+                    if (!checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), 14, level[levelIndex]->getWidth()))
                     {
                         team.getPlayer()[team.getPlayerIndex()][0].executePushingLeft();
                     }
@@ -423,7 +398,7 @@ public:
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
-                if (checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() - 1) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() / 2))
+                if (checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety(), 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() - 1 , 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() / 2, 14, level[levelIndex]->getWidth()))
                 {
                     team.getPlayer()[team.getPlayerIndex()][0].moveRight();
                     if (buffer_end < 196 * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() >= buffer_end)
@@ -436,7 +411,7 @@ public:
                 }
                 else
                 {
-                    if (!checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety()))
+                    if (!checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety(), 14, level[levelIndex]->getWidth()))
                     {
                         team.getPlayer()[team.getPlayerIndex()][0].executePushingRight();
                     }
@@ -461,7 +436,7 @@ public:
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
-                team.useSpecial(level[levelIndex]->getLvl());
+                team.useSpecial(level[levelIndex]->getLvl(),14,level[levelIndex]->getWidth());
             }
             if (team.getSpacePressed())
             {
@@ -480,7 +455,7 @@ public:
                 team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() = STILL;
             }
             if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
-                team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = collisionCheckWithSpikes(level[levelIndex][0].getLvl(), offset_y, hit_box_factor_y, hit_box_factor_x, team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), 64, team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(),level[levelIndex]->getHeight(),level[levelIndex]->getWidth());
+                team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = collisionCheckWithSpikes(level[levelIndex][0].getLvl(), offset_y, hit_box_factor_y, hit_box_factor_x, team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), 64, team.getPlayer()[team.getPlayerIndex()][0].getVelocityY(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth());
             if (team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) /*|| team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedByProjectile()*/
             {
                 team.getPlayer()[team.getPlayerIndex()][0].getx() -= 6;
@@ -488,15 +463,17 @@ public:
                 team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY() += team.getPlayer()[team.getPlayerIndex()][0].getTempGravity();
                 if (team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY() >= 0)
                 {
-                    team.getPlayer()[team.getPlayerIndex()][0].playerVirtualGravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed(),level[levelIndex]->getHeight(), level[levelIndex]->getWidth(),gameOver);
+                    team.getPlayer()[team.getPlayerIndex()][0].playerVirtualGravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), gameOver);
                 }
             }
-            cout << "\n\n\nPlayer's_x = " << "" << team.getPlayer()[team.getPlayerIndex()][0].getx() << " Player's_y = " << team.getPlayer()[team.getPlayerIndex()][0].gety() << endl << endl << endl;
+            cout << "\n\n\nPlayer's_x = " << "" << team.getPlayer()[team.getPlayerIndex()][0].getx() << " Player's_y = " << team.getPlayer()[team.getPlayerIndex()][0].gety() << endl
+                << endl
+                << endl;
 
             if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
-                team.getPlayer()[team.getPlayerIndex()][0].player_gravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed(),level[levelIndex]->getHeight(), level[levelIndex]->getWidth(),gameOver);
+                team.getPlayer()[team.getPlayerIndex()][0].player_gravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), gameOver);
             team.storePath();
-            team.autoMoveFollowers(level[levelIndex]->getLvl(), offset_x, level[levelIndex]->getWidth());
+            team.autoMoveFollowers(level[levelIndex]->getLvl(), offset_x,level[levelIndex]->getWidth());
             if (level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
             {
                 if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() != STILL)
@@ -519,7 +496,7 @@ public:
         updateAndDrawCollectibles(level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), window);
         if (!gameOver)
             handleRingCollection(collectibles, level[levelIndex][0].getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), team.getPlayer()[team.getPlayerIndex()][0], hud.getRings(), cell_size);
-        
+
         team.draw(window, offset_x);
         /*
 
@@ -608,42 +585,72 @@ public:
                     level[levelIndex]->getFalling()[i]->fall();
                 }
             }
-        //if (!gameOver)
-            level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud,gameOver);
-        cout << "Score is : " << hud.getScore();
-        cout << "\nLives are : " << hud.getLives() << "\n\n\n";
+        // if (!gameOver)
+        //level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud, gameOver);
+      
         if (!gameOver)
             team.animate();
         team.draw(window, offset_x);
         hud.draw(window);
 
+        for (int i = 0; i < 8; i++)
+        {
+            level[levelIndex]->getFalling()[i]->shouldItActivate(team.getPlayer()[team.getPlayerIndex()]->getx());
+            if (level[levelIndex]->getFalling()[i]->getActivated())
+            {
+                level[levelIndex]->getFalling()[i]->fall();
+            }
+        }
+        //level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud, gameOver);
+        team.draw(window, offset_x);
 
-           /* for (int i = 0; i < beeCount; i++)
+        // change these according to the movement logic of motobug, for now it moves with player
+        /*  for (int i = 0; i < crabCount; i++) {
+
+              if (!crabs[i]->alive()) {
+                  continue;
+              }
+              crabs[i]->movement(level[levelIndex]->getLvl(), team.getPlayer()[team.getPlayerIndex()][0], cell_size);
+              if (crabs[i]->handleProjectilesCollision(level[levelIndex]->getLvl(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY()))
+              {
+                  team.getPlayer()[team.getPlayerIndex()][0].getOnGround() = false;
+
+              }
+              if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+              {
+                  if (crabs[i]->checkCollisionWithPlayer(team.getPlayer()[team.getPlayerIndex()][0])) {
+
+                      if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPR || team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPL) {
+
+                          crabs[i]->setHp(0);
+                          crabs[i]->setAlive(false);
+                          continue;
+
+                      }
+                  }
+              }
+              crabs[i]->drawProjectile(window, offset_x);
+              crabs[i]->draw(window, offset_x);
+          }*/
+          /*  for (int i = 0; i < motobugCount; i++)
             {
 
-                if (!beebots[i]->alive()) {
+                if (!motobugs[i]->alive()) {
                     continue;
                 }
 
-                beebots[i]->movement(level[levelIndex]->getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight());
-                             
-                if (beebots[i]->handleProjectilesCollision(level[levelIndex]->getLvl(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY()))
+                motobugs[i]->movement(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety());
+
+                if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
                 {
-                    team.getPlayer()[team.getPlayerIndex()][0].getOnGround() = false;
-
-                }
-
-                if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack()) {
-
-                    if (beebots[i]->PlayerBeeCollision(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), beebots[i]->getX(), beebots[i]->getY(), beebots[i]->getbeeWidth(), beebots[i]->getbeeHeight()))
+                    if (motobugs[i]->PlayerBugCollision(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), motobugs[i]->getX(), motobugs[i]->getY(), motobugs[i]->getMotobugWidth(), motobugs[i]->getMotobugHeight()))
                     {
                         if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPR || team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPL)
                         {
-                            beebots[i]->setHp(0);
-                            beebots[i]->setAlive(false);
+                            motobugs[i]->setHp(0);
+                            motobugs[i]->setAlive(false);
                             continue;
                         }
-
                         else
                         {
                             team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = true;
@@ -651,89 +658,14 @@ public:
                         }
                     }
                 }
-
-                beebots[i]->drawProjectiles(window, offset_x);
-
-                beebots[i]->draw(window, offset_x);
-
-            }*/
-            for(int i = 0;i < 8;i++)
-            {
-                level[levelIndex]->getFalling()[i]->shouldItActivate(team.getPlayer()[team.getPlayerIndex()]->getx());
-                if (level[levelIndex]->getFalling()[i]->getActivated())
-                {
-                    level[levelIndex]->getFalling()[i]->fall();
-                }
-            }
-            level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud,gameOver);
-            //team.animate();
-            team.draw(window, offset_x);
-
-
-
-        // change these according to the movement logic of motobug, for now it moves with player
-      /*  for (int i = 0; i < crabCount; i++) {
-
-            if (!crabs[i]->alive()) {
-                continue;
-            }
-            crabs[i]->movement(level[levelIndex]->getLvl(), team.getPlayer()[team.getPlayerIndex()][0], cell_size);
-            if (crabs[i]->handleProjectilesCollision(level[levelIndex]->getLvl(), cell_size, team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY()))
-            {
-                team.getPlayer()[team.getPlayerIndex()][0].getOnGround() = false;
+                motobugs[i]->draw(window, offset_x);
 
             }
-            if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
-            {
-                if (crabs[i]->checkCollisionWithPlayer(team.getPlayer()[team.getPlayerIndex()][0])) {
 
-                    if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPR || team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPL) {
+            */
 
-                        crabs[i]->setHp(0);
-                        crabs[i]->setAlive(false);
-                        continue;
-
-                    }
-                }
-            }
-            crabs[i]->drawProjectile(window, offset_x);
-            crabs[i]->draw(window, offset_x);
-        }*/
-      /*  for (int i = 0; i < motobugCount; i++)
-        {
-
-            if (!motobugs[i]->alive()) {
-                continue;
-            }
-
-            motobugs[i]->movement(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety());
-
-            if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
-            {
-                if (motobugs[i]->PlayerBugCollision(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), motobugs[i]->getX(), motobugs[i]->getY(), motobugs[i]->getMotobugWidth(), motobugs[i]->getMotobugHeight()))
-                {
-                    if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPR || team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() == UPL)
-                    {
-                        motobugs[i]->setHp(0);
-                        motobugs[i]->setAlive(false);
-                        continue;
-                    }
-                    else
-                    {
-                        team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() = true;
-                        team.getPlayer()[team.getPlayerIndex()][0].getTempVelocityY() = -7;
-                    }
-                }
-            }
-            motobugs[i]->draw(window, offset_x);
-
-        }
-
-        */
-
-
-         // draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
-         // draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);
+            // draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
+            // draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);
 
         level[levelIndex]->drawEnemies(window, offset_x);
         if (level[levelIndex]->hasLevelEnded(team.getPlayer()[team.getPlayerIndex()]->getx()))
@@ -745,9 +677,8 @@ public:
             gameOver = true;
             window.draw(gameover);
         }
-        
+
         // draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
         // draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);
     }
-   
 };

@@ -157,7 +157,7 @@ public:
 	void movement(char** lvl, float player_x, float player_y, const int cell_size, int player_width, int player_height);
 	void getBeebotCoordinates(char** lvl, int height, int width, int y_start, int y_end);
 	void move_beebots(Beebot** beebots, int& beeIndex, int& beeCount, const int cell_size);
-	bool handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
+	bool handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY,int h,int w);
 	void drawProjectiles(RenderWindow& window, float offset_x);
 	bool PlayerBeeCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight);
 
@@ -444,11 +444,11 @@ void Beebot::drawProjectiles(RenderWindow& window, float offset_x) {
 
 }
 
-bool Beebot::handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY)
+bool Beebot::handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY,int height,int width)
 {
 	if (projectiles && projectiles->Active()) 
 	{
-		if (projectiles->handleCollision(lvl, cell_size, player_x, player_y, player_width, player_height, hasKnockedBack, tempVelocityY))
+		if (projectiles->handleCollision(lvl, cell_size, player_x, player_y, player_width, player_height, hasKnockedBack, tempVelocityY,height,width))
 		{
 			if (!projectiles->Active())
 			{

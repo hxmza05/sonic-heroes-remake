@@ -253,16 +253,16 @@ public:
 		}
 	}
 	void player_dummy_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed,int,int);
-	void autoMove(int x_coord,int y_coord,char**);
+	void autoMove(int x_coord,int y_coord,char**,int h,int w);
 	void draw_player(RenderWindow& window, Sprite& LstillSprite,float offset_x);
 	void player_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed,int,int,bool&);
 	void playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, const int cell_size,bool& spacePressed,int,int,bool&);
 	void moveLeft();
 	void moveRight();
 	virtual void moveUp(bool,int) = 0;
-	virtual void useSpecialAbilty(char**) = 0;
+	virtual void useSpecialAbilty(char**,int h,int w) = 0;
 	void checkDelayNow(int idx);
-	bool checkFeet(char** lvl);
+	bool checkFeet(char** lvl,int h,int w);
 	bool teleportToTailed();
 	bool& getTempOnGround()
 	{

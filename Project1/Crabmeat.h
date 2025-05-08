@@ -148,7 +148,7 @@ public:
 
 
 
-	bool handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
+	bool handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY,int height,int width);
 	void drawProjectile(RenderWindow& window, float offset_x);
 	void movement(char** lvl, Player& player, int cell_size);
 	void getCrabCoordinates(char** lvl, int height, int width, int y_start, int y_end);
@@ -397,11 +397,13 @@ void Crabmeat::move_crabs(Crabmeat** crabs, int& crabIndex, int& crabCount, cons
 
 
 
-bool Crabmeat::handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY) {
+bool Crabmeat::handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY,int height,int width) 
+{
 	
 	if (projectile && projectile->Active()) {
 
-		if (projectile->handleCollision(lvl, cell_size, player_x, player_y, player_width, player_height, hasKnockedBack, tempVelocityY)) {
+		if (projectile->handleCollision(lvl, cell_size, player_x, player_y, player_width, player_height, hasKnockedBack, tempVelocityY,height,width)) 
+		{
 			
 			if (!projectile->Active()) {
 
