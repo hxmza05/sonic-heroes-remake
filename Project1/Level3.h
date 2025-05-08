@@ -18,6 +18,7 @@ class Level3 : public Level
 public:
 	Level3(char** level = nullptr, Enemy*** e = nullptr)
 	{
+
 		height = 14;
 		width = 300;
 		lvl = new char* [height];
@@ -84,7 +85,7 @@ public:
 		return nullptr;
 	}
 
-	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD&)
+	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD&,bool&)
 	{
 
 	}

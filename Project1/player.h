@@ -252,11 +252,11 @@ public:
 			return;
 		}
 	}
-	void player_dummy_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed);
+	void player_dummy_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed,int,int);
 	void autoMove(int x_coord,int y_coord,char**);
 	void draw_player(RenderWindow& window, Sprite& LstillSprite,float offset_x);
-	void player_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed);
-	void playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, const int cell_size,bool& spacePressed);
+	void player_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed,int,int,bool&);
+	void playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, const int cell_size,bool& spacePressed,int,int,bool&);
 	void moveLeft();
 	void moveRight();
 	virtual void moveUp(bool,int) = 0;
@@ -275,7 +275,7 @@ public:
 		tempOnground = true;
 	}
 	//void detectYourself();
-	void figureItOutYourself(float,char**,float);
+	void figureItOutYourself(float,char**,float,int);
 	void executePushingLeft()
 	{
 		indexAnimation = PUSHLEFT;

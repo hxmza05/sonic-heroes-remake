@@ -72,9 +72,9 @@ private:
     Music menuMusic;
 
 
-    //Texture backgroundTexture;
-    //Sprite backgroundSprite;
-    //RectangleShape backgroundOverlay;
+    Texture backgroundTexture;
+    Sprite backgroundSprite;
+    RectangleShape backgroundOverlay;
 
     int sfxVolume;
     int musicVolume;
@@ -90,8 +90,8 @@ private:
     const int segaEndFrame = 50;
     const int segaFrameHeight = 76;
     const int segaFrameWidth = 320;
-    const int segaFrameCount = segaEndFrame - segaStartFrame + 1; // 50 frames
-    float segaFrameDuration = 0.08; // 3 seconds total
+    const int segaFrameCount = segaEndFrame - segaStartFrame + 1; 
+    float segaFrameDuration = 0.08; 
 
     Clock segaClock;
     bool showSegaIntro = true;
@@ -146,11 +146,13 @@ public:
         enter = false;
 
 
-        //backgroundTexture.loadFromFile("Data/menubg.png"); 
-        //backgroundSprite.setTexture(backgroundTexture);
-        //backgroundSprite.setScale(float(horizontal_x) / backgroundTexture.getSize().x, float(vertical_y) / backgroundTexture.getSize().y);
-        //backgroundOverlay.setSize(Vector2f(horizontal_x, vertical_y));
-        //backgroundOverlay.setFillColor(Color(255, 255, 255, 20)); // white, 80 alpha
+        backgroundTexture.loadFromFile("Menu/MenuBg.jpg"); 
+        backgroundSprite.setTexture(backgroundTexture);
+
+        //backgroundSprite.setRotation(180);
+        //backgroundSprite.setOrigin(backgroundTexture.getSize().x, backgroundTexture.getSize().y);
+        //backgroundSprite.setPosition(0, 0); 
+
 
 
         segaTexture.loadFromFile("Menu/Sega/sega_intro.png");
@@ -324,6 +326,12 @@ public:
             float elapsed = segaClock.getElapsedTime().asSeconds();
 
             
+            if (!segaSoundPlayed && elapsed >= segaSoundDelay)
+            {
+                segaSound.play();
+                segaSoundPlayed = true;
+            }
+
             if (elapsed >= segaFrameCount * segaFrameDuration)
             {
                 showSegaIntro = false;
@@ -331,6 +339,7 @@ public:
                 transitionClock.restart(); 
                 return;
             }
+
             return;
         }
 
@@ -746,16 +755,14 @@ public:
 
         if (enteringName)
         {
-            //window.draw(backgroundSprite);
-            //window.draw(backgroundOverlay);
+            window.draw(backgroundSprite);
             window.draw(promptText);
             window.draw(nameBox);
             window.draw(nameInputText);
         }
         else if (menuState && currentMenuLevel == 0)
         {
-            //window.draw(backgroundSprite);
-            //window.draw(backgroundOverlay);
+            window.draw(backgroundSprite);
             window.draw(title);
             window.draw(selector);
             for (int i = 0; i < totalMenuOptions; i++)
@@ -766,8 +773,7 @@ public:
 
         else if (menuState && currentMenuLevel == 1)
         {
-            //window.draw(backgroundSprite);
-            //window.draw(backgroundOverlay);
+            window.draw(backgroundSprite);
             window.draw(title);
             window.draw(selector);
             for (int i = 0; i < totalMenuOptions2; i++) 
@@ -778,8 +784,7 @@ public:
 
         else if (leaderboardState)
         {
-            //window.draw(backgroundSprite);
-            //window.draw(backgroundOverlay);
+            window.draw(backgroundSprite);
             leaderboard->draw(window);
         }
     }

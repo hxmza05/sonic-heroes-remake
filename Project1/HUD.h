@@ -31,6 +31,9 @@ public:
 	{
 		score = 0;
 		ringsCollected = 0;
+
+		lives = 100;
+		lives = 5;
 		timer.restart();
 		levelTime = 0.f;
 
@@ -49,7 +52,7 @@ public:
 		scoreScaleClock.restart();
 		scoreTextScale = 1.f;
 
-		lives = 100;
+
 	}
 
 	int&getScore()

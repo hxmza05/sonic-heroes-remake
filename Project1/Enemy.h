@@ -94,6 +94,7 @@ public:
 	{
 
 		sprite.setPosition(x - offset_x, y);
+		cout << "\nposition : " << x - offset_x;
 		window.draw(sprite);
 
 	}
