@@ -88,5 +88,27 @@ public:
 	{
 
 	}
+	void drawEnemies(RenderWindow& window, float offset_x){}
+	/*{
+		for (int i = 0;i < motobugCount;i++)
+		{
+			if (motobugs[i]->alive())
+				motobugs[i]->draw(window, offset_x);
+		}
+		for (int i = 0;i < crabCount;i++)
+		{
+			if (crabs[i]->alive())
+				crabs[i]->draw(window, offset_x);
+		}
+		for (int i = 0;i < beeCount;i++)
+		{
+			if (beebots[i]->alive())
+				beebots[i]->draw(window, offset_x);
+		}
+	}*/
+	bool hasLevelEnded(float x)
+	{
+		return true;
+	}
 
 };

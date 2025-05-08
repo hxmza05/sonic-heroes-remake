@@ -90,27 +90,12 @@ public:
 	virtual FallingPlatform**getFalling() = 0;
 	//virtual void handleEnemies() = 0;
 	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD& hud) = 0;
-
-	//{
-	//	for (int i = 0; i < height; i += 1)
-	//	{
-	//		for (int j = 0; j < width; j += 1)
-	//		{
-	//			if (lvl[i][j] == 's')
-	//				continue;
-	//			else if (lvl[i][j] == 'w')
-	//			{
-	//				bgSprite.setPosition(j * cell_size - offset_x, i * cell_size);
-	//				window.draw(bgSprite);
-	//			}
-	//		}
-	//	}
-	//}
-
-	//Level2(Texture T,Sprite S,)
-	//{
-	//	enemies = new * Enemy[3];
-	//	enemies[0][0] = new 
-	//}
+	virtual void drawEnemies(RenderWindow& window, float offset_x) = 0;
+	bool hasLevelEnded(float x)
+	{
+		if (x >= levelEnd)
+			return true;
+		return false;
+	}
 };
 

@@ -65,8 +65,8 @@ void Player::player_gravity(char** lvl, float& offset_y, float& offset_x, const 
 }
 void Player::player_dummy_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed)
 {
-	cout << "\n\nY beofer Func : " << y << endl;
-	cout << "VelocityY beofer Func : " << velocityY << endl;
+	/*cout << "\n\nY beofer Func : " << y << endl;
+	cout << "VelocityY beofer Func : " << velocityY << endl;*/
 
 	offset_y = y;
 	offset_y += velocityY;
@@ -120,8 +120,8 @@ void Player::player_dummy_gravity(char** lvl, float& offset_y, float& offset_x, 
 		velocityY = 0;
 		spacePressed = false;
 	}
-	cout << "VelocityY after Func : " << velocityY << endl;
-	cout << "Y after the func : " << y << "\n";
+	/*cout << "VelocityY after Func : " << velocityY << endl;
+	cout << "Y after the func : " << y << "\n";*/
 }
 void Player::playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed)
 {

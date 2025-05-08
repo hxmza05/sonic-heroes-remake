@@ -187,9 +187,9 @@ public:
                 }
                 else
                 {
-                    cout << "\n\n\n\n\n\nIts not Flying NOW\n\n\n\n";
+                    //cout << "\n\n\n\n\n\nIts not Flying NOW\n\n\n\n";
                     //bool wo
-                    if (isNotFlyingCount == 0 && isFlying/* && team[1]->getOnGround() *//*&& team[1]->getAnimationIndex() == STILL*/)
+                    if (isNotFlyingCount == 0 && isFlying && team[1]->getOnGround() /*&& team[1]->getAnimationIndex() == STILL*/)
                     {
                         team[0]->setTailedCoords(team[1]->getx() - 5, team[1]->gety() + 10);
                         team[2]->setTailedCoords(team[1]->getx() - 5, team[1]->gety()+ 10);
@@ -323,6 +323,16 @@ public:
         for (int i = 0;i < 3;i++)
         {
             team[i]->getStates()[team[i]->getAnimationIndex()]->RunAnimation();
+        }
+    }
+    void checkYCoords()
+    {
+        for (int i = 0;i < 3;i++)
+        {
+            if (team[i]->gety() / 64 > 12)
+            {
+
+            }
         }
     }
     ~Team()
