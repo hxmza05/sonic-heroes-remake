@@ -28,20 +28,20 @@ class Level2 : public Level
 	int motobug_start;
 	int motobug_end;
 	Motobug** motobugs;
-
 	int cell_size;
 
 public:
 	Level2(char** level = nullptr, Enemy*** e = nullptr) 
 	{
+        cout << "LEVEL 2 COnstructor being loaded : " << endl;
 		height = 14;
-		width = 200;
+		width = 250;
 		lvl = new char* [height];
 		for (int i = 0; i < height; i++)
 		{
 			lvl[i] = new char[width];
 		}
-        designlvl("lvl1.txt");
+        designlvl("lvl2.txt");
 
 		/*crabs = new Crabmeat * [5];
 		bees = new Beebot * [5];
@@ -52,58 +52,59 @@ public:
 			bees[i] = new Beebot();
 			MotoBugs[i] = new Motobug();
 		}*/
-		crabCount = 5;
-		crabIndex = 0;
-		crabs = new Crabmeat * [crabCount];
+        crabCount = 5;
+        crabIndex = 0;
+        crabs = new Crabmeat * [crabCount];
 
-		for (int i = 0; i < crabCount; i++)
-		{
-			crabs[i] = new Crabmeat();
-		}
+        for (int i = 0; i < crabCount; i++)
+        {
+            crabs[i] = new Crabmeat();
+        }
 
-		crab_start = 5;
-		crab_end = 9;
+        crab_start = 5;
+        crab_end = 9;
 
-		for (int i = 0; i < crabCount; ++i)
-		{
-			crabs[i]->getCrabCoordinates(lvl, height, width, crab_start, crab_end);
-		}
+        for (int i = 0; i < crabCount; ++i)
+        {
+            crabs[i]->getCrabCoordinates(lvl, height, width, crab_start, crab_end);
+        }
 
-		crabs[0]->move_crabs(crabs, crabIndex, crabCount, cell_size);
+        crabs[0]->move_crabs(crabs, crabIndex, crabCount, cell_size);
 
-		beeCount = 5;
-		beeIndex = 0;
-		beebots = new Beebot * [beeCount];
+        beeCount = 5;
+        beeIndex = 0;
+        beebots = new Beebot * [beeCount];
 
-		for (int i = 0; i < beeCount; i++)
-		{
-			beebots[i] = new Beebot();
-		}
+        for (int i = 0; i < beeCount; i++)
+        {
+            beebots[i] = new Beebot();
+        }
 
-		bee_start = 5;
-		bee_end = 8;
-		beebots[0]->getBeebotCoordinates(lvl, height, width, bee_start, bee_end);
-		beebots[0]->move_beebots(beebots, beeIndex, beeCount, cell_size);
+        bee_start = 5;
+        bee_end = 8;
+        beebots[0]->getBeebotCoordinates(lvl, height, width, bee_start, bee_end);
+        beebots[0]->move_beebots(beebots, beeIndex, beeCount, cell_size);
 
-		motobugCount = 5;
-		motobugIndex = 0;
-		motobugs = new Motobug * [motobugCount];
+        motobugCount = 5;
+        motobugIndex = 0;
+        motobugs = new Motobug * [motobugCount];
 
-		for (int i = 0; i < motobugCount; i++)
-		{
-			motobugs[i] = new Motobug();
-		}
+        for (int i = 0; i < motobugCount; i++)
+        {
+            motobugs[i] = new Motobug();
+        }
 
-		motobug_start = 10;
-		motobug_end = 12;
+        motobug_start = 10;
+        motobug_end = 12;
 
-		motobugs[0]->getMotobugCoordinates(lvl, height, width, motobug_start, motobug_end);
-		motobugs[0]->move_motobugs(motobugs, motobugIndex, motobugCount, cell_size);
+        motobugs[0]->getMotobugCoordinates(lvl, height, width, motobug_start, motobug_end);
+        motobugs[0]->move_motobugs(motobugs, motobugIndex, motobugCount, cell_size);
+
         falling = new FallingPlatform * [8];
         for (int i = 0, f = 32; i < 8; i++, f++)
             falling[i] = new FallingPlatform(64 * f, 500);
 		moveable = new MoveablePlatform(0,0,0,0);
-        levelEnd = 195 * 64;
+        levelEnd = 245 * 64;
 	}
     char  getMapValues(int val)
     {
@@ -149,15 +150,17 @@ public:
 	{
 		return falling;
 	}
-    void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud)
+    void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool& gameOver)
     {
+        cout << "Level 2 ENemeis being handled" << endl;
         for (int i = 0; i < beeCount; i++)
         {
             if (!beebots[i]->alive())
             {
                 continue;
             }
-            beebots[i]->movement(lvl, x, y, cell_size, Pwidth, Pheight);
+            if (!gameOver)
+                beebots[i]->movement(lvl, x, y, cell_size, Pwidth, Pheight);
             if (beebots[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity))
             {
                 hud.getLives()--;
@@ -201,7 +204,8 @@ public:
             {
                 continue;
             }
-            crabs[i]->movement(lvl, player, cell_size);
+            if (!gameOver)
+                crabs[i]->movement(lvl, player, cell_size);
             if (crabs[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity))
             {
                 onGround = false;
@@ -245,8 +249,9 @@ public:
             {
                 continue;
             }
-
-            motobugs[i]->movement(x, y);
+            if (!gameOver)
+                motobugs[i]->movement(x, y);
+            //motobugs[i]->movement(x, y);
 
             if (!hasKnockedBack)
             {
@@ -273,8 +278,7 @@ public:
             }
             //motobugs[i]->draw(window, offset_x);
         }
-    }
-    /* void handleBees()
+    }/* void handleBees()
      {
 
      }*/
@@ -283,9 +287,13 @@ public:
     {
         for (int i = 0;i < motobugCount;i++)
         {
-            cout << "Drawig for LEVEL 2";
             if (motobugs[i]->alive())
+            {
+                cout << "Drawig for LEVEL 2 motobugs";
+                cout << "\noffset_x" << offset_x << endl;
+
                 motobugs[i]->draw(window, offset_x);
+            }
         }
         for (int i = 0;i < crabCount;i++)
         {

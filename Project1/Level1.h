@@ -128,7 +128,7 @@ public:
         case 5:
             return 'r';
         case 6:
-            return 'p';
+            return 'i';
         case 9:
             return 'b';
 
@@ -158,7 +158,7 @@ public:
         }
         file.close();
     }
-    void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud)
+    void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud,bool& gameOver)
     {
         for (int i = 0; i < beeCount; i++)
         {
@@ -166,7 +166,8 @@ public:
             {
                 continue;
             }
-            beebots[i]->movement(lvl, x, y, cell_size, Pwidth, Pheight);
+            if(!gameOver)
+                beebots[i]->movement(lvl, x, y, cell_size, Pwidth, Pheight);
             if (beebots[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity))
             {
                 hud.getLives()--;
@@ -210,7 +211,8 @@ public:
             {
                 continue;
             }
-            crabs[i]->movement(lvl, player, cell_size);
+			if (!gameOver)
+             crabs[i]->movement(lvl, player, cell_size);
             if (crabs[i]->handleProjectilesCollision(lvl, cell_size, x, y, Pwidth, Pheight, hasKnockedBack, tempVelocity))
             {
                 onGround = false;
@@ -254,8 +256,9 @@ public:
             {
                 continue;
             }
-
-            motobugs[i]->movement(x, y);
+			if (!gameOver)
+				motobugs[i]->movement(x, y);
+            //motobugs[i]->movement(x, y);
 
             if (!hasKnockedBack)
             {
@@ -286,6 +289,7 @@ public:
     /* void handleBees()
      {
 
+<<<<<<< HEAD
      }*/
   
     void drawEnemies(RenderWindow&window,float offset_x)
@@ -306,4 +310,14 @@ public:
                 beebots[i]->draw(window, offset_x);
         }
     }
+
+	/*oveablePlatform* getMoveable() override
+	{
+		return moveable;
+	}
+	virtual FallingPlatform** getFalling()
+	{
+		return falling;
+	}*/
+	 
 };

@@ -49,7 +49,7 @@ public:
 		case 3: return 'e';
 		case 4: return 'p';
 		case 5: return 'r';
-		case 6: return 'p';
+		case 6: return 'i'; // ultay spikes 
 		default: return 's';
 		}
 	}
@@ -84,7 +84,7 @@ public:
 		return nullptr;
 	}
 
-	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD&)
+	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD&,bool&)
 	{
 
 	}

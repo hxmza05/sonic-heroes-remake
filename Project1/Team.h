@@ -107,7 +107,7 @@ public:
     {
         return spaceCount;
     }
-    void autoMoveFollowers(char** lvl,float offsetx)
+    void autoMoveFollowers(char** lvl,float offsetx,int width)
     {
         for (int i = 0; i < 3; i++)
         {
@@ -151,7 +151,7 @@ public:
                                     //else cout << "Knuckles";
                                     //    cout << " is figuring it out\n\n\n";
                                         //if (team[j]->getAnimationIndex() != STILL)
-                                            team[j]->figureItOutYourself(team[playerIndex]->getx(),lvl,offsetx);
+                                            team[j]->figureItOutYourself(team[playerIndex]->getx(),lvl,offsetx,width);
                                 }
                             }
                             else 
@@ -179,7 +179,7 @@ public:
                             //if (team[j]->getAnimationIndex() != STILL)
                             if (team[j]->getHaveBeenPutDown().getElapsedTime().asSeconds() > 1)
                             {
-                                team[j]->figureItOutYourself(team[playerIndex]->getx(), lvl, offsetx);
+                                team[j]->figureItOutYourself(team[playerIndex]->getx(), lvl, offsetx,width);
 
                             }
                         }
