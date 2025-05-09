@@ -76,10 +76,8 @@ public:
 	void draw(RenderWindow& window, float offset_x);
 	bool Active() const;
 	bool checkCollisionWithPlayer(float player_x, float player_y, int Pwidth, int Pheight, float x, float y, const float x_width, const float x_heigth);
-	bool checkCollisionWithWall(char** lvl, int cell_size);
-	bool handleCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
-
-
+	bool checkCollisionWithWall(char** lvl, int cell_size,int height,int width);
+	bool handleCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY,int h,int w);
 	void moveCrabProjectile();
 	void setCrabProjectileVelocity(float startX, float startY, float vx, float vy);
 
@@ -143,10 +141,16 @@ bool Projectile::checkCollisionWithPlayer(float player_x, float player_y, int Pw
 
 }
 
-bool Projectile::checkCollisionWithWall(char** lvl, int cell_size) {
-
+bool Projectile::checkCollisionWithWall(char** lvl, int cell_size, int height, int width) 
+{
 	int tile_x = (int)(x + x_width / 2) / cell_size;
 	int tile_y = (int)(y + x_heigth / 2) / cell_size;
+
+	if (tile_x < 0) tile_x = 0;
+	else if (tile_x >= width) tile_x = width - 1;
+
+	if (tile_y < 0) tile_y = 0;
+	else if (tile_y >= height) tile_y = height - 1;
 
 	char tile = lvl[tile_y][tile_x];
 
@@ -157,10 +161,10 @@ bool Projectile::checkCollisionWithWall(char** lvl, int cell_size) {
 	}
 
 	return false;
-
 }
 
-bool Projectile::handleCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY)
+
+bool Projectile::handleCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY,int height,int width)
 {	
 	if (checkCollisionWithPlayer(player_x, player_y, player_width, player_height, x, y, x_width, x_heigth))
 	{
@@ -171,7 +175,7 @@ bool Projectile::handleCollision(char** lvl, int cell_size, float player_x, floa
 		cout << "Knockback active ? " << hasKnockedBack << endl;
 		return true;
 	}
-	else if (checkCollisionWithWall(lvl, cell_size)) 
+	else if (checkCollisionWithWall(lvl, cell_size,14,width)) 
 	{
 		active = false;
 		cout << "Projectile Hit wall  deactivated" << endl;

@@ -158,7 +158,7 @@ public:
                             {
                                 makeThemGlide(j, h);
                             }
-                            if (team[j]->checkFeet(lvl)  && team[j]->getAnimationIndex() != STILL)
+                            if (team[j]->checkFeet(lvl,14,width)  && team[j]->getAnimationIndex() != STILL)
                             {
                                 team[j]->getAnimationIndex() = STILL;
                                 team[j]->getStates()[STILL][0].RunAnimation();
@@ -191,12 +191,11 @@ public:
                     //bool wo
                     if (isNotFlyingCount == 0 && isFlying && team[1]->getOnGround() /*&& team[1]->getAnimationIndex() == STILL*/)
                     {
+
                         team[0]->setTailedCoords(team[1]->getx() - 5, team[1]->gety() + 10);
                         team[2]->setTailedCoords(team[1]->getx() - 5, team[1]->gety()+ 10);
                         team[2]->getAnimationIndex() = BREAKR;
                         isNotFlyingCount++;
-
-                        //team[2]
                     }
                     if (playerIndex == 1 && isFlying && playerIndex == 1 && isNotFlyingCount > 0 )
                     {
@@ -224,7 +223,7 @@ public:
                         }
                         break;
                     }
-                    team[i][0].autoMove(leadersPath[team[i][0].getDelayinFollow()][0] - 16, leadersPath[team[i][0].getDelayinFollow()][1], lvl);
+                    team[i][0].autoMove(leadersPath[team[i][0].getDelayinFollow()][0] - 16, leadersPath[team[i][0].getDelayinFollow()][1], lvl,14,width);
 					team[i][0].getVelocityY() = -19;
                    /* if (team[playerIndex]->getAnimationIndex() == STILL)
                     {
@@ -311,11 +310,11 @@ public:
         team[playerIndex]->moveUp(spacePressed, spaceCount);
         spacePressed = true;
     }
-    void useSpecial(char** lvl)
+    void useSpecial(char** lvl,int height,int width)
     {
         if (playerIndex == 2)
         {
-            team[2]->useSpecialAbilty(lvl);
+            team[2]->useSpecialAbilty(lvl, height, width);
         }
     }
     void animate()

@@ -3,6 +3,7 @@
 using namespace std;
 using namespace sf;
 #include"Animation.h"
+#include "HUD.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
@@ -90,37 +91,28 @@ public:
 
 	}
 
-	virtual void draw(RenderWindow& window, float offset_x)
+	void draw(RenderWindow& window, float offset_x)
 	{
 
 		sprite.setPosition(x - offset_x, y);
-		cout << "\nposition : " << x - offset_x;
 		window.draw(sprite);
 
 	}
 
-	////////////////////////// remove this later /////////////////////////////
-
-	float getSpriteHeight() 
-	{
-		return sprite.getGlobalBounds().height;
-	}
-
-	sf::FloatRect getBounds() const {
-		sf::FloatRect bounds = sprite.getGlobalBounds();
-		bounds.left = x;
-		return bounds;
-	}
-
-	////////////////////////// remove this later /////////////////////////////
 
 	Sprite& getSprite() {
 		return sprite;
 	}
 
 
-	virtual bool checkWallCollisionWithEnemy(char** lvl, float enemy_x, float enemy_y, const int cell_size = 64) {
+	bool checkWallCollisionWithEnemy(char** lvl, float enemy_x, float enemy_y, const int cell_size = 64) {
 
 		return !(lvl[(int)(enemy_y) / cell_size][(int)(enemy_x) / cell_size] == 's');
 	}
+
+	virtual void update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver) = 0;
+	virtual void drawExtra(RenderWindow& window, float offset_x) {}
+	virtual ~Enemy() {}
+
+
 };

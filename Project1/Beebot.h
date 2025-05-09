@@ -2,6 +2,9 @@
 #include <iostream>
 #include<cmath>
 #include "Projectile.h"
+#include "Player.h"
+#include "HUD.h"
+
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -11,13 +14,9 @@ class Beebot : public Enemy {
 
 private:
 
-	int *BeebotStart;
-	int *BeebotEnd;
-	int *BeebotHeights;
-
-	int beeCoordintes;
-	int indexBee;
-	int air_Row;
+	int BeebotStart;
+	int BeebotEnd;
+	int BeebotHeights;
 
 	const float bee_height;
 	const float bee_width;
@@ -67,12 +66,10 @@ public:
 		moveClock.restart();
 		attackClock.restart();
 
-		beeCoordintes = 10;
-		indexBee = 0;
-		air_Row = 5;
-		BeebotStart = new int[beeCoordintes];
-		BeebotEnd = new int[beeCoordintes];
-		BeebotHeights = new int[beeCoordintes];
+
+		BeebotStart = 0;
+		BeebotEnd = 0;
+		BeebotHeights = 0;
 
 
 		projectiles = nullptr;
@@ -155,13 +152,52 @@ public:
 
 
 	void movement(char** lvl, float player_x, float player_y, const int cell_size, int player_width, int player_height);
-	void getBeebotCoordinates(char** lvl, int height, int width, int y_start, int y_end);
-	void move_beebots(Beebot** beebots, int& beeIndex, int& beeCount, const int cell_size);
-	bool handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY);
-	void drawProjectiles(RenderWindow& window, float offset_x);
+	bool getBeebotCoordinates(char** lvl, int height, int width, int y_start, int y_end, int& j_start, bool* occupiedColumns);
+	void move_beebots(const int cell_size);
+	bool handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY,int h,int w);
 	bool PlayerBeeCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight);
+	void update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver) override;
+	void drawExtra(RenderWindow& window, float offset_x) override;
 
 };
+
+
+
+
+
+void Beebot::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
+{
+
+	movement(lvl, player.getx(), player.gety(), cell_size, player.getPwidth(), player.getPheight());
+
+	if (handleProjectilesCollision(lvl, cell_size, player.getx(), player.gety(), player.getPwidth(), player.getPheight(), hasKnockedBack, tempVelocityY, 14, 200)) 
+	{
+		hud.getLives()--;
+		onGround = false;
+
+		if (hud.getLives() <= 0)
+			gameOver = true;
+	}
+
+	if (!hasKnockedBack) {
+
+		if (PlayerBeeCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, getbeeWidth(), getbeeHeight())) {
+
+			if (indexAnimation == UPR || indexAnimation == UPL) {
+				setHp(0);
+				setAlive(false);
+				hud.getScore() += 200;
+			}
+
+			else {
+				hud.getLives()--;
+				if (hud.getLives() <= 0) gameOver = true;
+				hasKnockedBack = true;
+				tempVelocityY = -7;
+			}
+		}
+	}
+}
 
 
 void Beebot::movement(char** lvl, float player_x, float player_y, const int cell_size, int player_width, int player_height) {
@@ -346,42 +382,32 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 }
 
 
-void Beebot::move_beebots(Beebot** beebots, int& beeIndex, int& beeCount, const int cell_size)
+
+void Beebot::move_beebots(const int cell_size)
 {
-	for (int i = 0; i < beeCount; i++) {
 
-		if (beeIndex >= beeCount) {
-			break;
-		}
+	float patrolStart = BeebotStart * cell_size;
+	float beebot_End = BeebotEnd * cell_size;
+	float beebot_maxEnd = patrolStart + 10 * cell_size;
+	float patrolEnd = (beebot_End > beebot_maxEnd) ? beebot_maxEnd : beebot_End;
 
-		float patrolStart = BeebotStart[i] * cell_size;
-		float beebot_End = BeebotEnd[i] * cell_size;
-		float beebot_maxEnd = patrolStart + 10 * cell_size;
-		float patrolEnd = (beebot_End > beebot_maxEnd) ? beebot_maxEnd : beebot_End;
+	float bee_X = (patrolStart + patrolEnd) / 2.0f;
+	float bee_Y = BeebotHeights * cell_size + 10;
 
-		float bee_X = (patrolStart + patrolEnd) / 2.0f;
-		float bee_Y = BeebotHeights[i] * cell_size + 10;
+	setPosition(bee_X, bee_Y, patrolStart, patrolEnd);
+	beeBaseY = bee_Y;
 
-		beebots[beeIndex]->setPosition(bee_X, bee_Y, patrolStart, patrolEnd);
-		beebots[beeIndex]->beeBaseY = bee_Y;
+	cout << "Placed Beebot at: " << bee_X << ", " << bee_Y << endl;
 
-		cout << "placed bee " << beeIndex << ": " << bee_X << ", " << bee_Y << endl;
-		beeIndex++;
-
-	}
-
-	beeCount = beeIndex;
 }
-void Beebot::getBeebotCoordinates(char** lvl, int height, int width, int y_start, int y_end)
-{
 
-	bool* occupiedColumns = new bool[width](false); 
+bool Beebot::getBeebotCoordinates(char** lvl, int height, int width, int y_start, int y_end, int& j_start, bool* occupiedColumns)
+
+{
 
 	for (int i = y_start; i < y_end; i++) {
 
-		int j = 0;
-
-		while (j < width - 1) {
+		for (int j = j_start; j < width - 1; j++) {
 
 			if (lvl[i][j] == 's' && lvl[i + 1][j] == 's' && lvl[i - 1][j] == 's') {
 
@@ -393,7 +419,7 @@ void Beebot::getBeebotCoordinates(char** lvl, int height, int width, int y_start
 
 				int end = j - 1;
 
-				if (end - start + 1 >= 7 && indexBee < beeCoordintes) {
+				if (end - start + 1 >= 7) {
 
 					int midpoint = (start + end) / 2;
 					int patrolStart = max(0, midpoint - 2);
@@ -411,44 +437,46 @@ void Beebot::getBeebotCoordinates(char** lvl, int height, int width, int y_start
 
 					if (!conflict) {
 
-						BeebotStart[indexBee] = patrolStart;
-						BeebotEnd[indexBee] = patrolEnd;
-						BeebotHeights[indexBee] = i;
+						BeebotStart = patrolStart;
+						BeebotEnd = patrolEnd;
+						BeebotHeights = i;
 
 						for (int col = patrolStart; col <= patrolEnd; col++) {
 							occupiedColumns[col] = true;
 						}
 
-						indexBee++;
+						cout << "Placed Beebot from column " << patrolStart << " to " << patrolEnd << " at row " << i << endl;
 
-						cout << "Found air zone from tile " << start << " to " << end << " at row " << i << endl;
+						j_start = j;
+
+						return true;
 					}
 				}
 			}
-
-			else {
-				j++;
-			}
 		}
+
+		j_start = 0; 
 	}
 
-	delete[] occupiedColumns; 
-
+	return false;
 }
 
-void Beebot::drawProjectiles(RenderWindow& window, float offset_x) {
 
+
+void Beebot::drawExtra(RenderWindow& window, float offset_x)
+{
 	if (projectiles && projectiles->Active()) {
 		projectiles->draw(window, offset_x);
 	}
-
 }
 
-bool Beebot::handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY)
+
+
+bool Beebot::handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY,int height,int width)
 {
 	if (projectiles && projectiles->Active()) 
 	{
-		if (projectiles->handleCollision(lvl, cell_size, player_x, player_y, player_width, player_height, hasKnockedBack, tempVelocityY))
+		if (projectiles->handleCollision(lvl, cell_size, player_x, player_y, player_width, player_height, hasKnockedBack, tempVelocityY,height,width))
 		{
 			if (!projectiles->Active())
 			{

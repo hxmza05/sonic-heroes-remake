@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include "Player.h"
+#include "HUD.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -120,10 +122,56 @@ public:
     void drawSpike(RenderWindow& window, float offset_x);
     bool playerSpikeCollision(float playerX, float playerY, float playerW, float playerH);
     bool PlayerStingerCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight);
-
+    void update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver) override;
+    void drawExtra(RenderWindow& window, float offset_x) override;
 
 
 };
+
+
+
+
+void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
+{
+
+    if (!Alive)
+        return;
+
+    movement(player.getx(), player.gety(), player.getPwidth(), lvl, cell_size);
+
+    if (!hasKnockedBack && playerSpikeCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight()))
+    {
+        hasKnockedBack = true;
+        tempVelocityY = -7;
+    }
+
+    if (!hasKnockedBack && PlayerStingerCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, stingerWidth, stingerHeight))
+    {
+        if (indexAnimation == UPR || indexAnimation == UPL)
+        {
+            if (hp == 0)
+                Alive = false;
+            else
+                hp--;
+        }
+
+        else
+        {
+            hud.getLives()--;
+            hasKnockedBack = true;
+            tempVelocityY = -7;
+
+            if (hud.getLives() <= 0)
+                gameOver = true;
+        }
+    }
+}
+
+
+void Eggstinger::drawExtra(RenderWindow& window, float offset_x) {
+    drawSpike(window, offset_x);
+}
+
 
 
 bool Eggstinger::PlayerStingerCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight)

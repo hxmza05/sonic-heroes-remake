@@ -185,12 +185,12 @@ public:
 
         nameInputText.setFont(font);
         nameInputText.setCharacterSize(42);
-        nameInputText.setFillColor(Color::White);
+        nameInputText.setFillColor(Color::Yellow);
         nameInputText.setPosition(300, 400);
 
         nameBox.setSize(Vector2f(400, 60));
         nameBox.setFillColor(Color(0, 0, 0, 150));
-        nameBox.setOutlineColor(Color::White);
+        nameBox.setOutlineColor(Color::Yellow);
         nameBox.setOutlineThickness(2);
         nameBox.setPosition(295, 395); 
 
@@ -260,7 +260,7 @@ public:
             temp.setPosition(x, y);
             text[i] = temp;
 
-            text[i].setFillColor(i == selectedOption ? Color::Yellow : Color::White);
+            text[i].setFillColor(i == selectedOption ? Color::White : Color::Yellow);
 
         }
 
@@ -276,7 +276,7 @@ public:
             temp.setPosition(x, y);
             text2[i] = temp;
 
-            text2[i].setFillColor(i == currentMenuOption ? Color::Yellow : Color::White);
+            text2[i].setFillColor(i == currentMenuOption ? Color::White : Color::Yellow);
 
         }
 

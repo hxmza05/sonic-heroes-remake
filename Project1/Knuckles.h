@@ -214,7 +214,7 @@ public:
 			coolDown.restart();
 		}
 	}
-	void useSpecialAbilty(char**lvl)
+	void useSpecialAbilty(char**lvl,int height,int width)
 	{
 		cout << coolDown.getElapsedTime().asSeconds()<<"\n";
 		if(GlideCount <=10)
@@ -229,13 +229,13 @@ public:
 				indexAnimation = BREAKL;
 			}
 			cout << "BreakCalled";
-			Break(lvl);
+			Break(lvl,14,width);
 			//coolDown.restart();
 		}
 		states[indexAnimation]->RunAnimation();
 		coolingDownCount();
 	}
-	void Break(char**lvl)
+	void Break(char**lvl,int height,int width)
 	{
 		int glidePixels = 5;
 		int checkX = (indexAnimation == BREAKR) ? x + getPwidth() + glidePixels : x - glidePixels;
@@ -246,19 +246,19 @@ public:
 		//  checking bounds here firstxly
 		if (tileX < 0 || tileX >= 200 || tileY < 0 || tileY >= 14)
 			return;
-		if (checkCollisionSpikes(lvl, checkX, checkY))
+		if (checkCollisionSpikes(lvl, checkX, checkY,height,width))
 		{
 			return;
 		}
 		// If block is breakable
-		if (checkCollisionExceptSpikes(lvl, checkX, checkY))
+		if (checkCollisionExceptSpikes(lvl, checkX, checkY,height,width))
 		{
 			lvl[tileY][tileX] = 's'; // Mark it as emptyspace pwnow
 			cout << "Collision Detected and Block Broken\n";
 		}
 		checkY = y - 5;
 		tileY = checkY / 64;
-		if (checkCollisionExceptSpikes(lvl, checkX, checkY))
+		if (checkCollisionExceptSpikes(lvl, checkX, checkY,height,width))
 		{
 			lvl[tileY][tileX] = 's'; // Mark it as emptyspace pwnow
 			cout << "Collision Detected and Block Broken\n";
