@@ -277,9 +277,7 @@ void Batbrain::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 	if (handleDeathAnimation())
 		return;
 
-
 	movement(lvl, player.getx(), player.gety(), cell_size);
-
 	if (!hasKnockedBack)
 	{
 		if (PlayerBatCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, getBatBrainWidth(), getBatBrainHeight()))
@@ -298,14 +296,11 @@ void Batbrain::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 				}
 
 			}
-
 			else
 			{
 				hud.getLives()--;
-
 				if (hud.getLives() <= 0)
 					gameOver = true;
-
 				hasKnockedBack = true;
 				tempVelocityY = -7;
 			}

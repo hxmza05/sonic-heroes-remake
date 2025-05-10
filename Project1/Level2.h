@@ -164,7 +164,7 @@ public:
     }
     void designlvl(const char* filename)
     {
-        //cout << "\n\n\nIn desgin function for level 2\n\n\n";
+
         ifstream file(filename);
         if (!file.is_open())
         {
@@ -178,9 +178,9 @@ public:
                 int wall;
                 file >> wall;
                 lvl[i][j] = getMapValues(wall);
-                cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
+                //cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
             }
-            cout << endl;
+            //cout << endl;
         }
         file.close();
     }

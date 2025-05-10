@@ -20,14 +20,11 @@ protected:
 	float levelEnd;
 	//Collectible*** collectibles;
 	//Obstacle** obstacles;
+
 	const int endMark;
 	Texture backgorund;
 	Sprite bgSprite;
 	char** lvl;
-
-	int height;
-	int width;
-	float friction;
 
 	Ring** rings;
 	Texture* ringTex;
@@ -42,6 +39,11 @@ protected:
 	Texture* boostTex;
 	int boostCount;
 
+
+	 int height;
+	 int width;
+	 float friction;
+	//Enemy*** enemies;
 
 
 
