@@ -45,8 +45,8 @@ public:
 	Level2() 
 	{
 
+        friction = 0.1;
         cell_size = 64;
-
         cout << "LEVEL 2 COnstructor being loaded : " << endl;
 		height = 14;
 		width = 250;
@@ -160,7 +160,7 @@ public:
     }
     void designlvl(const char* filename)
     {
-
+        //cout << "\n\n\nIn desgin function for level 2\n\n\n";
         ifstream file(filename);
         if (!file.is_open())
         {

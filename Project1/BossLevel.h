@@ -25,6 +25,7 @@ class BossLevel : public Level
 public:
 	BossLevel()
 	{
+		friction = 0.0;
 		cell_size = 64;
 		height = 14;
 		width = 24;

@@ -12,6 +12,7 @@ class Level1 : public Level
     FallingPlatform** falling;
     MoveablePlatform* moveable;
 
+
     int crabCount;
     int crab_start;
     int crab_end;
@@ -45,6 +46,7 @@ class Level1 : public Level
 public:
     Level1()
     {
+        friction = 0.3;
         cell_size = 64;
         height = 14;
         width = 200;
@@ -53,7 +55,6 @@ public:
         {
             lvl[i] = new char[width];
         }
-
         designlvl("lvl1.txt");
 
         enemyCount = 0;
@@ -128,26 +129,6 @@ public:
         }
 
 
-
-        /*
-
-        motobugCount = 5;
-        motobugIndex = 0;
-        motobugs = new Motobug * [motobugCount];
-
-        for (int i = 0; i < motobugCount; i++)
-        {
-            motobugs[i] = new Motobug();
-        }
-
-        motobug_start = 10;
-        motobug_end = 12;
-
-        motobugs[0]->getMotobugCoordinates(lvl, height, width, motobug_start, motobug_end);
-        motobugs[0]->move_motobugs(motobugs, motobugIndex, motobugCount, cell_size);
-        */
-
-
         falling = new FallingPlatform * [8];
         for (int i = 0, f = 32; i < 8; i++, f++)
             falling[i] = new FallingPlatform(64 * f, 500);
@@ -193,7 +174,8 @@ public:
     }
     void designlvl(const char* filename)
     {
-
+        //cout << "\n\n\nIn desgin function\n\n\n";
+        cout << "\n\n\nIn desgin function for level 1\n\n\n";
         ifstream file(filename);
         if (!file.is_open())
         {
@@ -219,7 +201,7 @@ public:
     {
         for (int i = 0; i < enemyCount; ++i)
         {
-            if (!enemies[i]->alive())
+            if (!enemies[i]->alive() && enemies[i]->deathDone())
                 continue;
 
             enemies[i]->update(lvl, player, cell_size, hasKnockedBack, tempVelocity, onGround, indexAnimation, hud, gameOver);

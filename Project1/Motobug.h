@@ -51,7 +51,7 @@ public:
 		Start = 0;
 		End = 0;
 		clock.restart();
-		totalAnimations = 4;
+		totalAnimations = 3;
 		indexAnimation = 0;
 
 		MotoBugStart = 0;
@@ -90,59 +90,11 @@ public:
 			states[1]->getSprites()[i].setScale(0.451f, 0.428f);
 		}
 
-
-		/*
-
-		// flip direction 0
-		states[1] = new Animation(2);
-
-		for (int i = 0, width = 0; i < 2; i++, width += 157.f) {
-			states[1]->getSprites()[i].setTexture(flip0);
-			states[1]->getSprites()[i].setTextureRect(IntRect(width, 0, 157.f, 118.f));
-			states[1]->getSprites()[i].setScale(0.487f, 0.457f);
-		}
-
-
-		// flip direction 1 
-
-		states[2] = new Animation(3);
-
-		for (int i = 0, height = 0; i < 3; i++, height += 120.6f) {
-			states[2]->getSprites()[i].setTexture(flip1);
-			states[2]->getSprites()[i].setTextureRect(IntRect(0, height, 161.f, 120.6f));
-			states[2]->getSprites()[i].setScale(0.475f, 0.447f);
-		}
-
-		*/
-
-
-
+		loadDeathAnimation("Sprites/death0.png", 41, 42, 1.65f, 1.65f); 
 
 	}
 
-	float getX() {
 
-		return x;
-	}
-
-	float getY() {
-
-		return y;
-	}
-
-	int getHp() {
-
-		return hp;
-	}
-
-	bool alive() {
-
-		return Alive;
-	}
-
-	bool returnAttack() {
-		return attack;
-	}
 
 	void setAttack() {
 		attack = true;
@@ -157,9 +109,6 @@ public:
 		return MotobugWidth;
 	}
 
-	bool isFacingRight() const {
-		return facingRight;
-	}
 
 	void update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver) override;
 	void movement(float player_x, float player_y);
@@ -280,6 +229,10 @@ void Motobug::movement(float player_x, float player_y) {
 void Motobug::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
 {
 
+	if (handleDeathAnimation())
+		return;
+
+
 	movement(player.getx(), player.gety());
 
 	if (!hasKnockedBack)
@@ -289,9 +242,14 @@ void Motobug::update(char** lvl, Player& player, int cell_size, bool& hasKnocked
 			if (indexAnimation == UPR || indexAnimation == UPL)
 			{
 				setHp(0);
-				triggerDeath();
-				setAlive(false);
-				hud.getScore() += 100;
+
+				if (hp <= 0 && Alive) {
+					setAlive(false);
+					isDying = true;
+					deathClock.restart();
+					deathFrameClock.restart();
+					hud.getScore() += 100;
+				}
 			}
 			else
 			{
@@ -363,14 +321,6 @@ bool Motobug::getMotobugCoordinates(char** lvl, int height, int width, int& star
 
 void Motobug::drawExtra(RenderWindow& window, float offset_x) {
 
-	if (isDying && !deathFinished) {
-
-		if (playDeathAnimation(window, offset_x)) 
-		{
-			
-		}
-		return; 
-	}
 }
 
 bool Motobug::PlayerBugCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight)

@@ -85,7 +85,7 @@ public:
 
 		move_bee.loadFromFile("Sprites/bees.png");
 
-		totalAnimations = 2;
+		totalAnimations = 3;
 		indexAnimation = 0;
 
 		states = new Animation * [totalAnimations];
@@ -124,6 +124,9 @@ public:
 		states[1]->getSprites()[3].setTexture(move_bee);
 		states[1]->getSprites()[3].setTextureRect(IntRect(0, 152, 47, 32));
 		states[1]->getSprites()[3].setScale(1.88f, 1.171875f);
+
+
+		loadDeathAnimation("Sprites/death0.png", 41, 42, 1.5f, 1.5f);  
 
 
 
@@ -168,6 +171,9 @@ public:
 void Beebot::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
 {
 
+	if (handleDeathAnimation())
+		return;
+
 	movement(lvl, player.getx(), player.gety(), cell_size, player.getPwidth(), player.getPheight());
 
 	if (handleProjectilesCollision(lvl, cell_size, player.getx(), player.gety(), player.getPwidth(), player.getPheight(), hasKnockedBack, tempVelocityY, 14, 200)) 
@@ -184,9 +190,17 @@ void Beebot::update(char** lvl, Player& player, int cell_size, bool& hasKnockedB
 		if (PlayerBeeCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, getbeeWidth(), getbeeHeight())) {
 
 			if (indexAnimation == UPR || indexAnimation == UPL) {
+
 				setHp(0);
-				setAlive(false);
-				hud.getScore() += 200;
+
+				if (Alive) 
+				{
+					setAlive(false);
+					isDying = true;
+					deathClock.restart();
+					deathFrameClock.restart();
+					hud.getScore() += 200;
+				}
 			}
 
 			else {

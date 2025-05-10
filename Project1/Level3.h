@@ -18,7 +18,7 @@ class Level3 : public Level
 public:
 	Level3(char** level = nullptr, Enemy*** e = nullptr)
 	{
-
+		friction = 0.3;
 		height = 14;
 		width = 300;
 		lvl = new char* [height];

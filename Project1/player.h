@@ -118,6 +118,7 @@ public:
 		hasDetectedItself = false;
 
 	}
+	void decelerate(char** lvl, int w,float friction);
 	float& getx()
 	{
 		return x;
@@ -252,13 +253,14 @@ public:
 			return;
 		}
 	}
+	void decelerateRight(char** lvl, int width, float friction);
 	void player_dummy_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed,int,int);
 	void autoMove(int x_coord,int y_coord,char**,int h,int w);
 	void draw_player(RenderWindow& window, Sprite& LstillSprite,float offset_x);
 	void player_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed,int,int,bool&);
 	void playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, const int cell_size,bool& spacePressed,int,int,bool&);
-	void moveLeft();
-	void moveRight();
+	void moveLeft(char**lvl,int w,float friction);
+	void moveRight(char** llvl,int w,float friction);
 	virtual void moveUp(bool,int) = 0;
 	virtual void useSpecialAbilty(char**,int h,int w) = 0;
 	void checkDelayNow(int idx);

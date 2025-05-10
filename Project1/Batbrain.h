@@ -52,7 +52,7 @@ public:
 		StartX = x;
 		StartY = y;
 		indexAnimation = 0;
-		totalAnimations = 4;
+		totalAnimations = 5;
 		animationClock.restart();
 		animationPhaseClock.restart();
 		frameClock.restart();
@@ -71,7 +71,6 @@ public:
 		spawn.loadFromFile("Sprites/bat_sleep.png");
 		states[0]->getSprites()[0].setTexture(spawn);
 		states[0]->getSprites()[0].setTextureRect(IntRect(0, 0, 36, 60));
-		//states[0]->getSprites()[0].setScale(BatWidth / 36, Batheight / 60);
 
 
 		// move 0 
@@ -113,8 +112,10 @@ public:
 		states[3] = new Animation(1);
 		states[3]->getSprites()[0].setTexture(accel);
 		states[3]->getSprites()[0].setTextureRect(IntRect(0, 0, 95, 53));
-		//states[3]->getSprites()[0].setScale(BatWidth / 95, Batheight / 53);
 		states[3]->getSprites()[0].setOrigin(95.0f / 2.0f, 0);
+
+
+		loadDeathAnimation("Sprites/death0.png", 41, 42, 1.5f, 1.5f);  
 
 
 
@@ -273,6 +274,10 @@ void Batbrain::movement(char** lvl, float player_x, float player_y, const int ce
 void Batbrain::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
 {
 
+	if (handleDeathAnimation())
+		return;
+
+
 	movement(lvl, player.getx(), player.gety(), cell_size);
 
 	if (!hasKnockedBack)
@@ -282,8 +287,16 @@ void Batbrain::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 			if (indexAnimation == UPR || indexAnimation == UPL)
 			{
 				setHp(0);
-				setAlive(false);
-				hud.getScore() += 120;
+
+				if (Alive) 
+				{
+					setAlive(false);
+					isDying = true;
+					deathClock.restart();
+					deathFrameClock.restart();
+					hud.getScore() += 120;
+				}
+
 			}
 
 			else
@@ -340,8 +353,8 @@ bool Batbrain::getBatbrainCoordinates(char** lvl, int height, int width, int& i_
 				float bat_x = j * cell_size;
 				float bat_y = i * cell_size;
 
-				int patrolStartTile = (j - 7 < 0) ? 0 : j - 7;
-				int patrolEndTile = (j + 7 >= width) ? (width - 1) : (j + 7);
+				int patrolStartTile = (j - 6 < 0) ? 0 : j - 6;
+				int patrolEndTile = (j + 6 >= width) ? (width - 1) : (j + 6);
 
 				float patrolStart = patrolStartTile * cell_size;
 				float patrolEnd = patrolEndTile * cell_size;
