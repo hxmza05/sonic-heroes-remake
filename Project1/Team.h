@@ -48,6 +48,10 @@ public:
     {
         return playerIndex;
     }
+    void setplayerIndex(int a)
+    {
+		playerIndex = a;
+    }
     void switchLeader()
     {
         pathIndex = 0;
@@ -333,6 +337,10 @@ public:
 
             }
         }
+    }
+    void drawSonic(RenderWindow& window,float  offset_x)
+    {
+		team[0]->draw_player(window, team[0]->getStates()[team[0]->getAnimationIndex()][0].getSprites()[team[0]->getStates()[team[0]->getAnimationIndex()][0].getIndex()], offset_x);
     }
     ~Team()
     {

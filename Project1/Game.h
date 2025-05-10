@@ -56,9 +56,9 @@ class Game
 
     // Batbrain** batbrains;
 
-    int stingerCount;
-    bool eggStingerSpawn;
-    Eggstinger* stinger;
+    //int stingerCount;
+    //bool eggStingerSpawn;
+    //Eggstinger* stinger;
 
     Texture backGround;
     Sprite backGroundSprite;
@@ -104,11 +104,11 @@ public:
         // team = Team();
         // level = new * Level();
         level = new Level * [3];
-        //level[0] = new Level1();
+        level[0] = new Level1();
         level[1] = new Level2();
         //level[2] = new Level3();
-        //level[3] = new BossLevel();
-        levelIndex = 1;
+        level[3] = new BossLevel();
+        levelIndex = 3;
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
         bufferSpriteEnd.setTexture(buffer);
@@ -121,31 +121,6 @@ public:
         hit_box_factor_y = 5 * 2.5;
 
 
-        ////////////////////////////////////
-        /////////////////Bosss//////////////
-        ////////////////////////////////////
-
-        stingerCount = 1;
-        eggStingerSpawn = false;
-        stinger = new Eggstinger();
-
-        ///////////////////////////////////
-        //////////////batbrain
-        ////////////////////////////////////
-
-        /*
-
-         batCount = 4;
-         batIndex = 0;
-         batbrains = new Batbrain * [batCount];
-
-         for (int i = 0; i < batCount; ++i) {
-             batbrains[i] = new Batbrain();
-         }
-
-         batbrains[0]->getBatbrainCoordinates(batbrains,level[levelIndex]->getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), batIndex, batCount, cell_size);
-
-        */
 
         backGround.loadFromFile("Data/bg1.png");
         backGroundSprite.setTexture(backGround);
@@ -204,9 +179,7 @@ public:
     {
         return levelIndex;
     }
-
-
-    bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY,int height,int width)
+    bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY, int height, int width)
     {
         offset_y = player_y;
         offset_y += velocityY;
@@ -300,7 +273,6 @@ public:
 
                     if (player.getx() + player.getPwidth() > ring_x && player.getx() < ring_x + ringWidth && player.gety() + player.getPheight() > ring_y && player.gety() < ring_y + ringHeight)
                     {
-
                         collectibles[i][j]->collect();
                         ringsCollected++;
                         lvl[i][j] = 's';
@@ -369,6 +341,10 @@ public:
     }
     void play(RenderWindow& window)
     {
+        if (levelIndex == 3)
+        {
+            team.setplayerIndex(0);
+        }
         if (!gameOver)
         {
             if (team.getPlayer()[team.getPlayerIndex()][0].getOnGround())
@@ -487,7 +463,7 @@ public:
                 team.getPlayer()[team.getPlayerIndex()][0].player_gravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), gameOver);
             team.storePath();
             team.autoMoveFollowers(level[levelIndex]->getLvl(), offset_x,level[levelIndex]->getWidth());
-            if (level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
+            if (levelIndex != 3 && level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
             {
                 if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() != STILL)
                 {
@@ -498,19 +474,18 @@ public:
             }
         }
         draw_bg(window, backGroundSprite, offset_x);
-        if (!gameOver)
+        if (levelIndex != 3 && !gameOver)
             level[levelIndex]->getMoveable()->draw(window, offset_x);
 
         display_level(window, level[levelIndex][0].getHeight(), level[levelIndex][0].getWidth(), level[levelIndex][0].getLvl(), walls, 64, offset_x);
-        if (!gameOver)
+        if (levelIndex != 3 &&  !gameOver)
             for (int i = 0; i < 8; i++)
                 level[levelIndex]->getFalling()[i]->draw(window, offset_x);
 
         updateAndDrawCollectibles(level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), window);
         if (!gameOver)
             handleRingCollection(collectibles, level[levelIndex][0].getLvl(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), team.getPlayer()[team.getPlayerIndex()][0], hud.getRings(), cell_size);
-
-        team.draw(window, offset_x);
+        
         /*
 
         if (!eggStingerSpawn)
@@ -589,7 +564,7 @@ public:
             batbrains[i]->draw(window, offset_x);
         }
        */
-        if (!gameOver)
+        if (levelIndex != 3 && !gameOver)
             for (int i = 0; i < 8; i++)
             {
                 level[levelIndex]->getFalling()[i]->shouldItActivate(team.getPlayer()[team.getPlayerIndex()]->getx());
@@ -598,14 +573,17 @@ public:
                     level[levelIndex]->getFalling()[i]->fall();
                 }
             }
-        // if (!gameOver)
-        //level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud, gameOver);
+        if (!gameOver)
+        level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud, gameOver);
       
         if (!gameOver)
             team.animate();
-        team.draw(window, offset_x);
+        if (levelIndex != 3)
+            team.draw(window, offset_x);
+        else team.drawSonic(window, offset_x);   
         hud.draw(window);
 
+        if(levelIndex != 3)
         for (int i = 0; i < 8; i++)
         {
             level[levelIndex]->getFalling()[i]->shouldItActivate(team.getPlayer()[team.getPlayerIndex()]->getx());
@@ -615,7 +593,7 @@ public:
             }
         }
         //level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud, gameOver);
-        team.draw(window, offset_x);
+        //team.draw(window, offset_x);
 
         // change these according to the movement logic of motobug, for now it moves with player
         /*  for (int i = 0; i < crabCount; i++) {
@@ -676,6 +654,7 @@ public:
             }
 
             */
+            
 
             // draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
             // draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);
@@ -691,7 +670,7 @@ public:
             gameOver = true;
             window.draw(gameover);
         }
-        
+
 
         // draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
         // draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);

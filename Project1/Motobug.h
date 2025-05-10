@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include "Enemy.h"
+#include "Player.h"
+#include "HUD.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -14,11 +16,9 @@ private:
 	bool attack;
 	Clock clock;
 
-	int* MotoBugStart;
-	int* MotoBugEnd;
-	int* MotoBugWalls;
-	int MotoBugCoordinates;
-	int indexMotoBug;
+	int MotoBugStart;
+	int MotoBugEnd;
+	int MotoBugWalls;
 
 	const float MotobugHeight;
 	const float MotobugWidth;
@@ -54,12 +54,9 @@ public:
 		totalAnimations = 4;
 		indexAnimation = 0;
 
-		MotoBugCoordinates = 10;
-		indexMotoBug = 0;
-
-		MotoBugStart = new int[MotoBugCoordinates];
-		MotoBugEnd = new int[MotoBugCoordinates];
-		MotoBugWalls = new int[MotoBugCoordinates];
+		MotoBugStart = 0;
+		MotoBugEnd = 0;
+		MotoBugWalls = 0;
 
 		flipStarted = false;
 		flipCompleted = false;
@@ -164,11 +161,12 @@ public:
 		return facingRight;
 	}
 
-
+	void update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver) override;
 	void movement(float player_x, float player_y);
-	void move_motobugs(Motobug** motobugs, int& motobugIndex, int& motobugCount, const int cell_size);
-	void getMotobugCoordinates(char** lvl, int height, int width, int start_x, int end_x);
+	void move_motobugs(const int cell_size);
+	bool getMotobugCoordinates(char** lvl, int height, int width, int& start_x, int end_x, int& j_start);
 	bool PlayerBugCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight);
+	void drawExtra(RenderWindow& window, float offset_x);
 
 };
 
@@ -278,35 +276,60 @@ void Motobug::movement(float player_x, float player_y) {
 }
 
 
-void Motobug::move_motobugs(Motobug** motobugs, int& motobugIndex, int& motobugCount, const int cell_size)
+
+void Motobug::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
 {
-	for (int i = 0; i < motobugCount; i++) {
 
-		float Start = MotoBugStart[i] * cell_size;
-		float motobug_End = MotoBugEnd[i] * cell_size;
-		float motobug_maxEnd = Start + 10 * cell_size;
-		float End = (motobug_End > motobug_maxEnd) ? motobug_maxEnd : motobug_End;
+	movement(player.getx(), player.gety());
 
-		float bug_X = (Start + End) / 2.0f;
-		float bug_Y = (MotoBugWalls[i] + 1) * cell_size - MotobugHeight;
+	if (!hasKnockedBack)
+	{
+		if (PlayerBugCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, getMotobugWidth(), getMotobugHeight()))
+		{
+			if (indexAnimation == UPR || indexAnimation == UPL)
+			{
+				setHp(0);
+				triggerDeath();
+				setAlive(false);
+				hud.getScore() += 100;
+			}
+			else
+			{
+				hud.getLives()--;
 
-		motobugs[i]->setPosition(bug_X, bug_Y, Start, End);
+				if (hud.getLives() <= 0)
+					gameOver = true;
 
-		cout << "placed bug " << motobugIndex << ": " << bug_X << ", " << bug_Y << endl;
-		motobugIndex++;
+				hasKnockedBack = true;
+				tempVelocityY = -7;
+			}
+		}
 	}
-
-	motobugCount = motobugIndex;
 }
 
 
-void Motobug::getMotobugCoordinates(char** lvl, int height, int width, int start_x, int end_x)
+void Motobug::move_motobugs(const int cell_size)
 {
-	for (int i = start_x; i < end_x; i++) { 
+	float Start = MotoBugStart * cell_size;
+	float motobug_End = MotoBugEnd * cell_size;
+	float motobug_maxEnd = Start + 10 * cell_size;
+	float End = (motobug_End > motobug_maxEnd) ? motobug_maxEnd : motobug_End;
 
-		int j = 0;
+	float bug_X = (Start + End) / 2.0f;
+	float bug_Y = (MotoBugWalls + 1) * cell_size - MotobugHeight;
 
-		while (j < width - 1) {
+	setPosition(bug_X, bug_Y, Start, End);
+	cout << "Placed bug at X: " << bug_X << ", Y: " << bug_Y << endl;
+}
+
+bool Motobug::getMotobugCoordinates(char** lvl, int height, int width, int& start_x, int end_x, int& j_start)
+{
+
+	for (int i = start_x; i < end_x; i++) {
+
+		int j = (i == start_x) ? j_start : 0;
+
+		for (; j < width - 1; j++) {
 
 			if (lvl[i][j] == 's' && (lvl[i + 1][j] == 'w' || lvl[i + 1][j] == 'e' || lvl[i + 1][j] == 'q')) {
 
@@ -318,23 +341,37 @@ void Motobug::getMotobugCoordinates(char** lvl, int height, int width, int start
 
 				int end = j - 1;
 
-				if (end - start + 1 >= 4 && indexMotoBug < MotoBugCoordinates) {
-					MotoBugStart[indexMotoBug] = start;
-					MotoBugEnd[indexMotoBug] = end;
-					MotoBugWalls[indexMotoBug] = i;
-					indexMotoBug++;
+				if (end - start + 1 >= 4) {
 
-					cout << "Found bug zone from tile " << start << " to " << end << " at row " << i << endl;
+					MotoBugStart = start;
+					MotoBugEnd = end;
+					MotoBugWalls = i;
+
+					std::cout << "Found bug zone from tile " << start << " to " << end << " at row " << i << std::endl;
+
+					start_x = i;    
+					j_start = j;     
+
+					return true;
 				}
-			}
-
-			else {
-				j++;
 			}
 		}
 	}
+	return false;
 }
 
+
+void Motobug::drawExtra(RenderWindow& window, float offset_x) {
+
+	if (isDying && !deathFinished) {
+
+		if (playDeathAnimation(window, offset_x)) 
+		{
+			
+		}
+		return; 
+	}
+}
 
 bool Motobug::PlayerBugCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight)
 {
