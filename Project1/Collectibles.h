@@ -19,7 +19,6 @@ protected:
 	int indexAnimation;
 	int totalAnimations;
 
-
 	Texture* texture;
 	Texture* afterEffect;
 	Sprite sprite;
@@ -57,30 +56,6 @@ public:
 		effectClock.restart();
 	}
 
-	virtual void draw(RenderWindow& window, float offset_x) {
-
-		if (!collected || showEffect) {
-			sprite.setPosition(x * 64 - offset_x, y * 64 + 12);
-			window.draw(sprite);
-		}
-
-	}
-
-	virtual void collect(){}
-
-	virtual void update() 
-	{
-		
-		if (collected) {
-			return;
-		}
-
-		states[indexAnimation]->RunAnimation();
-		sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
-		sprite.setPosition(x * 64, y * 64); 
-	
-	} 
-
 	bool isActive() const { 
 		return !collected; 
 	}
@@ -93,10 +68,28 @@ public:
 		return y; 
 	}
 
-
 	int getIndex() const {
 		return states[indexAnimation]->getIndex();
 	}
+
+	virtual void draw(RenderWindow& window, float offset_x) {
+
+		if (!collected || showEffect) {
+			sprite.setPosition(x * 64 - offset_x, y * 64);
+			window.draw(sprite);
+		}
+
+	}
+
+	virtual void update() {
+
+		if (!collected || showEffect) {
+			sprite.setPosition(x * 64, y * 64 + 32);
+		}
+	}
+
+	virtual void collect() {}
+	virtual bool handleCollision(Player& player, char** lvl, int cell_size, int& result) = 0;
 
 
 };

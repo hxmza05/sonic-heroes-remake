@@ -6,7 +6,8 @@
 #include"MoveablePlatform.h"
 #include"FallingPlatform.h"
 #include"HUD.h"
-
+#include"Extralives.h"
+#include"SpecialBoost.h"
 using namespace std;
 #include"Animation.h"
 #include <SFML/Graphics.hpp>
@@ -27,6 +28,22 @@ protected:
 	int height;
 	int width;
 	float friction;
+
+	Ring** rings;
+	Texture* ringTex;
+	Texture* ringEffect;
+	int ringCount;
+
+	ExtraLife** lives;
+	Texture* lifeTex;
+	int livesCount;
+	
+	SpecialBoost** boosts;
+	Texture* boostTex;
+	int boostCount;
+
+
+
 
 public:
 	Level(char** level = nullptr) :endMark(0)
@@ -93,8 +110,8 @@ public:
 	{
 		return friction;
 	}
+
 	virtual FallingPlatform**getFalling() = 0;
-	//virtual void handleEnemies() = 0;
 	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD& hud,bool& ) = 0;
 	virtual void drawEnemies(RenderWindow& window, float offset_x) = 0;
 
@@ -105,8 +122,158 @@ public:
 		return false;
 	}
 
+	void setRingTextures(Texture* r, Texture* re) {
+		ringTex = r;
+		ringEffect = re;
+	}
 
+	void setLifeTexture(Texture* tex) { 
+		lifeTex = tex; 
+	}
+
+	void setBoostTexture(Texture* tex) { 
+		boostTex = tex; 
+	}
+
+	int getRingCount() const {
+		return ringCount;
+	}
+
+	int getLivesCount() const {
+		return livesCount;
+	}
+
+	int getBoostCount() const {
+		return boostCount;
+	}
+
+	Ring** getRings() {
+		return rings; 
+	}
+
+	ExtraLife** getLives() {
+		return lives;
+	}
+
+	SpecialBoost** getBoosts() { 
+		return boosts; 
+	}
+
+	void placeRingsFromMap(Texture* ringTex, Texture* ringEffect);
+	void placeExtraLivesFromMap();
+	void placeBoostsFromMap();
+	void loadAndPlaceCollectibles();
 
 
 };
+
+
+void Level::loadAndPlaceCollectibles() {
+
+	ringTex = new Texture();
+	ringEffect = new Texture();
+	lifeTex = new Texture();
+	boostTex = new Texture();
+
+	ringTex->loadFromFile("Sprites/rings.png");
+	ringEffect->loadFromFile("Sprites/after_ring.png");
+	lifeTex->loadFromFile("Sprites/life.png");
+	boostTex->loadFromFile("Sprites/boost.png");
+
+	placeRingsFromMap(ringTex, ringEffect);
+	placeExtraLivesFromMap();
+	placeBoostsFromMap();
+
+}
+
+
+void Level::placeRingsFromMap(Texture* ringTex, Texture* ringEffect) {
+
+	ringCount = 0;
+
+	for (int i = 0; i < height; ++i) {
+
+		for (int j = 0; j < width; ++j) {
+
+			if (lvl[i][j] == 'r') {
+				ringCount++;
+			}
+		}
+	}
+
+	rings = new Ring * [ringCount];
+
+	int index = 0;
+
+	for (int i = 0; i < height; ++i) {
+
+		for (int j = 0; j < width; ++j) {
+
+			if (lvl[i][j] == 'r') {
+				rings[index++] = new Ring(j, i, ringTex, ringEffect);
+			}
+		}
+	}
+}
+
+
+void Level::placeExtraLivesFromMap() {
+
+	livesCount = 0;
+
+	for (int i = 0; i < height; ++i) {
+
+		for (int j = 0; j < width; ++j) {
+
+			if (lvl[i][j] == 'l') {
+				livesCount++;
+			}
+		}
+	}
+
+	lives = new ExtraLife * [livesCount];
+
+	int index = 0;
+
+	for (int i = 0; i < height; ++i) {
+
+		for (int j = 0; j < width; ++j) {
+
+			if (lvl[i][j] == 'l') {
+				lives[index++] = new ExtraLife(j, i, lifeTex);
+			}
+		}
+	}
+}
+
+
+void Level::placeBoostsFromMap() {
+
+	boostCount = 0;
+
+	for (int i = 0; i < height; ++i) {
+
+		for (int j = 0; j < width; ++j) {
+
+			if (lvl[i][j] == 'j') {
+				boostCount++;
+			}
+		}
+	}
+
+	boosts = new SpecialBoost * [boostCount];
+
+	int index = 0;
+
+	for (int i = 0; i < height; ++i) {
+
+		for (int j = 0; j < width; ++j) {
+
+			if (lvl[i][j] == 'j') {
+				boosts[index++] = new SpecialBoost(j, i, boostTex);
+			}
+		}
+	}
+}
+
 

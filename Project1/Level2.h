@@ -151,6 +151,10 @@ public:
             return 'r';
         case 6:
             return 'i';
+        case 7:
+            return 'j';
+        case 8:
+            return 'l';
         case 9:
             return 'b';
 

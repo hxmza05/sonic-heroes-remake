@@ -40,18 +40,33 @@ public:
 		moveable = new MoveablePlatform(0, 0, 0, 0);
 		designlvl("lvl3.txt");
 	}
-	char  getMapValues(int val)
+	char getMapValues(int val)
 	{
 		switch (val)
 		{
-		case 0: return 's';
-		case 1: return 'q';
-		case 2: return 'w';
-		case 3: return 'e';
-		case 4: return 'p';
-		case 5: return 'r';
-		case 6: return 'i'; // ultay spikes 
-		default: return 's';
+		case 0:
+			return 's';
+		case 1:
+			return 'q';
+		case 2:
+			return 'w';
+		case 3:
+			return 'e';
+		case 4:
+			return 'p';
+		case 5:
+			return 'r';
+		case 6:
+			return 'i';
+		case 7:
+			return 'j';
+		case 8:
+			return 'l';
+		case 9:
+			return 'b';
+
+		default:
+			return 's';
 		}
 	}
 	void designlvl(const char* filename)

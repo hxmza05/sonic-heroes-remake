@@ -12,7 +12,6 @@ class Level1 : public Level
     FallingPlatform** falling;
     MoveablePlatform* moveable;
 
-
     int crabCount;
     int crab_start;
     int crab_end;
@@ -56,6 +55,7 @@ public:
             lvl[i] = new char[width];
         }
         designlvl("lvl1.txt");
+        //placeRingsFromMap(ringTex, ringEffect); 
 
         enemyCount = 0;
         TotalEnemyCount = 17;
@@ -165,6 +165,10 @@ public:
             return 'r';
         case 6:
             return 'i';
+        case 7:
+            return 'j';
+        case 8:
+            return 'l';
         case 9:
             return 'b';
 
