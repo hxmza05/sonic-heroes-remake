@@ -31,7 +31,7 @@ public:
         team[0] = new Sonic();
         team[1] = new TailedFox();
         team[2] = new Knuckles();
-        playerIndex = 1;
+        playerIndex = 2;
         leadersPath = new int* [100];
 		leadersVelocityY = new float[100];
         for (int i = 0; i < 100; i++)

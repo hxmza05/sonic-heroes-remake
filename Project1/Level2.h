@@ -31,9 +31,10 @@ class Level2 : public Level
 	int cell_size;
 
 public:
-	Level2(char** level = nullptr, Enemy*** e = nullptr) 
+	Level2() 
 	{
-		cell_size = 64;
+        friction = 0.1;
+        cell_size = 64;
         cout << "LEVEL 2 COnstructor being loaded : " << endl;
 		height = 14;
 		width = 250;
@@ -107,23 +108,34 @@ public:
 		moveable = new MoveablePlatform(0,0,0,0);
         levelEnd = 245 * 64;
 	}
-    char  getMapValues(int val)
+    char getMapValues(int val)
     {
         switch (val)
         {
-        case 0: return 's';
-        case 1: return 'q';
-        case 2: return 'w';
-        case 3: return 'e';
-        case 4: return 'p';
-        case 5: return 'r';
-        case 6: return 'p';
-        default: return 's';
+        case 0:
+            return 's';
+        case 1:
+            return 'q';
+        case 2:
+            return 'w';
+        case 3:
+            return 'e';
+        case 4:
+            return 'p';
+        case 5:
+            return 'r';
+        case 6:
+            return 'i';
+        case 9:
+            return 'b';
+
+        default:
+            return 's';
         }
     }
     void designlvl(const char* filename)
     {
-        //cout << "\n\n\nIn desgin function for level 3\n\n\n";
+        //cout << "\n\n\nIn desgin function for level 2\n\n\n";
         ifstream file(filename);
         if (!file.is_open())
         {

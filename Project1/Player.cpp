@@ -11,7 +11,7 @@ void Player::draw_player(RenderWindow& window, Sprite& LstillSprite, float offse
 }
 void Player::player_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed, int height, int width,bool&gameOver)
 {
-    cout << "\nIn player Gravity\n";
+    //cout << "\nIn player Gravity\n";
     offset_y = y;
     offset_y += velocityY;
     if ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size >= height)
@@ -123,7 +123,7 @@ void Player::player_gravity(char** lvl, float& offset_y, float& offset_x, const 
 
 void Player::player_dummy_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed, int height, int width)
 {
-    cout << "\nIn player dummy Gravity\n";
+    //cout << "\nIn player dummy Gravity\n";
 
     offset_y = y;
     offset_y += velocityY;
@@ -241,7 +241,6 @@ void Player::playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, 
     offset_y = y;
     offset_y += tempVelocityY;
 
-    // Check out-of-bounds fall
     if ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size >= height) 
     {
         gameOver = true;
@@ -280,40 +279,150 @@ void Player::playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, 
         tempVelocityY = 0;
         spacePressed = false;
     }
-    else {
+    else 
+    {
         y = offset_y;
         tempVelocityY += tempGravity;
         onGround = false;
     }
 }
-void Player::moveLeft()
+void Player::decelerate(char** lvl, int width,float friction)
 {
+    cout << "\n\nIn decelration : \n friction : "<<friction<<endl;
+    cout << "Vecloity before frition : " << velocityX;
+    int tempAnimationIndex = STILL;
     if (velocityX > 0)
     {
-        // velocityX-=
+        velocityX -= friction;
+        tempAnimationIndex = EDGER;
+
+        if (velocityX < 0)
+        {
+            tempAnimationIndex = STILL;
+            velocityX = 0;
+        }
     }
+    else if (velocityX < 0)
+    {
+        velocityX += friction;
+        tempAnimationIndex = EDGEL;
+
+        if (velocityX > 0)
+        {
+            velocityX = 0;
+            tempAnimationIndex = STILL;
+        }
+
+    }
+    int calculated_x = x + velocityX;
+    if (checkCollision(lvl, calculated_x + hit_box_factor_x, y + hit_box_factor_y, 14, width) && (checkCollision(lvl, calculated_x + hit_box_factor_x + Pwidth - 1, y + hit_box_factor_y + Pheight - 10, 14, width) /*|| checkCollision(lvl, calculated_x + hit_box_factor_x + Pwidth - 1, y + hit_box_factor_y, 14, width)*/))
     {
         x += velocityX;
-        if (velocityX - acceleration > -max_speed)
+        indexAnimation = tempAnimationIndex;
+    }
+    else
+    {
+        cout << "Collisoin Detected ";
+        velocityX = 0;
+    }
+    cout << "VeloctiyX  after frictio = " << velocityX << endl << endl;
+}
+void Player::decelerateRight(char** lvl, int width, float friction)
+{
+    cout << "\n\nIn decelration : \n friction : " << friction << endl;
+    cout << "Vecloity before frition : " << velocityX;
+    int tempAnimationIndex = STILL;
+    if (velocityX > 0)
+    {
+        velocityX -= friction;
+        tempAnimationIndex = EDGER;
+
+        if (velocityX < 0)
         {
-            velocityX -= acceleration;
+            tempAnimationIndex = STILL;
+            velocityX = 0;
         }
-        if (velocityX > -10)
+    }
+    else if (velocityX < 0)
+    {
+        velocityX += friction;
+        tempAnimationIndex = EDGEL;
+
+        if (velocityX > 0)
         {
-            indexAnimation = LEFT;
-            states[LEFT][0].RunAnimation(); /*&& topLeft != 'q' && topLeft != 'e';*/
+            velocityX = 0;
+            tempAnimationIndex = STILL;
         }
-        else
-        {
-            indexAnimation = LEFTRUN;
-            states[LEFTRUN][0].RunAnimation();
-        }
+
+    }
+    int calculated_x = x + velocityX;
+    if (checkCollision(lvl, calculated_x + hit_box_factor_x, y + hit_box_factor_y, 14, width) && (checkCollision(lvl, calculated_x + hit_box_factor_x, y + hit_box_factor_y + Pheight - 10, 14, width) /*|| checkCollision(lvl, calculated_x + hit_box_factor_x + Pwidth - 1, y + hit_box_factor_y, 14, width)*/))
+    {
+        x += velocityX;
+        indexAnimation = tempAnimationIndex;
+    }
+    else
+    {
+        cout << "Collisoin Detected ";
+        velocityX = 0;
+    }
+    cout << "VeloctiyX  after frictio = " << velocityX << endl << endl;
+}
+
+void Player::moveLeft(char** lvl, int width ,float friction)
+{
+    //checking for current position espcially wfor when we switch the keys insatbtly over th edge
+    if (velocityX > 0)
+    {
+		decelerate(lvl, width, friction);
+        return;
+    }
+    int  proposed_x = x + velocityX;
+    if (!checkCollision(lvl, proposed_x + hit_box_factor_x, y + hit_box_factor_y, 14, width) && !checkCollision(lvl, proposed_x + hit_box_factor_x, y + hit_box_factor_y + Pheight - 1, 14, width))
+    {
+        cout << "Collsion Detecetd (LEFT) : \n";
+        velocityX = 0;  
+        return;
+    }
+    cout << "\n\nIn Left its working \n\n\n";
+    x = proposed_x;
+    if (velocityX - acceleration > -max_speed)
+    {
+        velocityX -= acceleration;
+    }
+    if (velocityX > -10)
+    {
+        indexAnimation = LEFT;
+        states[LEFT][0].RunAnimation();
+    }
+    else
+    {
+        indexAnimation = LEFTRUN;
+        states[LEFTRUN][0].RunAnimation();
+    }
+    if (velocityX > 0)
+    {
+        indexAnimation = EDGER;
     }
     direction = 0;
 }
-void Player::moveRight()
+
+void Player::moveRight(char** lvl, int width,float friction)
 {
-    x += velocityX;
+    int proposed_x = x + velocityX;
+    if (velocityX < 0)
+    {
+		decelerateRight(lvl, width, friction);
+		return;
+    }
+    if (!checkCollision(lvl, proposed_x + hit_box_factor_x, y + hit_box_factor_y, 14, width) && !checkCollision(lvl, proposed_x + hit_box_factor_x, y + hit_box_factor_y + Pheight - 1, 14, width) )
+    {
+        cout << "Collsion Detecetd (RIGHT) : \n";
+
+        velocityX = 0;  
+        return;
+    }
+    x = proposed_x;
     if (velocityX + acceleration < max_speed)
     {
         velocityX += acceleration;
@@ -321,13 +430,16 @@ void Player::moveRight()
     if (velocityX < 10)
     {
         indexAnimation = RIGHT;
-        states[RIGHT][0].RunAnimation(); /*&& topLeft != 'q' && topLeft != 'e';*/
-        // cout<<"right  animation running";
+        states[RIGHT][0].RunAnimation();
     }
     else
     {
         indexAnimation = RIGHTRUN;
         states[RIGHTRUN][0].RunAnimation();
+    }
+    if (velocityX < 0)
+    {
+        indexAnimation = EDGEL;
     }
     direction = 1;
 }

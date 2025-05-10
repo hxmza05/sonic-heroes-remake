@@ -31,6 +31,7 @@ public:
 	{
 		score = 0;
 		ringsCollected = 0;
+
 		lives = 100;
 		lives = 5;
 		timer.restart();
@@ -50,6 +51,7 @@ public:
 		prevScore = 0;
 		scoreScaleClock.restart();
 		scoreTextScale = 1.f;
+
 
 	}
 

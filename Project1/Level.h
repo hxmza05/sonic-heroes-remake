@@ -25,6 +25,7 @@ protected:
 	char** lvl;
 	 int height;
 	 int width;
+	 float friction;
 	//Enemy*** enemies;
 public:
 	Level(char** level = nullptr) :endMark(0)
@@ -86,6 +87,10 @@ public:
 	virtual MoveablePlatform* getMoveable()
 	{
 		return nullptr;
+	}
+	float& getFriction()
+	{
+		return friction;
 	}
 	virtual FallingPlatform**getFalling() = 0;
 	//virtual void handleEnemies() = 0;

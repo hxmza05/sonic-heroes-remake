@@ -99,8 +99,12 @@ bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, in
 int main()
 {
     //trying new main
+    RenderWindow window;
+    window.create(VideoMode(screen_x, screen_y), "Sonic the Hedgehog", Style::Close | Style::Resize | Style::Close);
+    window.setVerticalSyncEnabled(true);
+    window.setFramerateLimit(60);
     Leaderboard* leaderboard = new Leaderboard();
-    StateManager game(leaderboard);
+    StateManager game(leaderboard,window);
     game.run();
 }
 

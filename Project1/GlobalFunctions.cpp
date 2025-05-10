@@ -9,7 +9,7 @@ bool checkCollision(char** lvl, int player_x, int player_y, int height, int widt
     {
         return false; 
     }
-    return !(lvl[row][col] == 'e' || lvl[row][col] == 'w' || lvl[row][col] == 'q' || lvl[row][col] == 'p');
+    return !(lvl[row][col] == 'e' || lvl[row][col] == 'w' || lvl[row][col] == 'q' || lvl[row][col] == 'p' || lvl[row][col] == 'i');
 }
 
  bool checkCollisionExceptSpikes(char** lvl, int player_x, int player_y,int height,int width)

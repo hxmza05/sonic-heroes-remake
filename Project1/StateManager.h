@@ -31,18 +31,17 @@ class StateManager
 	Menu *menu;
 	Game* game;
 	int stateIndex;
-	RenderWindow window;
+	RenderWindow& window;
 	int screen_x ;
 	int screen_y ;
 public:
-	StateManager(Leaderboard* leaderboard)
+	StateManager(Leaderboard* leaderboard, RenderWindow& w) :window(w)
 	{
+		//window = w;
 		screen_x = 1200;
 		screen_y = 900;
-		window.create(VideoMode(screen_x, screen_y), "Sonic the Hedgehog", Style::Close | Style::Resize | Style::Close);
-		window.setVerticalSyncEnabled(true);
-		window.setFramerateLimit(60);
-		stateIndex = 0;
+		
+		stateIndex = 1;
 		//menu = new Menu(screen_x, screen_y, &leaderboard);
 		menu = new Menu(screen_x, screen_y, leaderboard);
 		game = new Game();
