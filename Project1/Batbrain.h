@@ -272,9 +272,7 @@ void Batbrain::movement(char** lvl, float player_x, float player_y, const int ce
 
 void Batbrain::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
 {
-
 	movement(lvl, player.getx(), player.gety(), cell_size);
-
 	if (!hasKnockedBack)
 	{
 		if (PlayerBatCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, getBatBrainWidth(), getBatBrainHeight()))
@@ -285,14 +283,11 @@ void Batbrain::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 				setAlive(false);
 				hud.getScore() += 120;
 			}
-
 			else
 			{
 				hud.getLives()--;
-
 				if (hud.getLives() <= 0)
 					gameOver = true;
-
 				hasKnockedBack = true;
 				tempVelocityY = -7;
 			}

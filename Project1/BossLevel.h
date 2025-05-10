@@ -69,7 +69,7 @@ public:
 	}
 	void designlvl(const char* filename)
 	{
-		cout << "\n\n\nIn desgin function of boss\n\n\n";
+		//cout << "\n\n\nIn desgin function of boss\n\n\n";
 		ifstream file(filename);
 		if (!file.is_open())
 		{
@@ -83,9 +83,9 @@ public:
 				int wall;
 				file >> wall;
 				lvl[i][j] = getMapValues(wall);
-				cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
+				//cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
 			}
-			cout << endl;
+			//cout << endl;
 		}
 		file.close();
 	}

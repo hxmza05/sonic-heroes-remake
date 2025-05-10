@@ -57,7 +57,8 @@ public:
 		effectClock.restart();
 	}
 
-	virtual void draw(RenderWindow& window, float offset_x) {
+	virtual void draw(RenderWindow& window, float offset_x)
+	{
 
 		if (!collected || showEffect) {
 			sprite.setPosition(x * 64 - offset_x, y * 64 + 12);
@@ -66,8 +67,7 @@ public:
 
 	}
 
-	virtual void collect(){}
-
+	virtual void collect() = 0;
 	virtual void update() 
 	{
 		

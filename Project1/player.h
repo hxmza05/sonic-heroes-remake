@@ -24,7 +24,7 @@ using namespace sf;
 
 class Player
 {
-	
+	int callCount;
 	bool hasCollided;
 	bool hasKnockedBack;
 	bool spacePressed;// our own defined
@@ -47,6 +47,11 @@ class Player
 	int hit_box_factor_y;
 	bool knockedByProjectile;
 	Clock haveBeenPutDown;
+	float hitBox_x;
+	float hitBox_y;
+	Texture hitBoxTex;
+	Texture hitBoxTexJump;
+	Sprite HitBoxSprite;
 
 protected:
 	float tailed_x;
@@ -76,6 +81,7 @@ protected:
 public:
 	Player()
 	{
+		callCount = 0;
 		tempOnground = true;
 		tailed_x = -999;
 		tailed_y = -999;
@@ -87,6 +93,8 @@ public:
 		isEven = 0;
 		x = 150;
 		y = 150;
+		hitBox_x = x;
+		hitBox_y = y;
 		hasCollided = false;
 		hasKnockedBack = false;
 		max_speed = 12;
@@ -116,7 +124,9 @@ public:
 		hasStartedFollowing = false;
 		knockedByProjectile = false;
 		hasDetectedItself = false;
-
+		hitBoxTex.loadFromFile("Data/hitBox.png");
+		hitBoxTexJump.loadFromFile("Data/hitBoxJump.png");
+		HitBoxSprite.setScale(2.5, 2.5);
 	}
 	void decelerate(char** lvl, int w,float friction);
 	float& getx()
@@ -243,6 +253,22 @@ public:
 	{
 		return knockedByProjectile;
 	}
+	void setHitBoxX(float x)
+	{
+		hitBox_x = x;
+	}
+	void setHitBoxY(float y)
+	{
+		hitBox_y = y;
+	}
+	float getHitBoxX()
+	{
+		return hitBox_x;
+	}
+	float getHitBoxY()
+	{
+		return hitBox_y;
+	}
 	void updateDelay()
 	{
 		delayInFollow++;
@@ -289,6 +315,30 @@ public:
 		indexAnimation = PUSHRIGHT;
 		states[indexAnimation][0].RunAnimation();
 		//cout << "\n\n\nPushing right executed\n\n\n";
+	}
+	void drawHitBox(RenderWindow& window)
+	{
+		callCount++;
+		cout << "Call : " << callCount << "\n";
+		if (!onGround)
+		{
+			cout << "Drawing in jump\n\n";
+			HitBoxSprite.setTexture(hitBoxTexJump);
+			HitBoxSprite.setScale(1,1);
+			HitBoxSprite.setPosition(x + hit_box_factor_x - 1, y + hit_box_factor_y + 5);
+		}
+		else 
+		{
+			cout << "Not drawing in jump\n\n";
+			HitBoxSprite.setTexture(hitBoxTex);
+			HitBoxSprite.setScale(2.5, 2.5);
+			HitBoxSprite.setPosition(x + hit_box_factor_x - 1, y + hit_box_factor_y + 5);
+
+		}
+		window.draw(HitBoxSprite);
+
+
+		//HitBoxSprite.setPosition(x + hit_box_factor_x, y + hit_box_factor_y);
 	}
 
 };

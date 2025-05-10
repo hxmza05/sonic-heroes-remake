@@ -176,9 +176,9 @@ public:
                 int wall;
                 file >> wall;
                 lvl[i][j] = getMapValues(wall);
-                cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
+                //cout << "lvl[" << i << "][" << j << "] = " << lvl[i][j] << endl;
             }
-            cout << endl;
+            //cout << endl;
         }
         file.close();
     }
