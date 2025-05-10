@@ -32,16 +32,18 @@ class StateManager
 	Game* game;
 	int stateIndex;
 	RenderWindow& window;
+	Leaderboard* leaderboard;
 	int screen_x ;
 	int screen_y ;
 public:
 	StateManager(Leaderboard* leaderboard, RenderWindow& w) :window(w)
 	{
+		this->leaderboard = leaderboard;
 		//window = w;
 		screen_x = 1200;
 		screen_y = 900;
 		
-		stateIndex = 1;
+		stateIndex = 0;
 		//menu = new Menu(screen_x, screen_y, &leaderboard);
 		menu = new Menu(screen_x, screen_y, leaderboard);
 		game = new Game();
@@ -64,29 +66,25 @@ public:
 			{
 				if (event.type == Event::Closed)
 				{
+					game->saveGame(menu->getRefToPlayerName());
 					window.close();
 				}
-				if (!menu->isGameStateActive()) 
+				if (!menu->isGameStateActive())
 				{
 					menu->update(window, event);
 				}
+				else break;
 			}
-			/*if (Keyboard::isKeyPressed(Keyboard::Escape))
-			{
-				window.close();
-			}*/
 			window.clear();
 			if (!stateIndex)
 			{
-				menu->work(window,event);
+				menu->work(window,event,game);
 				if (menu->isGameStateActive())
 				{
 					stateIndex = 1;
 				}
 			}
 			//cout << "State Index : " << stateIndex << endl;
-
-
 			if (stateIndex == 1)
 			{
 				game->play(window);

@@ -296,6 +296,14 @@ public:
 	{
 		return tempOnground;
 	}
+	void setx(float _x)
+	{
+		x = _x;
+	}
+	void sety(float _y)
+	{
+		y = _y;
+	}
 	void setTailedCoords(float x, float y)
 	{
 		tailed_x = x;

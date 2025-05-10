@@ -4,26 +4,24 @@
 #include <string>
 #include "Input.h"
 
-class Leaderboard {
+class Leaderboard
+{
 
 private:
-
     static const int maxScores = 10;
-    int scoresList[maxScores + 1]; 
+    int scoresList[maxScores + 1];
     string namesList[maxScores + 1];
-
 
     Font font;
     Text title;
     Text names[maxScores];
     Text scores[maxScores];
 
-    Input* inputHandler; 
-
+    Input* inputHandler;
 
 public:
-
-    Leaderboard(Input* input = nullptr) : inputHandler(input) {
+    Leaderboard(Input* input = nullptr) : inputHandler(input)
+    {
 
         font.loadFromFile("Fonts/scoreFont.ttf");
         title.setFont(font);
@@ -34,10 +32,10 @@ public:
 
         readScores();
         prepareEntries();
-
     }
 
-    void readScores() {
+    void readScores()
+    {
 
         ifstream file("HighScore.txt");
         for (int i = 0; i < maxScores; i++)
@@ -55,20 +53,23 @@ public:
         }
     }
 
-    void writeScores() {
+    void writeScores()
+    {
 
         ofstream file("HighScore.txt");
         if (file.is_open())
         {
             for (int i = 0; i < maxScores; i++)
             {
-                file << (namesList[i].empty() ? "------" : namesList[i]) << "\n" << scoresList[i] << "\n";
+                file << (namesList[i].empty() ? "------" : namesList[i]) << "\n"
+                    << scoresList[i] << "\n";
             }
             file.close();
         }
     }
 
-    void sortScores() {
+    void sortScores()
+    {
 
         int n = maxScores + 1;
         for (int i = 0; i < n - 1; i++)
@@ -84,18 +85,19 @@ public:
         }
     }
 
-    void addNewScore(std::string name, int score) {
+    void addNewScore(std::string name, int score)
+    {
 
         namesList[maxScores] = name;
         scoresList[maxScores] = score;
         sortScores();
         writeScores();
         prepareEntries();
-
     }
 
-    void prepareEntries() {
-        
+    void prepareEntries()
+    {
+
         for (int i = 0; i < maxScores; i++)
         {
             names[i].setFont(font);
@@ -115,7 +117,8 @@ public:
         }
     }
 
-    void draw(RenderWindow& window) {
+    void draw(RenderWindow& window)
+    {
 
         window.draw(title);
         for (int i = 0; i < maxScores; i++)

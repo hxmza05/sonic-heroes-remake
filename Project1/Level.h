@@ -28,8 +28,10 @@ protected:
 	 float friction;
 	//Enemy*** enemies;
 
+	 int TotalEnemyCount;
 
-
+	 Enemy** enemies;
+	 int enemyCount;
 
 
 
@@ -111,7 +113,14 @@ public:
 			return true;
 		return false;
 	}
-
+	int getTotalEnemyCount()
+	{
+		return TotalEnemyCount;
+	}
+	Enemy** getEnemies()
+	{
+		return enemies;
+	}
 
 
 

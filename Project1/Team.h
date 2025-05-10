@@ -257,7 +257,6 @@ public:
     {
         return reset;
     }*/
-
         bool canFollowerGlide( int playerLeft, int playerTop, int playerWidth, int tailed_x, int tailed_y, int tailedHeight, int tailedWidth)
     {
         int playerRight = playerLeft + playerWidth;
@@ -337,6 +336,10 @@ public:
 
             }
         }
+    }
+    void setPlayerIndex(int n)
+    {
+        playerIndex = n;
     }
     void drawSonic(RenderWindow& window,float  offset_x)
     {
