@@ -339,7 +339,10 @@ public:
         buffer_end = 13 * 64;
         offset_x = 0;
     }
-
+    HUD &getHUD()
+    {
+        return hud;
+    }
 
     void play(RenderWindow& window)
     {

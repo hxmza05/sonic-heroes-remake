@@ -643,7 +643,8 @@ public:
 
         else if (leaderboardState)
         {
-
+            leaderboard->readScores();
+            leaderboard->sortScores();
             if (Keyboard::isKeyPressed(Keyboard::M) || Keyboard::isKeyPressed(Keyboard::Escape))
             {
                 backSound.play(); 
@@ -698,6 +699,7 @@ public:
 
                 if (!playerName.empty())
                 {
+
                     enteringName = false;
                     gameState = true;
                     menuState = false;
