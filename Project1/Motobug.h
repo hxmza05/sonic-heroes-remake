@@ -166,7 +166,7 @@ public:
 	void move_motobugs(const int cell_size);
 	bool getMotobugCoordinates(char** lvl, int height, int width, int& start_x, int end_x, int& j_start);
 	bool PlayerBugCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight);
-
+	void drawExtra(RenderWindow& window, float offset_x);
 
 };
 
@@ -289,6 +289,7 @@ void Motobug::update(char** lvl, Player& player, int cell_size, bool& hasKnocked
 			if (indexAnimation == UPR || indexAnimation == UPL)
 			{
 				setHp(0);
+				triggerDeath();
 				setAlive(false);
 				hud.getScore() += 100;
 			}
@@ -305,9 +306,6 @@ void Motobug::update(char** lvl, Player& player, int cell_size, bool& hasKnocked
 		}
 	}
 }
-
-
-
 
 
 void Motobug::move_motobugs(const int cell_size)
@@ -363,7 +361,17 @@ bool Motobug::getMotobugCoordinates(char** lvl, int height, int width, int& star
 }
 
 
+void Motobug::drawExtra(RenderWindow& window, float offset_x) {
 
+	if (isDying && !deathFinished) {
+
+		if (playDeathAnimation(window, offset_x)) 
+		{
+			
+		}
+		return; 
+	}
+}
 
 bool Motobug::PlayerBugCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight)
 {

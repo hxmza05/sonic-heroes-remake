@@ -52,7 +52,7 @@ public:
 		Start = 0;
 		End = 0;
 
-		totalAnimations = 4;
+		totalAnimations = 6;
 		indexAnimation = 0;
 
 		projectile = nullptr;
@@ -380,6 +380,7 @@ void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 
 		if (indexAnimation == UPR || indexAnimation == UPL) {
 			setHp(0);
+			triggerDeath();
 			setAlive(false);
 			hud.getScore() += 150;
 		}
@@ -395,6 +396,16 @@ void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 
 
 void Crabmeat::drawExtra(RenderWindow& window, float offset_x)  {
+
+	if (isDying && !deathFinished) {
+
+		if (playDeathAnimation(window, offset_x)) 
+		{
+		}
+
+		return; 
+	}
+
 	if (projectile && projectile->Active()) {
 		projectile->draw(window, offset_x);
 	}
@@ -459,7 +470,8 @@ bool Crabmeat::checkCollisionWithPlayer(Player& player)
 
 		if (bottom_of_Player - 10 < top_of_Crab) 
 		{
-			//player.getVelocityY() = -10.0f;
+			//Alive = false;
+			//hp = 0;
 		}
 
 		else {

@@ -76,6 +76,7 @@ public:
 
         spikeHeightShown = 0;     
         maxSpikeHeight = 64.f;      
+
         spikeGrowSpeed = 2.f;     
         spikeOffsetY = 0;
         spikeHoldClock.restart();
@@ -141,8 +142,15 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
 
     if (!hasKnockedBack && playerSpikeCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight()))
     {
-        hasKnockedBack = true;
-        tempVelocityY = -7;
+        //hud.getLives()--;
+        //hasKnockedBack = true;
+        //tempVelocityY = -7;
+
+        // Player damage animation 
+        if (hud.getLives() <= 0)
+            gameOver = true;
+
+        return; 
     }
 
     if (!hasKnockedBack && PlayerStingerCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, stingerWidth, stingerHeight))
@@ -157,9 +165,11 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
 
         else
         {
-            hud.getLives()--;
-            hasKnockedBack = true;
-            tempVelocityY = -7;
+            //hud.getLives()--;
+            //hasKnockedBack = true;
+            //tempVelocityY = -7;
+
+            // Player damage animation 
 
             if (hud.getLives() <= 0)
                 gameOver = true;
