@@ -88,7 +88,7 @@ public:
         level[1] = new Level2();
         //level[2] = new Level3();
         level[3] = new BossLevel();
-        levelIndex = 0;
+        levelIndex = 3;
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
         bufferSpriteEnd.setTexture(buffer);
