@@ -372,8 +372,21 @@ void Eggstinger::movement(float player_x, float player_y, float player_width, ch
         sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
     }
 
-    sprite.setPosition(x, y);  
+
+    if (right) 
+    {
+        sprite.setScale(-(120.0f / 71.0f), 97.6f / 58.0f);
+        sprite.setOrigin(71.f, 0);
+    }
+    else 
+    {
+        sprite.setScale(120.0f / 71.0f, 97.6f / 58.0f);
+        sprite.setOrigin(0, 0);
+    }
+
+    sprite.setPosition(x, y);
+
+    //updateHitbox();
 
 }
-
 

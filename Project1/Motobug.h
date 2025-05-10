@@ -34,6 +34,7 @@ private:
 	bool facingRight;
 	Clock flipClock;
 
+	float prevX;
 
 
 
@@ -45,6 +46,7 @@ public:
 		this->speed = 2.5;
 		this->x = 0;
 		this->y = 0;
+		prevX = 0;
 		Moving = true;
 		Alive = true;
 		attack = false;
@@ -53,6 +55,10 @@ public:
 		clock.restart();
 		totalAnimations = 3;
 		indexAnimation = 0;
+
+		enemyHeight = MotobugHeight;
+		enemyWidth = MotobugWidth;
+
 
 		MotoBugStart = 0;
 		MotoBugEnd = 0;
@@ -181,9 +187,9 @@ void Motobug::movement(float player_x, float player_y) {
 		else 
 			{
 
-			if (x - speed <= Start + MotobugWidth) 
+			if (x - speed <= Start) 
 			{
-				x = Start + MotobugWidth;
+				x = Start;
 				Moving = true;
 			}
 
@@ -199,29 +205,22 @@ void Motobug::movement(float player_x, float player_y) {
 	states[indexAnimation]->RunAnimation();
 	sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
 
-	if (indexAnimation == 0) {
-		sprite.setScale(facingRight ? -0.452f : 0.452f, 0.432f);
+
+	if (x > prevX) {
+		sprite.setScale(-0.452f, 0.432f);  
+		sprite.setOrigin(MotobugWidth*2.183f, 0);  
+	}
+	else if (x < prevX) {
+		sprite.setScale(0.452f, 0.432f);   
+		sprite.setOrigin(0, 0);      
 	}
 
-	else {
-		sprite.setScale(facingRight ? -0.451f : 0.451f, 0.428f);
-	}
+	prevX = x;
 
-	if (facingRight) 
-	{
-		if (indexAnimation == 0) 
-		{
-			sprite.setPosition(x + 167.f * 0.452f, y);
-		}
-		else
-		{
-			sprite.setPosition(x + 169.6f * 0.451f, y);
-		}
-	}
+	sprite.setPosition(x, y);
 
-	else {
-		sprite.setPosition(x, y);
-	}
+	//updateHitbox();
+
 }
 
 

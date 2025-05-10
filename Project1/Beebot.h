@@ -67,6 +67,11 @@ public:
 		attackClock.restart();
 
 
+		enemyHeight = bee_height;
+		enemyWidth = bee_width;
+		hit_box_factor_x = 7.5;
+		hit_box_factor_y = 7.5;
+
 		BeebotStart = 0;
 		BeebotEnd = 0;
 		BeebotHeights = 0;
@@ -375,12 +380,12 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 	}
 
 	if (x > prevX) {
-		sprite.setScale(-sprite.getScale().x, sprite.getScale().y);
-		sprite.setOrigin(sprite.getLocalBounds().width, 0);
+		sprite.setScale(-1.88f, 1.346f);
+		sprite.setOrigin(47.f, 0);
 	}
 
 	else if (x < prevX) {
-		sprite.setScale(sprite.getScale().x, sprite.getScale().y);
+		sprite.setScale(1.88f, 1.346f);
 		sprite.setOrigin(0, 0);
 	}
 
@@ -388,6 +393,7 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 
 	sprite.setPosition(x, y);
 
+	//updateHitbox();
 
 	if (projectiles && projectiles->Active()) {
 		projectiles->move();

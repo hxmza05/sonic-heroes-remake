@@ -36,6 +36,7 @@ private:
 
 	int animationFrame;
 
+	float prevX;
 
 
 
@@ -51,6 +52,7 @@ public:
 		facingRight = false;  
 		StartX = x;
 		StartY = y;
+		prevX = 0;
 		indexAnimation = 0;
 		totalAnimations = 5;
 		animationClock.restart();
@@ -58,6 +60,8 @@ public:
 		frameClock.restart();
 		animationFrame = 0;
 
+		enemyHeight = Batheight;
+		enemyWidth = BatWidth;
 
 		chaseCooldownClock.restart();
 		isCooldown = false;
@@ -265,8 +269,19 @@ void Batbrain::movement(char** lvl, float player_x, float player_y, const int ce
 	}
 
 
-	sprite.setScale((facingRight ? -1.0f : 1.0f), Batheight / 69.0f);
+	if (facingRight) 
+	{
+		sprite.setScale(-1.0f, Batheight / 69.0f);        
+		sprite.setOrigin(81.5f, 0);         
+	}
 
+	else 
+	{
+		sprite.setScale(1.0f, Batheight / 69.0f);    
+		sprite.setOrigin(0, 0);                           
+	}
+
+	//updateHitbox();
 
 }
 
@@ -356,7 +371,7 @@ bool Batbrain::getBatbrainCoordinates(char** lvl, int height, int width, int& i_
 
 				setPosition(bat_x, bat_y, patrolStart, patrolEnd);
 
-				std::cout << "Placed Batbrain at (" << bat_x << ", " << bat_y << ")\n";
+				cout << "Placed Batbrain at (" << bat_x << ", " << bat_y << ")\n";
 
 				lvl[i][j] = 's';  
 				i_start = i;      

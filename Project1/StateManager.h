@@ -5,10 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
-
 //////////////////////////////
-
-
 #include"Player.h"
 #include"Sonic.h"
 #include"Collectibles.h"
@@ -66,6 +63,7 @@ public:
 			{
 				if (event.type == Event::Closed)
 				{
+					leaderboard->addNewScore(menu->getPlayerName(),game->getHUD().getScore());
 					game->saveGame(menu->getRefToPlayerName());
 					window.close();
 				}
@@ -93,13 +91,4 @@ public:
 		}
 
 	}
-	//{
-	//	screen_x = 1200;
-	//	screen_y = 900;
-	//	menu(1200, 900, &leaderboard);
-	//	window(VideoMode(screen_x, screen_y), "Sonic the Hedgehog", Style::Close | Style::Resize | Style::Close);
-	//	window.setVerticalSyncEnabled(true);
-	//	window.setFramerateLimit(60);
-	//
-	//}
 };
