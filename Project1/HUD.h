@@ -67,6 +67,10 @@ public:
 	{
 		return lives;
 	}
+	void setLives(int n)
+	{
+		lives = n;
+	}
 
 	void updateTime() {
 		levelTime = timer.getElapsedTime().asSeconds();

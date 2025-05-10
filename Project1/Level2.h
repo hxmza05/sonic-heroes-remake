@@ -37,7 +37,7 @@ class Level2 : public Level
 
     Enemy** enemies;
     int enemyCount;
-    int TotalEnemyCount;
+    //int TotalEnemyCount;
     int j_start;
     int cell_size;
 

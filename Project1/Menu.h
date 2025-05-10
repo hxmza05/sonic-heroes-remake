@@ -2,31 +2,29 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include<SFML/Audio.hpp>
-#include"Leaderboard.h"
-#include"Animation.h"
+#include <SFML/Audio.hpp>
+#include "Leaderboard.h"
+#include "Animation.h"
+#include"Game.h"
 using namespace sf;
 using namespace std;
 
-
-class Menu 
+class Menu
 {
 
 private:
-
     static const int totalMenuOptions = 7;
-    const char* menuOptions[totalMenuOptions] = { "New Game", "Load Game", "Continue", "Options", "Leader Board", "Difficulty", "Exit"};
+    const char* menuOptions[totalMenuOptions] = { "New Game", "Load Game", "Continue", "Options", "Leader Board", "Difficulty", "Exit" };
 
-	static const int totalMenuOptions2 = 5;
-	const char* menuOptions2[totalMenuOptions2] = { "Tutorial", "Controls", "Credits", "", ""};
-	Text text2[totalMenuOptions2];
-
+    static const int totalMenuOptions2 = 5;
+    const char* menuOptions2[totalMenuOptions2] = { "Tutorial", "Controls", "Credits", "", "" };
+    Text text2[totalMenuOptions2];
 
     int horizontal_x;
     int vertical_y;
     int selectedOption;
     int currentMenuLevel;
-	int currentMenuOption;
+    int currentMenuOption;
     int lastSelectedOption;
     int lastCurrentMenuOption;
 
@@ -51,15 +49,12 @@ private:
     bool showCursor;
     RectangleShape nameBox;
 
-
-
     Animation** states;
     Sprite selector;
     Texture ringTexture;
     Clock selectorClock;
     int indexAnimation;
     int totalAnimations;
-
 
     SoundBuffer moveBuffer;
     SoundBuffer selectBuffer;
@@ -71,15 +66,12 @@ private:
 
     Music menuMusic;
 
-
     Texture backgroundTexture;
     Sprite backgroundSprite;
     RectangleShape backgroundOverlay;
 
     int sfxVolume;
     int musicVolume;
-
-
 
     Texture segaTexture;
     Sprite segaSprite;
@@ -90,8 +82,8 @@ private:
     const int segaEndFrame = 50;
     const int segaFrameHeight = 76;
     const int segaFrameWidth = 320;
-    const int segaFrameCount = segaEndFrame - segaStartFrame + 1; 
-    float segaFrameDuration = 0.08; 
+    const int segaFrameCount = segaEndFrame - segaStartFrame + 1;
+    float segaFrameDuration = 0.08;
 
     Clock segaClock;
     bool showSegaIntro = true;
@@ -117,20 +109,15 @@ private:
     float blackScreenDuration = 0.5f;
 
 
-
-
-
-
+    bool gameLoaded;
 
 public:
-
-    Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : title("Sonic Classic Heroes", font, 64), leaderboard(lb) 
+    Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : title("Sonic Classic Heroes", font, 64), leaderboard(lb)
     {
-
-
+        gameLoaded = false;
         selectedOption = 0;
         currentMenuLevel = 0;
-		currentMenuOption = 0;
+        currentMenuOption = 0;
         sfxVolume = 20;
         musicVolume = 5;
         lastSelectedOption = selectedOption;
@@ -145,19 +132,16 @@ public:
         enteringName = false;
         enter = false;
 
-
-        backgroundTexture.loadFromFile("Menu/MenuBg.jpg"); 
+        backgroundTexture.loadFromFile("Menu/MenuBg.jpg");
         backgroundSprite.setTexture(backgroundTexture);
 
-        //backgroundSprite.setRotation(180);
-        //backgroundSprite.setOrigin(backgroundTexture.getSize().x, backgroundTexture.getSize().y);
-        //backgroundSprite.setPosition(0, 0); 
-
-
+        // backgroundSprite.setRotation(180);
+        // backgroundSprite.setOrigin(backgroundTexture.getSize().x, backgroundTexture.getSize().y);
+        // backgroundSprite.setPosition(0, 0);
 
         segaTexture.loadFromFile("Menu/Sega/sega_intro.png");
         segaSprite.setTexture(segaTexture);
-        segaSprite.setScale(3.0f, 3.0f); 
+        segaSprite.setScale(3.0f, 3.0f);
 
         segaBuffer.loadFromFile("Audio/Sega.wav");
         segaSound.setBuffer(segaBuffer);
@@ -170,8 +154,6 @@ public:
             std::string filename = "Menu/Animation/frame_" + std::to_string(i) + ".png";
             islandTextures[i].loadFromFile(filename);
         }
-
-
 
         font.loadFromFile("Fonts/scoreFont.ttf");
         title.setFillColor(Color::Yellow);
@@ -192,7 +174,7 @@ public:
         nameBox.setFillColor(Color(0, 0, 0, 150));
         nameBox.setOutlineColor(Color::Yellow);
         nameBox.setOutlineThickness(2);
-        nameBox.setPosition(295, 395); 
+        nameBox.setPosition(295, 395);
 
         moveBuffer.loadFromFile("Audio/MenuButton.wav");
         selectBuffer.loadFromFile("Audio/Select.wav");
@@ -202,17 +184,14 @@ public:
         selectSound.setBuffer(selectBuffer);
         backSound.setBuffer(backBuffer);
 
-		moveSound.setVolume(50);
-		selectSound.setVolume(50);
-		backSound.setVolume(50);
-
+        moveSound.setVolume(50);
+        selectSound.setVolume(50);
+        backSound.setVolume(50);
 
         menuMusic.openFromFile("Audio/MenuMusic.ogg");
         menuMusic.setLoop(true);
         menuMusic.setVolume(musicVolume);
-        //menuMusic.play();
-
-
+        // menuMusic.play();
 
         ringTexture.loadFromFile("Sprites/rings.png");
         selectorClock.restart();
@@ -222,32 +201,25 @@ public:
         states = new Animation * [totalAnimations];
         states[0] = new Animation(4);
 
-
         states[0]->getSprites()[0].setTexture(ringTexture);
         states[0]->getSprites()[0].setTextureRect(IntRect(0, 0, 66, 66));
         states[0]->getSprites()[0].setScale(0.5f, 0.5f);
-
 
         states[0]->getSprites()[1].setTexture(ringTexture);
         states[0]->getSprites()[1].setTextureRect(IntRect(66, 0, 56, 66));
         states[0]->getSprites()[1].setScale(0.5f, 0.5f);
 
-
         states[0]->getSprites()[2].setTexture(ringTexture);
         states[0]->getSprites()[2].setTextureRect(IntRect(122, 0, 32, 66));
         states[0]->getSprites()[2].setScale(0.5f, 0.5f);
-
 
         states[0]->getSprites()[3].setTexture(ringTexture);
         states[0]->getSprites()[3].setTextureRect(IntRect(154, 0, 53, 66));
         states[0]->getSprites()[3].setScale(0.5f, 0.5f);
 
-
         selector = states[0]->getSprites()[0];
 
         indexAnimation = 0;
-
-
 
         for (int i = 0; i < totalMenuOptions; i++)
         {
@@ -261,10 +233,9 @@ public:
             text[i] = temp;
 
             text[i].setFillColor(i == selectedOption ? Color::White : Color::Yellow);
-
         }
 
-        for (int i = 0; i < totalMenuOptions2; i++) 
+        for (int i = 0; i < totalMenuOptions2; i++)
         {
 
             std::string label = menuOptions2[i];
@@ -277,55 +248,55 @@ public:
             text2[i] = temp;
 
             text2[i].setFillColor(i == currentMenuOption ? Color::White : Color::Yellow);
-
         }
-
 
         menuOptions2[3] = "SFX: 50";
         menuOptions2[4] = "Music: 50";
-
-
-
     }
 
-    bool isGameStateActive() { 
-        return gameState; 
+    bool isGameStateActive()
+    {
+        return gameState;
     }
 
-    bool isEnteringName() { 
-        return enteringName; 
+    bool isEnteringName()
+    {
+        return enteringName;
     }
 
-    void setLeaderboard(Leaderboard* lb) {
+    void setLeaderboard(Leaderboard* lb)
+    {
         leaderboard = lb;
     }
 
-    string getPlayerName() { 
-        return playerName; 
-    }
-
-    string& getRefToPlayerName() {
+    string getPlayerName()
+    {
         return playerName;
     }
-    
-    Font& getFont() {
+
+    string& getRefToPlayerName()
+    {
+        return playerName;
+    }
+
+    Font& getFont()
+    {
         return font;
     }
 
-    void startGame() {
+    void startGame()
+    {
         enteringName = false;
         gameState = true;
     }
 
-    void update(RenderWindow& window)
+    void update(RenderWindow& window,Game*game)
     {
-
 
         if (showSegaIntro)
         {
             float elapsed = segaClock.getElapsedTime().asSeconds();
 
-            
             if (!segaSoundPlayed && elapsed >= segaSoundDelay)
             {
                 segaSound.play();
@@ -336,7 +307,7 @@ public:
             {
                 showSegaIntro = false;
                 showBlackScreen = true;
-                transitionClock.restart(); 
+                transitionClock.restart();
                 return;
             }
 
@@ -349,7 +320,7 @@ public:
             {
                 showBlackScreen = false;
                 showIslandIntro = true;
-                transitionClock.restart(); 
+                transitionClock.restart();
             }
             return;
         }
@@ -378,11 +349,13 @@ public:
                 if (!arrowUp)
                 {
                     selectedOption--;
-                    if (selectedOption < 0) selectedOption = totalMenuOptions - 1;
+                    if (selectedOption < 0)
+                        selectedOption = totalMenuOptions - 1;
                     arrowUp = true;
                 }
             }
-            else {
+            else
+            {
                 arrowUp = false;
             }
 
@@ -391,11 +364,13 @@ public:
                 if (!arrowDown)
                 {
                     selectedOption++;
-                    if (selectedOption >= totalMenuOptions) selectedOption = 0;
+                    if (selectedOption >= totalMenuOptions)
+                        selectedOption = 0;
                     arrowDown = true;
                 }
             }
-            else {
+            else
+            {
                 arrowDown = false;
             }
 
@@ -405,63 +380,90 @@ public:
                 {
                     selectSound.play();
 
-                    if (selectedOption == 0) {
+                    if (selectedOption == 0)
+                    {
                         enteringName = true;
                     }
-                    else if (selectedOption == 1) {
-                        // Load Game 
+                    else if (selectedOption == 1)
+                    {
+                        gameLoaded = game->loadGame(playerName);
+                        // Load Game
                     }
-                    else if (selectedOption == 2) {
+                    else if (selectedOption == 2)
+                    {
+                        if (gameLoaded)
+                        {
+                            gameState = 1;
+                            return;
+                        }
                         // Continue
                     }
-                    else if (selectedOption == 3) {
-                        currentMenuLevel = 1;  // SUb menu
+                    else if (selectedOption == 3)
+                    {
+                        currentMenuLevel = 1; // SUb menu
                     }
-                    else if (selectedOption == 4) {
+                    else if (selectedOption == 4)
+                    {
                         leaderboardState = true;
                         menuState = false;
                     }
-                    else if (selectedOption == 5) {
+                    else if (selectedOption == 5)
+                    {
                         // Difficult
                     }
-                    else if (selectedOption == 6) {
+                    else if (selectedOption == 6)
+                    {
                         window.close();
                     }
                     enter = true;
                 }
             }
-            else {
+            else
+            {
                 enter = false;
             }
 
-            for (int i = 0; i < totalMenuOptions; i++) {
+            for (int i = 0; i < totalMenuOptions; i++)
+            {
 
-                if (text[i].getGlobalBounds().contains(mousePos)) {
+                if (text[i].getGlobalBounds().contains(mousePos))
+                {
 
                     selectedOption = i;
 
-                    //text[i].setFillColor(Color::Blue);
+                    // text[i].setFillColor(Color::Blue);
 
-                    if (Mouse::isButtonPressed(Mouse::Left)) {
+                    if (Mouse::isButtonPressed(Mouse::Left))
+                    {
 
                         selectSound.play();
 
-                        if (i == 0) enteringName = true;
+                        if (i == 0)
+                            enteringName = true;
 
-                        else if (i == 1) {  }
+                        else if (i == 1)
+                        {
+                        }
 
-                        else if (i == 2) {  }
+                        else if (i == 2)
+                        {
+                        }
 
-                        else if (i == 3) currentMenuLevel = 1;
+                        else if (i == 3)
+                            currentMenuLevel = 1;
 
-                        else if (i == 4) {
+                        else if (i == 4)
+                        {
                             leaderboardState = true;
                             menuState = false;
                         }
 
-                        else if (i == 5) {  }
+                        else if (i == 5)
+                        {
+                        }
 
-                        else if (i == 6) window.close();
+                        else if (i == 6)
+                            window.close();
                     }
                 }
             }
@@ -472,7 +474,8 @@ public:
                 lastSelectedOption = selectedOption;
             }
 
-            for (int i = 0; i < totalMenuOptions; i++) {
+            for (int i = 0; i < totalMenuOptions; i++)
+            {
                 text[i].setFillColor(i == selectedOption ? Color::Yellow : Color::White);
             }
 
@@ -483,13 +486,11 @@ public:
         else if (menuState && currentMenuLevel == 1)
         {
 
-
             if (Keyboard::isKeyPressed(Keyboard::Escape) || Keyboard::isKeyPressed(Keyboard::M))
             {
                 backSound.play();
                 currentMenuLevel = 0;
             }
-
 
             if (Keyboard::isKeyPressed(Keyboard::Up))
             {
@@ -497,7 +498,8 @@ public:
                 {
                     currentMenuOption--;
 
-                    if (currentMenuOption < 0) {
+                    if (currentMenuOption < 0)
+                    {
                         currentMenuOption = totalMenuOptions2 - 1;
                     }
 
@@ -505,7 +507,8 @@ public:
                 }
             }
 
-            else {
+            else
+            {
                 arrowUp = false;
             }
 
@@ -515,7 +518,8 @@ public:
                 {
                     currentMenuOption++;
 
-                    if (currentMenuOption >= totalMenuOptions2) {
+                    if (currentMenuOption >= totalMenuOptions2)
+                    {
                         currentMenuOption = 0;
                     }
 
@@ -523,11 +527,10 @@ public:
                 }
             }
 
-            else {
+            else
+            {
                 arrowDown = false;
             }
-
-
 
             if (Keyboard::isKeyPressed(Keyboard::Right))
             {
@@ -542,7 +545,6 @@ public:
                 {
                     musicVolume++;
                     menuMusic.setVolume(musicVolume);
-
                 }
             }
 
@@ -562,28 +564,28 @@ public:
                 }
             }
 
-
             if (Keyboard::isKeyPressed(Keyboard::Enter))
             {
                 if (!enter)
                 {
                     selectSound.play();
 
-                    if (currentMenuOption == 0) {
-                        
+                    if (currentMenuOption == 0)
+                    {
                     }
-                    else if (currentMenuOption == 1) {
-                        
+                    else if (currentMenuOption == 1)
+                    {
                     }
-                    else if (currentMenuOption == 2) {
-                        
+                    else if (currentMenuOption == 2)
+                    {
                     }
 
                     enter = true;
                 }
             }
 
-            else {
+            else
+            {
                 enter = false;
             }
 
@@ -602,14 +604,14 @@ public:
                     {
                         selectSound.play();
 
-                        if (i == 0) {
-                           
+                        if (i == 0)
+                        {
                         }
-                        else if (i == 1) {
-                            
+                        else if (i == 1)
+                        {
                         }
-                        else if (i == 2) {
-                            
+                        else if (i == 2)
+                        {
                         }
                     }
                 }
@@ -621,8 +623,7 @@ public:
                 lastCurrentMenuOption = currentMenuOption;
             }
 
-
-            for (int i = 0; i < totalMenuOptions2; i++) 
+            for (int i = 0; i < totalMenuOptions2; i++)
             {
                 text2[i].setFillColor(i == currentMenuOption ? Color::Yellow : Color::White);
             }
@@ -636,12 +637,8 @@ public:
                 text2[i].setPosition((horizontal_x / 2) - bounds.width / 2, text2[i].getPosition().y);
             }
 
-
             Vector2f finalPos = text2[currentMenuOption].getPosition();
             selector.setPosition(finalPos.x - 60, finalPos.y + 12);
-
-
-
         }
 
         else if (leaderboardState)
@@ -649,26 +646,27 @@ public:
 
             if (Keyboard::isKeyPressed(Keyboard::M) || Keyboard::isKeyPressed(Keyboard::Escape))
             {
-                backSound.play();
+                backSound.play(); 
                 leaderboardState = false;
                 menuState = true;
             }
         }
 
-        if (enteringName) {
+        if (enteringName)
+        {
 
-            if (mouseCursor.getElapsedTime().asSeconds() >= 0.5f) {
+            if (mouseCursor.getElapsedTime().asSeconds() >= 0.5f)
+            {
                 showCursor = !showCursor;
                 mouseCursor.restart();
             }
 
-            std::string displayName = playerName;
-            if (showCursor && playerName.length() < 15) displayName += "_";
+            string displayName = playerName;
+            if (showCursor && playerName.length() < 15)
+                displayName += "_";
             nameInputText.setString(displayName);
         }
-
     }
-
 
     void update(RenderWindow& window, Event& event)
     {
@@ -679,10 +677,12 @@ public:
                 if (event.text.unicode < 128)
                 {
                     char entered = static_cast<char>(event.text.unicode);
-                    if (entered == '\b' && !playerName.empty()) {
+                    if (entered == '\b' && !playerName.empty())
+                    {
                         playerName.pop_back();
                     }
-                    else if ((isalnum(entered) || entered == ' ') && playerName.length() < 15) {
+                    else if ((isalnum(entered) || entered == ' ') && playerName.length() < 15)
+                    {
                         playerName += entered;
                     }
                     // Don't set nameInputText here — done in display logic
@@ -691,7 +691,7 @@ public:
 
             else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter)
             {
-                playerName.erase(0, playerName.find_first_not_of(" \n\r\t")); 
+                playerName.erase(0, playerName.find_first_not_of(" \n\r\t"));
                 size_t lastChar = playerName.find_last_not_of(" \n\r\t");
                 if (lastChar != std::string::npos)
                     playerName.erase(lastChar + 1);
@@ -700,10 +700,9 @@ public:
                 {
                     enteringName = false;
                     gameState = true;
-                    menuState = false; 
+                    menuState = false;
                 }
             }
-
         }
 
         if (showIslandIntro && event.type == Event::KeyPressed && event.key.code == Keyboard::RShift)
@@ -711,7 +710,6 @@ public:
             showIslandIntro = false;
             menuState = true;
         }
-
     }
 
     void draw(RenderWindow& window)
@@ -725,7 +723,8 @@ public:
 
             int frame = static_cast<int>(elapsed / segaFrameDuration);
 
-            if (frame >= segaFrameCount) {
+            if (frame >= segaFrameCount)
+            {
                 frame = segaFrameCount - 1;
             }
 
@@ -776,7 +775,7 @@ public:
             window.draw(backgroundSprite);
             window.draw(title);
             window.draw(selector);
-            for (int i = 0; i < totalMenuOptions2; i++) 
+            for (int i = 0; i < totalMenuOptions2; i++)
             {
                 window.draw(text2[i]);
             }
@@ -788,37 +787,42 @@ public:
             leaderboard->draw(window);
         }
     }
-    void work(RenderWindow& window,Event&event)
+    void work(RenderWindow& window, Event& event,Game* game)
     {
+        while (window.pollEvent(event))
+        {
+            if (event.type == Event::Closed)
+            {
+                window.close();
+            }
+        }
+
+        window.clear();
+
+        if (isEnteringName() && gameState != 1)
+        {
             while (window.pollEvent(event))
             {
+
                 if (event.type == Event::Closed)
                 {
                     window.close();
                 }
+
+                update(window, event);
+                if (gameState)
+                    return;
+                    //break;
             }
+            update(window,game);
+            draw(window);
+        }
+        else if (!isGameStateActive())
+        {
+            update(window,game);
+            draw(window);
+        }
 
-            window.clear();
-
-            if (isEnteringName())
-            {
-                while (window.pollEvent(event)) {
-
-                    if (event.type == Event::Closed) {
-                        window.close();
-                    }
-
-                    update(window, event);
-                }
-                update(window);
-                draw(window);
-            }
-            else if (!isGameStateActive())
-            {
-                update(window);
-                draw(window);
-            }
-
-            //window.display();
+        // window.display();
     }
 };

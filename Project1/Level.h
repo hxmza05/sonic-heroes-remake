@@ -45,6 +45,14 @@ protected:
 	 float friction;
 	//Enemy*** enemies;
 
+	 int TotalEnemyCount;
+
+
+	 Enemy** enemies;
+	 int enemyCount;
+
+
+
 
 
 public:
@@ -127,6 +135,14 @@ public:
 	void setRingTextures(Texture* r, Texture* re) {
 		ringTex = r;
 		ringEffect = re;
+	}
+	int getTotalEnemyCount()
+	{
+		return TotalEnemyCount;
+	}
+	Enemy** getEnemies()
+	{
+		return enemies;
 	}
 
 	void setLifeTexture(Texture* tex) { 

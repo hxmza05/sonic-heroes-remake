@@ -35,9 +35,7 @@ class Level1 : public Level
     Batbrain* bats;
 
 
-    Enemy** enemies;
-    int enemyCount;
-    int TotalEnemyCount;
+   
     int j_start;
     int cell_size;
 
@@ -221,6 +219,14 @@ public:
                 enemies[i]->draw(window, offset_x);
         }
     }
+    int getCrabCount() const { return crabCount; }
+    int getBeeCount() const { return beeCount; }
+    int getMotobugCount() const { return motobugCount; }
+    int getBatbrainCount() const { return batbrainCount; }
+    int getEnemyCount() const { return enemyCount; }
+    int getTotalEnemyCount() const { return TotalEnemyCount; }
+    
+
 
  
 };

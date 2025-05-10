@@ -411,10 +411,9 @@ public:
             }
 
         if (!gameOver)
-            level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud, gameOver);
-       
-        team.getPlayer()[team.getPlayerIndex()]->drawHitBox(window);
-
+        level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud, gameOver);
+        //team.getPlayer()[team.getPlayerIndex()]->drawHitBox(window);
+        
         if (!gameOver)
             team.animate();
         if (levelIndex != 3)
@@ -446,4 +445,58 @@ public:
         /* draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
          draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
     }
+   
+    void saveGame(string&playerName)
+    {
+        ofstream out("savefile.txt");
+        if (!out) return;
+
+        out << playerName << "\n";  // assuming you have playerName stored somewhere
+        out << levelIndex << "\n";
+        out << hud.getLives() << "\n";
+        out << team.getPlayerIndex() << "\n";
+        out << team.getPlayer()[team.getPlayerIndex()][0].getx() << "\n";
+        out << team.getPlayer()[team.getPlayerIndex()][0].gety() << "\n";
+        out << hud.getRings() << "\n"; // if you store this somewhere
+        out << hud.getScore() << "\n"; // assuming you track it
+        /*cout << level[levelIndex]->getTotalEnemyCount();
+        cout << level[levelIndex]->getEnemies();*/
+        /*for (int i = 0;i < level[levelIndex]->getTotalEnemyCount();i++)
+        {
+            out << (int)level[levelIndex]->getEnemies()[i]->alive()<<"\n";
+            cout << level[levelIndex]->getEnemies()[i]->alive() << "\n";
+        }*/
+        out.close();
+    }
+    bool loadGame(string& playerName) 
+    {
+        ifstream in("savefile.txt");
+        if (!in) return false;
+
+        string name;
+        float x, y;
+        int hp, playerIdx;
+        int sc;
+
+        getline(in, name);
+        playerName = name;
+
+        in >> levelIndex >> hp >> playerIdx >> x >> y >> hud.getRings() /*>> enemiesDefeated*/ >> sc;
+     /*   for (int i = 0;i < level[levelIndex]->getTotalEnemyCount();i++)
+        {
+            bool b;
+            in >> b;
+            level[levelIndex]->getEnemies()[i]->setAlive(b);
+        }*/
+        team.setPlayerIndex(playerIdx);
+        hud.setLives(hp);
+        
+        team.getPlayer()[playerIdx]->setx(x);
+        team.getPlayer()[playerIdx]->sety(y);
+
+        in.close();
+        return true;
+    }
+
+
 };
