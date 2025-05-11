@@ -411,7 +411,8 @@ void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 
 		}
 
-		else {
+		else 
+		{
 
 			hud.getLives()--;
 

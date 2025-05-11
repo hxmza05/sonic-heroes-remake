@@ -46,6 +46,8 @@ public:
 		{
 			lvl[i] = new char[width];
 		}
+		designlvl("lvl3.txt");
+
 		crabs = new Crabmeat * [5];
 		bees = new Beebot * [5];	
 		MotoBugs = new Motobug * [5];
@@ -61,8 +63,7 @@ public:
 		for (int i = 0, f = 64; i < fallingCount; i++, f++)
 			falling[i] = new FallingPlatform(64 * f, 350);
 		moveable = new MoveablePlatform(0, 0, 0, 0);
-		designlvl("lvl3.txt");
-		levelEnd = (width - 5) * 64;
+		levelEnd = (295 - 5) * 64;
 	}
 	char getMapValues(int val)
 	{
@@ -128,24 +129,14 @@ public:
 	{
 
 	}
-	void drawEnemies(RenderWindow& window, float offset_x){}
-	/*{
-		for (int i = 0;i < motobugCount;i++)
+	void drawEnemies(RenderWindow& window, float offset_x)
+	{
+		for (int i = 0; i < enemyCount; ++i)
 		{
-			if (motobugs[i]->alive())
-				motobugs[i]->draw(window, offset_x);
+			if (!enemies[i]->deathDone())
+				enemies[i]->draw(window, offset_x);
 		}
-		for (int i = 0;i < crabCount;i++)
-		{
-			if (crabs[i]->alive())
-				crabs[i]->draw(window, offset_x);
-		}
-		for (int i = 0;i < beeCount;i++)
-		{
-			if (beebots[i]->alive())
-				beebots[i]->draw(window, offset_x);
-		}
-	}*/
+	}
 	bool hasLevelEnded(float x)
 	{
 		return true;

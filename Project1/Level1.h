@@ -236,7 +236,7 @@ public:
     {
         for (int i = 0; i < enemyCount; ++i)
         {
-            if (enemies[i]->alive())
+            if (!enemies[i]->deathDone())
                 enemies[i]->draw(window, offset_x);
 
             //enemies[i]->drawHitBox(window, offset_x);

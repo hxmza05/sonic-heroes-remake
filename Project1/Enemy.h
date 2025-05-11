@@ -176,25 +176,27 @@ void Enemy::loadDeathAnimation(const string& filepath, int frameWidth, int frame
 
 }
 
-bool Enemy::handleDeathAnimation() {
+bool Enemy::handleDeathAnimation() 
+{
 
-	if (!Alive && !deathFinished) {
+	if (!Alive && isDying)
+	{
 
 		indexAnimation = totalAnimations - 1;
 
-		if (deathFrameClock.getElapsedTime().asSeconds() >= 1.f) {
+		if (deathFrameClock.getElapsedTime().asMilliseconds() >= 50) 
+		{
 			states[indexAnimation]->RunAnimation();
 			deathFrameClock.restart();
 		}
 
 		sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
 
-		if (deathClock.getElapsedTime().asSeconds() >= 40.f) {
+		if (deathClock.getElapsedTime().asMilliseconds() >= 200) 
+		{
 			deathFinished = true;
 		}
-
 		return true; 
 	}
-
 	return false;  
 }

@@ -43,7 +43,7 @@ public:
 		screen_x = 1200;
 		screen_y = 900;
 		
-		stateIndex = 0;
+		stateIndex = 1;
 		//menu = new Menu(screen_x, screen_y, &leaderboard);
 		menu = new Menu(screen_x, screen_y, leaderboard, &audio);
 		game = new Game();

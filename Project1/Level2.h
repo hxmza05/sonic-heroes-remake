@@ -232,11 +232,12 @@ public:
 
     void drawEnemies(RenderWindow& window, float offset_x) override
     {
-        for (int i = 0; i < enemyCount; ++i)
-        {
-            if (enemies[i]->alive())
-                enemies[i]->draw(window, offset_x);
-        }
+        
+            for (int i = 0; i < enemyCount; ++i)
+            {
+                if (!enemies[i]->deathDone())
+                    enemies[i]->draw(window, offset_x);
+            }
     }
 
 

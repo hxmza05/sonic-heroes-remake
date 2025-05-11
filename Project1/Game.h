@@ -69,7 +69,7 @@ public:
         cell_size = 64;
         // team = Team();
         // level = new * Level();
-        level = new Level * [4];
+        level = new Level * [3];
         level[0] = new Level1();
         level[1] = new Level2();
         level[2] = new Level3();
@@ -145,11 +145,12 @@ public:
     }
     void updateLevel()
     {
-        if (levelIndex >= 3)
+        if (levelIndex == 3)
         {
             return;
         }
         levelIndex++;
+        if(levelIndex != 3)
         level[levelIndex]->loadAndPlaceCollectibles();
         team.getPlayer()[team.getPlayerIndex()]->getx() = 150;
         team.getPlayer()[team.getPlayerIndex()]->gety() = 150;
@@ -158,6 +159,10 @@ public:
         buffer_start = 4 * 64;
         buffer_end = 9 * 64;
         offset_x = 0;
+        if (levelIndex == 3)
+        {
+            cout << "LEVEL $ it is  \n ";
+        }
     }
     HUD &getHUD()
     {
@@ -456,6 +461,10 @@ public:
         }
         if (hud.getLives() <= 0 || gameOver)
         {
+            if (levelIndex == 3)
+            {
+                cout << "game over hugai h level 3 k bad ";
+            }
             gameOver = true;
             window.draw(gameover);
         }
