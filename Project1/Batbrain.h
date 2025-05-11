@@ -3,6 +3,7 @@
 #include <cmath>
 #include "Player.h"
 #include "HUD.h"
+#include "Audio.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -307,6 +308,9 @@ void Batbrain::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 				if (Alive) 
 				{
 					setAlive(false);
+					if (audio) {
+						audio->playSound(audio->getDestroy());
+					}
 					isDying = true;
 					deathClock.restart();
 					deathFrameClock.restart();

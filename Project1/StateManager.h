@@ -48,9 +48,10 @@ public:
 		//menu = new Menu(screen_x, screen_y, &leaderboard);
 		menu = new Menu(screen_x, screen_y, leaderboard);
 		menu->setAudio(&audio);
-		game = new Game();
-		game->setAudio(&audio);
-		game->setupLevelAudio();
+		game = new Game(&audio);
+
+
+
 
               
 

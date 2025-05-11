@@ -41,8 +41,9 @@ class Level2 : public Level
     int cell_size;
 
 public:
-	Level2() 
+	Level2(Audio* ad) 
 	{
+        this->audio = ad;
         backGround.loadFromFile("Data/bgLvl2O.jpg");
         backGroundSprite.setTexture(backGround);
         unsigned int bgWidth = backGround.getSize().x;
@@ -92,6 +93,7 @@ public:
         for (int i = 0; i < crabCount; i++) {
 
             crab = new Crabmeat();
+            crab->setAudio(audio);
 
             if (crab->getCrabCoordinates(lvl, height, width, crab_start, crab_end, j_start))
             {
@@ -110,6 +112,7 @@ public:
         for (int i = 0; i < beeCount; i++) {
 
             beebot = new Beebot();
+            beebot->setAudio(audio);
 
             if (beebot->getBeebotCoordinates(lvl, height, width, bee_start, bee_end, j_start, occupiedColumns))
             {
@@ -128,6 +131,7 @@ public:
         for (int i = 0; i < motobugCount; i++) {
 
             motobugs = new Motobug();
+            motobugs->setAudio(audio);
 
             if (motobugs->getMotobugCoordinates(lvl, height, width, motobug_start, motobug_end, j_start))
             {
@@ -144,6 +148,7 @@ public:
         for (int i = 0; i < batbrainCount; ++i) {
 
             bats = new Batbrain();
+            bats->setAudio(audio);
 
             if (bats->getBatbrainCoordinates(lvl, height, width, batStart, batEnd, cell_size)) {
                 enemies[enemyCount++] = bats;

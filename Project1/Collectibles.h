@@ -5,6 +5,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include"Animation.h"
+#include "Audio.h"
 
 class Collectibles 
 {
@@ -25,6 +26,8 @@ protected:
 
 	bool showEffect;
 	Clock effectClock;
+
+	Audio* audio;
 
 public:
 
@@ -58,6 +61,10 @@ public:
 
 	bool isActive() const { 
 		return !collected; 
+	}
+
+	void setAudio(Audio* a) {
+		audio = a;
 	}
 
 	int getX() const { 

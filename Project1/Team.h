@@ -8,6 +8,8 @@
 #include "TailedFox.h"
 #include "Knuckles.h"
 #include "time.h"
+#include "Audio.h"
+
 class Team
 {
     Player** team;
@@ -21,6 +23,8 @@ class Team
     int spaceCount;
     bool isFlying;
     int isNotFlyingCount;
+
+    Audio* audio;
 
 public:
     Team()
@@ -111,6 +115,14 @@ public:
     {
         return spaceCount;
     }
+    void setAudio(Audio* a) 
+    { 
+        audio = a; 
+        for (int i = 0; i < 3; ++i) {
+            team[i]->setAudio(a);
+        }
+    }
+
     void autoMoveFollowers(char** lvl, float offsetx, int width)
     {
         for (int i = 0; i < 3; i++)
@@ -332,6 +344,39 @@ public:
     void drawSonic(RenderWindow& window, float offset_x)
     {
         team[0]->draw_player(window, team[0]->getStates()[team[0]->getAnimationIndex()][0].getSprites()[team[0]->getStates()[team[0]->getAnimationIndex()][0].getIndex()], offset_x);
+    }
+    void useSpecialBoost()
+    {
+        if (playerIndex == 0)
+        {
+            team[0]->setAccelration(team[0]->getAcceleration() + 1.5);
+            team[0]->setVelcotiyX(team[0]->getVelocityX() + 4);
+        }
+        if (playerIndex == 1)
+        {
+            team[1]->setFlyingTime(11);
+        }
+        if (playerIndex == 2)
+        {
+            team[2]->setInvincible(true);
+        }
+    }
+    void undoBoost()
+    {
+        if (playerIndex == 0)
+        {
+            team[0]->setAccelration(0.2);
+            team[0]->setVelcotiyX(2);
+        }
+        else if (playerIndex == 1)
+        {
+            team[1]->setFlyingTime(7);
+        }
+        else if (playerIndex == 2)
+        {
+            team[2]->setInvincible(false);
+        }
+
     }
     ~Team()
     {

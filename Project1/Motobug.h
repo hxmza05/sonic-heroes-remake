@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "HUD.h"
 #include "Enemy.h"
+#include "Audio.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -154,6 +155,10 @@ void Motobug::movement(float player_x, float player_y) {
 
 		setAttack(); 
 
+		if (audio) {
+			audio->playSound(audio->getSpikes());
+		}
+
 
 		indexAnimation = 1;
 
@@ -247,6 +252,9 @@ void Motobug::update(char** lvl, Player& player, int cell_size, bool& hasKnocked
 
 				if (hp <= 0 && Alive) {
 					setAlive(false);
+					if (audio) {
+						audio->playSound(audio->getDestroy());
+					}
 					isDying = true;
 					handleDeathAnimation();
 					deathClock.restart();

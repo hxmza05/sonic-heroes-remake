@@ -16,8 +16,9 @@ class Level3 : public Level
 	Motobug** MotoBugs;
 	Batbrain** bats;
 public:
-	Level3(char** level = nullptr, Enemy*** e = nullptr)
+	Level3(Audio* ad)
 	{
+		this->audio = ad;
 		backGround.loadFromFile("Data/lvl3Bg.jpeg");
 		backGroundSprite.setTexture(backGround);
 		unsigned int bgWidth = 626;

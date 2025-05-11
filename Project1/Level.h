@@ -137,12 +137,18 @@ public:
 	}
 	virtual void setAudio(Audio* a) {
 		audio = a;
+
+		for (int i = 0; i < enemyCount; i++) {
+			if (enemies[i]) {
+				enemies[i]->setAudio(audio);
+			}
+		}
 	}
 	 FallingPlatform** getFalling()
 	{
 		return falling;
 	}
-	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD& hud,bool& ) = 0;
+	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool&) = 0;
 	virtual void drawEnemies(RenderWindow& window, float offset_x) = 0;
 
 	bool hasLevelEnded(float x)
@@ -298,7 +304,9 @@ void Level::placeRingsFromMap(Texture* ringTex, Texture* ringEffect) {
 		for (int j = 0; j < width; ++j) {
 
 			if (lvl[i][j] == 'r') {
-				rings[index++] = new Ring(j, i, ringTex, ringEffect);
+				rings[index] = new Ring(j, i, ringTex, ringEffect);
+				rings[index]->setAudio(audio);
+				index++;
 			}
 		}
 	}
@@ -328,7 +336,9 @@ void Level::placeExtraLivesFromMap() {
 		for (int j = 0; j < width; ++j) {
 
 			if (lvl[i][j] == 'l') {
-				lives[index++] = new ExtraLife(j, i, lifeTex);
+				lives[index] = new ExtraLife(j, i, lifeTex);
+				lives[index]->setAudio(audio);
+				index++;
 			}
 		}
 	}
@@ -358,7 +368,9 @@ void Level::placeBoostsFromMap() {
 		for (int j = 0; j < width; ++j) {
 
 			if (lvl[i][j] == 'j') {
-				boosts[index++] = new SpecialBoost(j, i, boostTex);
+				boosts[index] = new SpecialBoost(j, i, boostTex);
+				boosts[index]->setAudio(audio);
+				index++;
 			}
 		}
 	}

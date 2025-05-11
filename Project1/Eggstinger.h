@@ -176,11 +176,15 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
         {
             if (hp == 0) {
                 Alive = false;
-
+                if (audio) {
+                    audio->playSound(audio->getDestroy());
+                }
             }
             else {
                 hp--;
-
+                if (hp > 0 && audio) {
+                    audio->playSound(audio->getBossHit());
+                }
             }
 
             hasKnockedBack = true;

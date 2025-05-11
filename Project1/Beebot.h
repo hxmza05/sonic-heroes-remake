@@ -203,7 +203,9 @@ void Beebot::update(char** lvl, Player& player, int cell_size, bool& hasKnockedB
 				if (Alive) 
 				{
 					setAlive(false);
-
+					if (audio) {
+						audio->playSound(audio->getDestroy());
+					}
 					isDying = true;
 					deathClock.restart();
 					deathFrameClock.restart();
@@ -293,7 +295,9 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 							projectiles = new Projectile();
 
 						projectiles->setPosition(beeCenterX, y + getbeeHeight() / 2.0f, projectileX, projectileY, 4.0f);
-
+						if (audio) {
+							audio->playSound(audio->getShot());
+						}
 					}
 				}
 

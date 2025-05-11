@@ -6,6 +6,7 @@ using namespace sf;
 #define BREAKL 16
 
 #define AJUMP 0
+#include "Audio.h"
 
 class Knuckles :public Player
 {
@@ -31,7 +32,7 @@ public:
 	Knuckles()
 	{
 		 GlideCount = 0;
-
+		 idxPl = 2;
 		//isGliding = false;
 		states = new Animation * [15];
 		indexAnimation = 0;
@@ -186,7 +187,7 @@ public:
 			states[BREAKR]->getSprites()[i].setScale(2, 2);
 		}
 
-		
+		invincible = false;
 		coolDown.restart();
 		delayInFollow = 30;
 	}
@@ -195,7 +196,7 @@ public:
 	{
 		
 	}
-	virtual void moveUp(bool spacePressed,int unusedHere)
+	virtual void moveUp(bool spacePressed,int& unusedHere)
 	{
 		if(!spacePressed)
 		{
@@ -232,6 +233,9 @@ public:
 			}
 			cout << "BreakCalled";
 			Break(lvl,14,width);
+			if (audio && GlideCount == 0) {
+				audio->playSound(audio->getSpecialWarp());
+			}
 			//coolDown.restart();
 		}
 		states[indexAnimation]->RunAnimation();
@@ -255,6 +259,10 @@ public:
 		// If block is breakable
 		if (checkCollisionExceptSpikes(lvl, checkX, checkY,height,width))
 		{
+			if (audio) {
+				audio->playSound(audio->getGlassSmash());
+			}
+
 			lvl[tileY][tileX] = 's'; // Mark it as emptyspace pwnow
 			cout << "Collision Detected and Block Broken\n";
 		}
@@ -262,6 +270,11 @@ public:
 		tileY = checkY / 64;
 		if (checkCollisionExceptSpikes(lvl, checkX, checkY,height,width))
 		{
+
+			if (audio) {
+				audio->playSound(audio->getGlassSmash());
+			}
+
 			lvl[tileY][tileX] = 's'; // Mark it as emptyspace pwnow
 			cout << "Collision Detected and Block Broken\n";
 		}

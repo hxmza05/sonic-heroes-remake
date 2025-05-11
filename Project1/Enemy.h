@@ -5,6 +5,7 @@ using namespace sf;
 #include"Animation.h"
 #include "Player.h"
 #include "HUD.h"
+#include "Audio.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
@@ -42,6 +43,8 @@ protected:
 	bool handleDeathAnimation();
 
 	//RectangleShape hitBoxShape;  
+
+	Audio* audio;
 
 
 public:
@@ -91,6 +94,10 @@ public:
 		this->Alive = status; 
 	}
 
+	void setAudio(Audio* a) 
+	{ 
+		audio = a; 
+	}
 
 	void setAnimation(int animationIndex) {
 		indexAnimation = animationIndex;

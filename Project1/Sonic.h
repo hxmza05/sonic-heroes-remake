@@ -45,6 +45,7 @@ class Sonic :public Player
 public:
 	Sonic()
 	{
+		idxPl = 0;
 		//isGliding = false;
 		states = new Animation*[15];
 		indexAnimation = 0;
@@ -196,7 +197,7 @@ public:
 	{
 		
 	}
-	virtual void moveUp(bool spacePressed,int unsedHere)
+	virtual void moveUp(bool spacePressed,int &unsedHere)
 	{
 		if(!spacePressed)
 		{

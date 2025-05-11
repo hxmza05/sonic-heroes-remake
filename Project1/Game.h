@@ -13,8 +13,10 @@
 #include "Rings.h"
 #include "GlobalFunctions.h"
 #include "HUD.h"
-#include"FallingPlatform.h"
+
 #include"Audio.h"
+
+#include "FallingPlatform.h"
 
 class Game
 {
@@ -41,13 +43,14 @@ class Game
 
 
 
+    Clock specialBoostClock;
+    bool specialBoostUsed;
 
     Team team;
     Level** level;
     int levelIndex;
     int cell_size;
     Clock Akey;
-
 
     ////////////////////////////
 
@@ -57,10 +60,10 @@ class Game
 
     ////////////////////////////
 
-
 public:
-    Game()
+    Game(Audio* ad) : audio(ad)
     {
+        specialBoostUsed = false;
         font.loadFromFile("Fonts/scoreFont.ttf");
         gameover.setFont(font);
         gameover.setString("GAME OVER");
@@ -68,15 +71,26 @@ public:
         gameover.setPosition(320, 350);
         gameover.setFillColor(Color::Red);
 
+        team.setAudio(audio);
+
         gameOver = false;
         cell_size = 64;
         // team = Team();
         // level = new * Level();
         level = new Level * [3];
-        level[0] = new Level1();
-        level[1] = new Level2();
-        //level[2] = new Level3();
-        //level[3] = new BossLevel();
+        level[0] = new Level1(audio);
+        level[0]->setAudio(audio);
+
+        level[1] = new Level2(audio);
+        level[1]->setAudio(audio);
+
+        level[2] = new Level3(audio);
+        level[2]->setAudio(audio);
+
+        //level[3] = new BossLevel(audio);
+        //level[3]->setAudio(audio);
+
+
         levelIndex = 0;
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
@@ -89,17 +103,16 @@ public:
         hit_box_factor_x = 8 * 2.5;
         hit_box_factor_y = 5 * 2.5;
 
-         
         spaceCount = 0;
         int height = level[levelIndex]->getHeight();
         int width = level[levelIndex]->getWidth();
 
         level[levelIndex]->loadAndPlaceCollectibles();
 
+
         ringsCollected = 0;
         BoostStatus = false;
         randomLives = 0;
-
     }
     void setLevelIndex(int index)
     {
@@ -108,11 +121,6 @@ public:
     int getLevelIndex()
     {
         return levelIndex;
-    }
-    void setupLevelAudio() {
-        if (level[levelIndex]) {
-            level[levelIndex]->setAudio(audio);
-        }
     }
 
     bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY, int height, int width)
@@ -142,7 +150,7 @@ public:
         bool forMiddle = topMiddle != 'w' && topMiddle != 'q' && topMiddle != 'e';
         bool forRight = topRight != 'w' && topRight != 'q' && topRight != 'e';
 
-         //cout << "Left : " << bottom_left_down << " ---- Mid : " << bottom_mid_down << " -------" << "Right : " << bottom_right_down << "----";
+        // cout << "Left : " << bottom_left_down << " ---- Mid : " << bottom_mid_down << " -------" << "Right : " << bottom_right_down << "----";
 
         return ((bottom_left_down == 'p' || bottom_mid_down == 'p' || bottom_right_down == 'p') && velocityY > 0 && (forLeft || forMiddle || forRight)) || ((top_left_up == 'i' || top_mid_up == 'i' || top_right_up == 'i') && velocityY < 0);
     }
@@ -159,8 +167,9 @@ public:
         }
         levelIndex++;
         level[levelIndex]->setAudio(audio);
-        if(levelIndex != 3)
-        level[levelIndex]->loadAndPlaceCollectibles();
+
+        if (levelIndex != 3)
+            level[levelIndex]->loadAndPlaceCollectibles();
         team.getPlayer()[team.getPlayerIndex()]->getx() = 150;
         team.getPlayer()[team.getPlayerIndex()]->gety() = 150;
         team.getPlayer()[team.getPlayerIndex()]->getVelocityY() = 15;
@@ -173,19 +182,20 @@ public:
             cout << "LEVEL $ it is  \n ";
         }
     }
-    HUD &getHUD()
+    HUD& getHUD()
     {
         return hud;
     }
-    void setAudio(Audio* a) { 
-        audio = a; 
+    void setTeamAudio(Audio* a) { 
+        team.setAudio(a);
     }
     void saveGame(string& playerName)
     {
         ofstream out("savefile.txt");
-        if (!out) return;
+        if (!out)
+            return;
 
-        out << playerName << "\n";  // assuming you have playerName stored somewhere
+        out << playerName << "\n"; // assuming you have playerName stored somewhere
         out << levelIndex << "\n";
         out << hud.getLives() << "\n";
         out << team.getPlayerIndex() << "\n";
@@ -205,7 +215,8 @@ public:
     bool loadGame(string& playerName)
     {
         ifstream in("savefile.txt");
-        if (!in) return false;
+        if (!in)
+            return false;
 
         string name;
         float x, y;
@@ -233,7 +244,7 @@ public:
     }
     void play(RenderWindow& window)
     {
-        //cout << "level = " << levelIndex<<endl;
+        // cout << "level = " << levelIndex<<endl;
         if (levelIndex == 3)
         {
             team.setplayerIndex(0);
@@ -248,9 +259,9 @@ public:
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
-                if (checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(),14,level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() - 1, 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() - 15, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() / 2, 14, level[levelIndex]->getWidth()) && team.getPlayer()[team.getPlayerIndex()][0].getx() > 0)
+                if (checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() - 1, 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() - 15, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() / 2, 14, level[levelIndex]->getWidth()) && team.getPlayer()[team.getPlayerIndex()][0].getx() > 0)
                 {
-                    team.getPlayer()[team.getPlayerIndex()][0].moveLeft(level[levelIndex]->getLvl(), level[levelIndex]->getWidth(),level[levelIndex]->getFriction());
+                    team.getPlayer()[team.getPlayerIndex()][0].moveLeft(level[levelIndex]->getLvl(), level[levelIndex]->getWidth(), level[levelIndex]->getFriction());
                     if (buffer_start > 4 * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() <= buffer_start)
                     {
                         buffer_start = team.getPlayer()[team.getPlayerIndex()][0].getx();
@@ -272,7 +283,7 @@ public:
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
-                if (checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety(), 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() - 1 , 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() / 2, 14, level[levelIndex]->getWidth()))
+                if (checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety(), 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() - 1, 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() / 2, 14, level[levelIndex]->getWidth()))
                 {
                     team.getPlayer()[team.getPlayerIndex()][0].moveRight(level[levelIndex]->getLvl(), level[levelIndex]->getWidth(), level[levelIndex]->getFriction());
                     if (buffer_end < (level[levelIndex]->getWidth() - 5) * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() >= buffer_end)
@@ -289,25 +300,26 @@ public:
                     {
                         team.getPlayer()[team.getPlayerIndex()][0].executePushingRight();
                         team.getPlayer()[team.getPlayerIndex()][0].getVelocityX() = 0;
-
                     }
                     if (team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() >= 0)
-                            team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() = 15;
+                        team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() = 15;
                 }
             }
             else
             {
                 leftRight = false;
-				if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
-                    team.getPlayer()[team.getPlayerIndex()]->decelerate(level[levelIndex]->getLvl(),level[levelIndex]->getWidth(),level[levelIndex]->getFriction());
-				else
-					team.getPlayer()[team.getPlayerIndex()][0].getVelocityX() = 0;
+                if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+                    team.getPlayer()[team.getPlayerIndex()]->decelerate(level[levelIndex]->getLvl(), level[levelIndex]->getWidth(), level[levelIndex]->getFriction());
+                else
+                    team.getPlayer()[team.getPlayerIndex()][0].getVelocityX() = 0;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
                 team.jump();
-                //cout << "Jumped\n\n";
-                //cout << "onground  in (space ) = " << team.getPlayer()[team.getPlayerIndex()]->getOnGround()<<endl;
+                //audio->playSound(audio->getJump());
+
+                // cout << "Jumped\n\n";
+                // cout << "onground  in (space ) = " << team.getPlayer()[team.getPlayerIndex()]->getOnGround()<<endl;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() && Akey.getElapsedTime().asMilliseconds() > 500)
             {
@@ -316,12 +328,12 @@ public:
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
-                team.useSpecial(level[levelIndex]->getLvl(),14,level[levelIndex]->getWidth());
+                team.useSpecial(level[levelIndex]->getLvl(), 14, level[levelIndex]->getWidth());
                 team.getPlayer()[team.getPlayerIndex()]->getSpecialAbiltyUsed() = true;
             }
             if (team.getPlayer()[team.getPlayerIndex()]->getSpecialAbiltyUsed() == true && team.getPlayerIndex() == 0)
             {
-                //cout << "SpinDash being called";
+                // cout << "SpinDash being called";
                 team.getPlayer()[0]->spinDash(level[levelIndex]->getLvl(), level[levelIndex]->getWidth(), level[levelIndex]->getFriction());
                 if (checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety(), 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() - 1, 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() / 2, 14, level[levelIndex]->getWidth()))
                 {
@@ -371,13 +383,13 @@ public:
             if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
                 team.getPlayer()[team.getPlayerIndex()][0].player_gravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), gameOver);
             team.storePath();
-            team.autoMoveFollowers(level[levelIndex]->getLvl(), offset_x,level[levelIndex]->getWidth());
-            if (levelIndex != 0 && levelIndex != 3  && level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
+            team.autoMoveFollowers(level[levelIndex]->getLvl(), offset_x, level[levelIndex]->getWidth());
+            if (levelIndex != 0 && levelIndex != 3 && level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
             {
-                //cout << "Buffers working\n";
+                // cout << "Buffers working\n";
                 if (buffer_end < (level[levelIndex]->getWidth() - 5) * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() >= buffer_end)
                 {
-                    //cout << "Buffers updaintg";
+                    // cout << "Buffers updaintg";
                     buffer_end = team.getPlayer()[team.getPlayerIndex()][0].getx();
                     buffer_start = buffer_end - 320;
                     offset_x += 3;
@@ -389,7 +401,7 @@ public:
                     offset_x -= 3;
                 }
                 team.getPlayer()[team.getPlayerIndex()]->getOnGround() = true;
-                for (int i = 0;i < 3;i++)
+                for (int i = 0; i < 3; i++)
                 {
                     if (team.getPlayerIndex() == i)
                         continue;
@@ -398,18 +410,19 @@ public:
                 team.getSpacePressed() = false;
             }
         }
-        //draw_bg(window, backGroundSprite, offset_x);
+        // draw_bg(window, backGroundSprite, offset_x);
         level[levelIndex]->draw_bg(window);
         if (levelIndex != 3 && !gameOver)
             level[levelIndex]->getMoveable()->draw(window, offset_x);
 
-        //display_level(window, level[levelIndex][0].getHeight(), level[levelIndex][0].getWidth(), level[levelIndex][0].getLvl(), walls, 64, offset_x);
+        // display_level(window, level[levelIndex][0].getHeight(), level[levelIndex][0].getWidth(), level[levelIndex][0].getLvl(), walls, 64, offset_x);
         level[levelIndex]->display_level(window, 64, offset_x);
-        if (levelIndex != 3 &&  !gameOver)
+        if (levelIndex != 3 && !gameOver)
             for (int i = 0; i < level[levelIndex]->getFallingCount(); i++)
                 level[levelIndex]->getFalling()[i]->draw(window, offset_x);
 
-        if (!gameOver) {
+        if (!gameOver)
+        {
 
             for (int i = 0; i < level[levelIndex]->getRingCount(); i++)
             {
@@ -422,19 +435,32 @@ public:
             {
                 level[levelIndex]->getLives()[i]->update();
                 level[levelIndex]->getLives()[i]->draw(window, offset_x);
-                level[levelIndex]->getLives()[i]->handleCollision(team.getPlayer()[team.getPlayerIndex()][0], level[levelIndex]->getLvl(), cell_size, randomLives);
+                if (level[levelIndex]->getLives()[i]->handleCollision(team.getPlayer()[team.getPlayerIndex()][0], level[levelIndex]->getLvl(), cell_size, randomLives))
+                {
+                    hud.setLives(hud.getLives() + 1);
+                }
             }
 
             for (int i = 0; i < level[levelIndex]->getBoostCount(); i++)
             {
                 level[levelIndex]->getBoosts()[i]->update();
                 level[levelIndex]->getBoosts()[i]->draw(window, offset_x);
-                level[levelIndex]->getBoosts()[i]->handleCollision(team.getPlayer()[team.getPlayerIndex()][0], level[levelIndex]->getLvl(), cell_size, randomLives);
+                if (level[levelIndex]->getBoosts()[i]->handleCollision(team.getPlayer()[team.getPlayerIndex()][0], level[levelIndex]->getLvl(), cell_size, randomLives))
+                {
+                    team.useSpecialBoost();
+                    specialBoostUsed = true;
+                    // specialBoosClock
+                    specialBoostClock.restart();
+                }
             }
         }
+        if (specialBoostUsed && specialBoostClock.getElapsedTime().asSeconds() > 6)
+        {
+            specialBoostUsed = false;
+            team.undoBoost();
+        }
 
-        //team.draw(window, offset_x);
-
+        // team.draw(window, offset_x);
 
         if (levelIndex != 3 && !gameOver)
             for (int i = 0; i < level[levelIndex]->getFallingCount(); i++)
@@ -445,26 +471,34 @@ public:
                     level[levelIndex]->getFalling()[i]->fall();
                 }
             }
-
-        if (!gameOver)
-        level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud, gameOver);
-        //team.getPlayer()[team.getPlayerIndex()]->drawHitBox(window);
+        int tempLives = hud.getLives();
+            bool tempGameOver = gameOver;
+;        if (!gameOver)
+            level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud, gameOver);
+        // team.getPlayer()[team.getPlayerIndex()]->drawHitBox(window);
+        if (specialBoostUsed && team.getPlayerIndex() == 2)
+        {
+            hud.setLives(tempLives);
+            gameOver = tempGameOver;
+        }
+        cout << "LIVE ARE " << hud.getLives() << endl;
         if (!gameOver)
             team.animate();
         if (levelIndex != 3)
             team.draw(window, offset_x);
-        else team.drawSonic(window, offset_x);   
+        else
+            team.drawSonic(window, offset_x);
         hud.draw(window);
 
-        if(levelIndex != 3)
-        for (int i = 0; i < 8; i++)
-        {
-            level[levelIndex]->getFalling()[i]->shouldItActivate(team.getPlayer()[team.getPlayerIndex()]->getx());
-            if (level[levelIndex]->getFalling()[i]->getActivated())
+        if (levelIndex != 3)
+            for (int i = 0; i < 8; i++)
             {
-                level[levelIndex]->getFalling()[i]->fall();
+                level[levelIndex]->getFalling()[i]->shouldItActivate(team.getPlayer()[team.getPlayerIndex()]->getx());
+                if (level[levelIndex]->getFalling()[i]->getActivated())
+                {
+                    level[levelIndex]->getFalling()[i]->fall();
+                }
             }
-        }
 
         level[levelIndex]->drawEnemies(window, offset_x);
         if (level[levelIndex]->hasLevelEnded(team.getPlayer()[team.getPlayerIndex()]->getx()))
@@ -481,11 +515,7 @@ public:
             window.draw(gameover);
         }
 
-         /*draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
-         draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
+        /*draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
+        draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
     }
-   
-    
-
-
 };
