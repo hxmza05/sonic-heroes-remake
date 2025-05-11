@@ -25,8 +25,9 @@ class BossLevel : public Level
 	Eggstinger* stinger;
 
 public:
-	BossLevel()
+	BossLevel(Audio* ad)
 	{
+		this->audio = ad;
 		backGround.loadFromFile("Data/bgLvl2O.jpg");
 		backGroundSprite.setTexture(backGround);
 		unsigned int bgWidth = backGround.getSize().x;
@@ -77,6 +78,7 @@ public:
 		enemies = new Enemy * [TotalEnemyCount];
 		
 		stinger = new Eggstinger();
+		stinger->setAudio(audio);
 		stinger->setPosition(12 * cell_size, 2 * cell_size, 0, 0);
 	    enemies[enemyCount++] = stinger;
 		

@@ -8,23 +8,29 @@ using namespace std;
 
 void Audio::playLevelMusicByIndex(int index) {
 
-    if (index < 0 || index >= TOTAL_MUSIC) {
+    if (index < 0 || index >= TOTAL_MUSIC)
         return;
-    }
 
-    levelMusic.stop();
+    if (currentlyPlayingMusic != index) {
 
-    if (levelMusic.openFromFile(musicPaths[index])) {
-        levelMusic.setLoop(true);
-        levelMusic.setVolume(musicVolume);
-        levelMusic.play();
+        levelMusic.stop();
+
+        if (levelMusic.openFromFile(musicPaths[index])) {
+            levelMusic.setLoop(true);
+            levelMusic.setVolume(musicVolume);
+            levelMusic.play();
+            currentlyPlayingMusic = index;
+        }
     }
 }
 
 bool Audio::isSoundPlaying(int index) const {
+
     if (index >= 0 && index < TOTAL_SFX) {
+
         return sfx[index].getStatus() == sf::Sound::Playing;
     }
+
     return false;
 }
 
@@ -68,6 +74,13 @@ void Audio::playSound(int id) {
     sfx[id].setVolume(sfxVolume);
     sfx[id].play();
 }
+
+void Audio::stopSound(int index) {
+    if (index >= 0 && index < TOTAL_SFX) {
+        sfx[index].stop();
+    }
+}
+
 
 void Audio::loadAllSounds() {
 

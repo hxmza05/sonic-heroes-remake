@@ -37,6 +37,8 @@ class Game
     int hit_box_factor_x;
     int hit_box_factor_y;
     Clock makeInvincible;
+    Clock jumpSFXClock;
+
 
     Audio* audio;
 
@@ -53,11 +55,12 @@ class Game
     Clock Akey;
 
     ////////////////////////////
-
+    Clock levelTimer;
     int ringsCollected;
     bool BoostStatus;
     int randomLives;
-
+    Clock gameOverClock;
+    bool gameOverRestarted;
     ////////////////////////////
 
 public:
@@ -87,11 +90,11 @@ public:
         level[2] = new Level3(audio);
         level[2]->setAudio(audio);
 
-        //level[3] = new BossLevel(audio);
-        //level[3]->setAudio(audio);
+        level[3] = new BossLevel(audio);
+        level[3]->setAudio(audio);
 
 
-        levelIndex = 0;
+        levelIndex = 2;
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
         bufferSpriteEnd.setTexture(buffer);
@@ -113,6 +116,7 @@ public:
         ringsCollected = 0;
         BoostStatus = false;
         randomLives = 0;
+        jumpSFXClock.restart();
     }
     void setLevelIndex(int index)
     {
@@ -131,6 +135,11 @@ public:
         if ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size >= height)
         {
             gameOver = true;
+            if (!gameOverRestarted)
+            {
+                gameOverClock.restart();
+                gameOverRestarted = true;
+            }
             return false;
         }
 
@@ -152,7 +161,11 @@ public:
 
         // cout << "Left : " << bottom_left_down << " ---- Mid : " << bottom_mid_down << " -------" << "Right : " << bottom_right_down << "----";
 
-        return ((bottom_left_down == 'p' || bottom_mid_down == 'p' || bottom_right_down == 'p') && velocityY > 0 && (forLeft || forMiddle || forRight)) || ((top_left_up == 'i' || top_mid_up == 'i' || top_right_up == 'i') && velocityY < 0);
+        bool b = ((bottom_left_down == 'p' || bottom_mid_down == 'p' || bottom_right_down == 'p') && velocityY > 0 && (forLeft || forMiddle || forRight)) || ((top_left_up == 'i' || top_mid_up == 'i' || top_right_up == 'i') && velocityY < 0);
+        if (b)
+        {
+           hud.getLives()--;
+        }
     }
     void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord)
     {
@@ -165,6 +178,7 @@ public:
         {
             return;
         }
+
         levelIndex++;
         level[levelIndex]->setAudio(audio);
 
@@ -177,6 +191,8 @@ public:
         buffer_start = 4 * 64;
         buffer_end = 9 * 64;
         offset_x = 0;
+        hud.resetTimer();
+        levelTimer.restart();
         if (levelIndex == 3)
         {
             cout << "LEVEL $ it is  \n ";
@@ -242,7 +258,13 @@ public:
         in.close();
         return true;
     }
-    void play(RenderWindow& window)
+    bool checkTimer()
+    {
+        if (levelTimer.getElapsedTime().asSeconds() >= level[levelIndex]->getTimer())
+            return true;
+        return false;
+    }
+    bool play(RenderWindow& window)
     {
         // cout << "level = " << levelIndex<<endl;
         if (levelIndex == 3)
@@ -316,7 +338,11 @@ public:
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
                 team.jump();
-                //audio->playSound(audio->getJump());
+
+                if (audio && jumpSFXClock.getElapsedTime().asSeconds() >= 3.f) {
+                    audio->playSound(audio->getJump());
+                    jumpSFXClock.restart();
+                }
 
                 // cout << "Jumped\n\n";
                 // cout << "onground  in (space ) = " << team.getPlayer()[team.getPlayerIndex()]->getOnGround()<<endl;
@@ -378,10 +404,20 @@ public:
                 {
                     team.getPlayer()[team.getPlayerIndex()][0].playerVirtualGravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), gameOver);
                 }
+                if (!gameOverRestarted && gameOver)
+                {
+                    gameOverClock.restart();
+                    gameOverRestarted = true;
+                }
                 makeInvincible.restart();
             }
             if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
                 team.getPlayer()[team.getPlayerIndex()][0].player_gravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), gameOver);
+            if (!gameOverRestarted && gameOver)
+            {
+                gameOverClock.restart();
+                gameOverRestarted = true;
+            }
             team.storePath();
             team.autoMoveFollowers(level[levelIndex]->getLvl(), offset_x, level[levelIndex]->getWidth());
             if (levelIndex != 0 && levelIndex != 3 && level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
@@ -476,10 +512,25 @@ public:
 ;        if (!gameOver)
             level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud, gameOver);
         // team.getPlayer()[team.getPlayerIndex()]->drawHitBox(window);
+         
         if (specialBoostUsed && team.getPlayerIndex() == 2)
         {
             hud.setLives(tempLives);
             gameOver = tempGameOver;
+        }
+        if (!gameOverRestarted && gameOver)
+        {
+            gameOverClock.restart();
+            gameOverRestarted = true;
+        }
+        if (checkTimer())
+        {
+            gameOver = true;
+            if (!gameOverRestarted)
+            {
+                gameOverClock.restart();
+                gameOverRestarted = true;
+            }
         }
         cout << "LIVE ARE " << hud.getLives() << endl;
         if (!gameOver)
@@ -489,7 +540,6 @@ public:
         else
             team.drawSonic(window, offset_x);
         hud.draw(window);
-
         if (levelIndex != 3)
             for (int i = 0; i < 8; i++)
             {
@@ -501,10 +551,11 @@ public:
             }
 
         level[levelIndex]->drawEnemies(window, offset_x);
-        if (level[levelIndex]->hasLevelEnded(team.getPlayer()[team.getPlayerIndex()]->getx()))
+        if (level[levelIndex]->hasLevelEnded(team.getPlayer()[team.getPlayerIndex()]->getx()) || hud.getRings() > 75)
         {
             updateLevel();
         }
+
         if (hud.getLives() <= 0 || gameOver)
         {
             if (levelIndex == 3)
@@ -512,9 +563,16 @@ public:
                 cout << "game over hugai h level 3 k bad ";
             }
             gameOver = true;
+            if (!gameOverRestarted)
+            {
+                gameOverClock.restart();
+                gameOverRestarted = true;
+            }
             window.draw(gameover);
         }
-
+        if (gameOver && gameOverClock.getElapsedTime().asMilliseconds() > 3000)
+            return true;
+        return false;
         /*draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
         draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
     }

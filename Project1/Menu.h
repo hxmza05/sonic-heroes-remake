@@ -78,8 +78,6 @@ private:
     int indexAnimation;
     int totalAnimations;
 
-    Music menuMusic;
-
     Texture backgroundTexture;
     Sprite backgroundSprite;
     RectangleShape backgroundOverlay;
@@ -240,11 +238,6 @@ public:
         nameBox.setOutlineThickness(2);
         nameBox.setPosition(295, 395);
 
-        menuMusic.openFromFile("Audio/Level2.ogg");
-        menuMusic.setLoop(true);
-        menuMusic.setVolume(musicVolume);
-        //menuMusic.play();
-
         ringTexture.loadFromFile("Sprites/rings.png");
         selectorClock.restart();
         indexAnimation = 0;
@@ -376,12 +369,14 @@ public:
         enteringName = false;
         gameState = true;
     }
-    void setAudio(Audio* a) 
+    void setAudio(Audio* a)
     {
         audio = a;
         audio->setSFXVolume((float)sfxVolume);
         audio->setMusicVolume((float)musicVolume);
+        audio->playLevelMusicByIndex(audio->getLevel2Music());
     }
+
     void update(RenderWindow& window,Game*game)
     {
 
@@ -475,7 +470,6 @@ public:
                     {
                         enteringName = true;
                         gameON = true;
-                        //menuMusic.pause();
                     }
                     else if (selectedOption == 1)
                     {
@@ -583,13 +577,12 @@ public:
                     if (currentMenuOption == 3 && sfxVolume < 50)
                     {
                         sfxVolume++;
-                        audio->setMusicVolume((float)musicVolume);
-
+                        audio->setSFXVolume((float)sfxVolume);
                     }
                     else if (currentMenuOption == 4 && musicVolume < 50)
                     {
                         musicVolume++;
-                        menuMusic.setVolume(musicVolume);
+                        audio->setMusicVolume((float)musicVolume);
                     }
                 }
 
@@ -598,13 +591,13 @@ public:
                     if (currentMenuOption == 3 && sfxVolume > 0)
                     {
                         sfxVolume--;
-                        audio->setMusicVolume((float)musicVolume);
+                        audio->setSFXVolume((float)sfxVolume);
 
                     }
                     else if (currentMenuOption == 4 && musicVolume > 0)
                     {
                         musicVolume--;
-                        menuMusic.setVolume(musicVolume);
+                        audio->setMusicVolume((float)musicVolume);
                     }
                 }
 

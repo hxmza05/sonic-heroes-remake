@@ -11,14 +11,40 @@
 class Level3 : public Level
 {
 	MoveablePlatform* moveable;
-	Crabmeat** crabs;
-	Beebot** bees;
-	Motobug** MotoBugs;
-	Batbrain** bats;
+
+	int crabCount;
+	int crab_start;
+	int crab_end;
+	Crabmeat* crab;
+
+	int beeCount;
+	int bee_start;
+	int bee_end;
+	bool* occupiedColumns;
+	Beebot* beebot;
+
+	int motobugCount;
+	int motobug_start;
+	int motobug_end;
+	Motobug* motobugs;
+
+
+	int batbrainCount;
+	int batStart;
+	int batEnd;
+	Batbrain* bats;
+
+
+	Enemy** enemies;
+	int enemyCount;
+	int j_start;
+	int cell_size;
+
 public:
 	Level3(Audio* ad)
 	{
 		this->audio = ad;
+		cell_size = 64;
 		backGround.loadFromFile("Data/lvl3Bg.jpeg");
 		backGroundSprite.setTexture(backGround);
 		unsigned int bgWidth = 626;
@@ -49,22 +75,88 @@ public:
 		}
 		designlvl("lvl3.txt");
 
-		crabs = new Crabmeat * [5];
-		bees = new Beebot * [5];	
-		MotoBugs = new Motobug * [5];
-		bats = new Batbrain * [5];
-		for (int i = 0; i < 5; i++)
-		{
-			crabs[i] = new Crabmeat();
-			bees[i] = new Beebot();
-			MotoBugs[i] = new Motobug();
-			bats[i] = new Batbrain();
+		enemyCount = 0;
+		TotalEnemyCount = 18;
+		enemies = new Enemy * [TotalEnemyCount];
+
+		j_start = 5;
+		crab_start = 5;
+		crab_end = 9;
+		crabCount = 5;
+
+		for (int i = 0; i < crabCount; i++) {
+
+			crab = new Crabmeat();
+			crab->setAudio(audio);
+
+			if (crab->getCrabCoordinates(lvl, height, width, crab_start, crab_end, j_start))
+			{
+				crab->move_crabs(cell_size);
+				enemies[enemyCount++] = crab;
+			}
 		}
+
+
+		j_start = 7;
+		bee_start = 5;
+		bee_end = 8;
+		beeCount = 5;
+		occupiedColumns = new bool[width]();
+
+		for (int i = 0; i < beeCount; i++) {
+
+			beebot = new Beebot();
+			beebot->setAudio(audio);
+
+			if (beebot->getBeebotCoordinates(lvl, height, width, bee_start, bee_end, j_start, occupiedColumns))
+			{
+				beebot->move_beebots(cell_size);
+				enemies[enemyCount++] = beebot;
+			}
+		}
+
+
+		j_start = 0;
+		motobug_start = 8;
+		motobug_end = 12;
+		motobugCount = 4;
+
+
+		for (int i = 0; i < motobugCount; i++) {
+
+			motobugs = new Motobug();
+			motobugs->setAudio(audio);
+
+			if (motobugs->getMotobugCoordinates(lvl, height, width, motobug_start, motobug_end, j_start))
+			{
+				motobugs->move_motobugs(cell_size);
+				enemies[enemyCount++] = motobugs;
+			}
+
+		}
+
+		batbrainCount = 4;
+		batStart = 0;
+		batEnd = 0;
+
+		for (int i = 0; i < batbrainCount; ++i) {
+
+			bats = new Batbrain();
+			bats->setAudio(audio);
+
+			if (bats->getBatbrainCoordinates(lvl, height, width, batStart, batEnd, cell_size)) {
+				enemies[enemyCount++] = bats;
+			}
+
+		}
+
+
 		falling = new FallingPlatform * [fallingCount = 15];
 		for (int i = 0, f = 64; i < fallingCount; i++, f++)
 			falling[i] = new FallingPlatform(64 * f, 350);
 		moveable = new MoveablePlatform(0, 0, 0, 0);
 		levelEnd = (295 - 5) * 64;
+		levelTimer = 150;
 	}
 	char getMapValues(int val)
 	{
@@ -130,15 +222,24 @@ public:
 		audio->playLevelMusicByIndex(audio->getLevel3Music());
 	}
 
-	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD&,bool&)
+	void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool& gameOver) override
+	{
+		for (int i = 0; i < enemyCount; i++)
+		{
+			if (!enemies[i]->alive() && enemies[i]->deathDone())
+				continue;
+
+			enemies[i]->update(lvl, player, cell_size, hasKnockedBack, tempVelocity, onGround, indexAnimation, hud, gameOver);
+
+			enemies[i]->drawExtra(window, offset_x);
+		}
+	}
+	void drawEnemies(RenderWindow& window, float offset_x) override
 	{
 
-	}
-	void drawEnemies(RenderWindow& window, float offset_x)
-	{
-		for (int i = 0; i < enemyCount; ++i)
+		for (int i = 0; i < enemyCount; i++)
 		{
-			if (!enemies[i]->deathDone() && enemies[i]->deathDone())
+			if (!enemies[i]->deathDone())
 				enemies[i]->draw(window, offset_x);
 		}
 	}

@@ -398,6 +398,11 @@ void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 		}
 
 		hud.getLives()--;
+
+		if (audio) {
+			audio->playSound(audio->getHurt());
+		}
+
 		onGround = false;
 
 		if (hud.getLives() <= 0)
@@ -420,14 +425,20 @@ void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 				deathClock.restart();
 				deathFrameClock.restart();
 				hud.getScore() += 150;
+				if (audio) {
+					audio->playSound(audio->getScoreAdd());
+				}
 			}
-
 		}
 
 		else 
 		{
 
 			hud.getLives()--;
+
+			if (audio) {
+				audio->playSound(audio->getHurt());
+			}
 
 			if (hud.getLives() <= 0) 
 				gameOver = true;

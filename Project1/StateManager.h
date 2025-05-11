@@ -29,15 +29,18 @@ class StateManager
 	Audio audio;
 	Menu *menu;
 	Game* game;
+	Clock leaderBoardClk;
 	int stateIndex;
 	RenderWindow& window;
 	Leaderboard* leaderboard;
 	int screen_x ;
 	int screen_y ;
 
+	bool showLeaderBoard;
 public:
 	StateManager(Leaderboard* leaderboard, RenderWindow& w) :window(w)
 	{
+		showLeaderBoard = false;
 		this->leaderboard = leaderboard;
 		audio.loadAllSounds();
 		//window = w;
@@ -87,17 +90,40 @@ public:
 			window.clear();
 			if (!stateIndex)
 			{
+				if (audio.getCurrentlyPlayingMusic() != audio.getBossMusic()) {
+					audio.playLevelMusicByIndex(audio.getBossMusic());
+				}
+
 				menu->work(window,event,game);
 				if (menu->isGameStateActive())
 				{
 					stateIndex = 1;
+					audio.playLevelMusicByIndex(game->getLevelIndex());
 				}
 			}
 			//cout << "State Index : " << stateIndex << endl;
 			if (stateIndex == 1)
 			{
-				game->play(window);
+				if (game->play(window))
+				{
+					showLeaderBoard = true;
+					stateIndex = 2;
+					leaderBoardClk.restart();
+					window.clear();
+
+				}
 			}
+			if (stateIndex == 2)
+				if (leaderBoardClk.getElapsedTime().asMilliseconds() < 7000)
+				{
+					leaderboard->draw(window);
+				}
+				else
+				{
+					leaderboard->addNewScore(menu->getPlayerName(), game->getHUD().getScore());
+					game->saveGame(menu->getRefToPlayerName());
+					window.close();
+				}
 			window.display();
 		}
 

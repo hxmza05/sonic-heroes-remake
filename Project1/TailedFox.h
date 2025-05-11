@@ -164,8 +164,17 @@ public:
 	{
 		if (spaceCount > 9 && ((!restarted) || (restarted && fliyingClock.getElapsedTime().asSeconds() < flyingTime)) )
 		{
-			if (audio && !audio->isSoundPlaying(audio->getFlying())) {
-				audio->playSound(audio->getFlying());
+
+			if (audio) {
+
+				if (audio->isSoundPlaying(audio->getJump())) {
+					audio->stopSound(audio->getJump());
+				}
+
+				if (!audio->isSoundPlaying(audio->getFlying())) {
+					audio->stopSound(audio->getJump());
+					audio->playSound(audio->getFlying());
+				}
 			}
 
 			hasCooleddown = false;

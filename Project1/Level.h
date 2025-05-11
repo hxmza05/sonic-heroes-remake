@@ -19,6 +19,7 @@ using namespace sf;
 class Level
 {
 protected:
+	double levelTimer;
 	int fallingCount;
 	FallingPlatform** falling;
 	float levelEnd;
@@ -143,6 +144,10 @@ public:
 				enemies[i]->setAudio(audio);
 			}
 		}
+	}
+	double getTimer()
+	{
+		return levelTimer;
 	}
 	 FallingPlatform** getFalling()
 	{
@@ -343,7 +348,6 @@ void Level::placeExtraLivesFromMap() {
 		}
 	}
 }
-
 
 void Level::placeBoostsFromMap() {
 

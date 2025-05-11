@@ -151,7 +151,7 @@ public:
 
         }
 
-
+        levelTimer = 90;
         falling = new FallingPlatform * [8];
         for (int i = 0, f = 32; i < 8; i++, f++)
             falling[i] = new FallingPlatform(64 * f, 500);
@@ -231,7 +231,7 @@ public:
 
     void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool& gameOver) override
     {
-        for (int i = 0; i < enemyCount; ++i)
+        for (int i = 0; i < enemyCount; i++)
         {
             if (!enemies[i]->alive() && enemies[i]->deathDone())
                 continue;
@@ -244,7 +244,7 @@ public:
 
     void drawEnemies(RenderWindow& window, float offset_x) override
     {
-        for (int i = 0; i < enemyCount; ++i)
+        for (int i = 0; i < enemyCount; i++)
         {
             if (!enemies[i]->deathDone())
                 enemies[i]->draw(window, offset_x);

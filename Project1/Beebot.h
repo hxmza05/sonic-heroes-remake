@@ -185,7 +185,17 @@ void Beebot::update(char** lvl, Player& player, int cell_size, bool& hasKnockedB
 
 	if (handleProjectilesCollision(lvl, cell_size, player.getx(), player.gety(), player.getPwidth(), player.getPheight(), hasKnockedBack, tempVelocityY, 14, 200)) 
 	{
+
+		if (audio) {
+			audio->playSound(audio->getExplosion());
+		}
+
 		hud.getLives()--;
+
+		if (audio) {
+			audio->playSound(audio->getHurt());
+		}
+
 		onGround = false;
 
 		if (hud.getLives() <= 0)
@@ -210,13 +220,23 @@ void Beebot::update(char** lvl, Player& player, int cell_size, bool& hasKnockedB
 					deathClock.restart();
 					deathFrameClock.restart();
 					hud.getScore() += 200;
+					if (audio) {
+						audio->playSound(audio->getScoreAdd());
+					}
 				}
 			}
 
 			else {
 
 				hud.getLives()--;
-				if (hud.getLives() <= 0) gameOver = true;
+
+				if (audio) {
+					audio->playSound(audio->getHurt());
+				}
+
+				if (hud.getLives() <= 0) 
+					gameOver = true;
+
 				hasKnockedBack = true;
 				tempVelocityY = -7;
 			}
@@ -295,6 +315,7 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 							projectiles = new Projectile();
 
 						projectiles->setPosition(beeCenterX, y + getbeeHeight() / 2.0f, projectileX, projectileY, 4.0f);
+
 						if (audio) {
 							audio->playSound(audio->getShot());
 						}
