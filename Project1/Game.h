@@ -407,8 +407,8 @@ public:
             window.draw(gameover);
         }
 
-        /* draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
-         draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
+         draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
+         draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);
     }
    
     void saveGame(string&playerName)

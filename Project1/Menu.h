@@ -13,11 +13,11 @@ class Menu
 {
 
 private:
-    static const int totalMenuOptions = 7;
-    const char* menuOptions[totalMenuOptions] = { "New Game", "Load Game", "Continue", "Options", "Leader Board", "Difficulty", "Exit" };
+    static const int totalMenuOptions = 6;
+    const char* menuOptions[totalMenuOptions] = { "New Game", "Load Game", "Continue", "Options", "Leader Board", "Exit" };
 
-    static const int totalMenuOptions2 = 5;
-    const char* menuOptions2[totalMenuOptions2] = { "Tutorial", "Controls", "Credits", "", "" };
+    static const int totalMenuOptions2 = 6;
+    const char* menuOptions2[totalMenuOptions2] = { "Difficulty", "Tutorial", "Controls", "", "", "Credits" };
     Text text2[totalMenuOptions2];
 
     int horizontal_x;
@@ -29,7 +29,6 @@ private:
     int lastCurrentMenuOption;
 
     Text text[totalMenuOptions];
-    Text title;
     Font font;
 
     bool arrowUp;
@@ -112,7 +111,7 @@ private:
     bool gameLoaded;
 
 public:
-    Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : title("Sonic Classic Heroes", font, 64), leaderboard(lb)
+    Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : leaderboard(lb)
     {
         gameLoaded = false;
         selectedOption = 0;
@@ -156,8 +155,6 @@ public:
         }
 
         font.loadFromFile("Fonts/scoreFont.ttf");
-        title.setFillColor(Color::Yellow);
-        title.setPosition(352.5f, 80);
 
         promptText.setFont(font);
         promptText.setString("Enter your Name:");
@@ -223,32 +220,36 @@ public:
 
         for (int i = 0; i < totalMenuOptions; i++)
         {
-            Text temp(menuOptions[i], font, 42);
+            Text temp(menuOptions[i], font, 60);
 
-            float y = float(screenHeigth / 3.6) + float(i * screenHeigth / 12);
+            float startY = float(screenHeigth / 2.4f);  
+            float y = startY + float(i * screenHeigth / 12);
+
             FloatRect bounds = temp.getGlobalBounds();
             float x = (float(screenWidth) / 2) - bounds.width / 2;
 
             temp.setPosition(x, y);
             text[i] = temp;
 
-            text[i].setFillColor(i == selectedOption ? Color::White : Color::Yellow);
+            text[i].setFillColor(i == selectedOption ? Color::Yellow : Color::Red); 
         }
 
         for (int i = 0; i < totalMenuOptions2; i++)
         {
-
             std::string label = menuOptions2[i];
-            Text temp(label, font, 48);
+            Text temp(label, font, 52);
             FloatRect bounds = temp.getGlobalBounds();
             float x = float(screenWidth) / 2 - bounds.width / 2;
-            float y = float(screenHeigth / 3.6) + float(i * screenHeigth / 12);
+
+            // OLD: float y = float(screenHeigth / 3.6) + float(i * screenHeigth / 12);
+            float startY = float(screenHeigth / 2.4f); 
+            float y = startY + float(i * screenHeigth / 12);
 
             temp.setPosition(x, y);
             text2[i] = temp;
-
-            text2[i].setFillColor(i == currentMenuOption ? Color::White : Color::Yellow);
+            text2[i].setFillColor(i == currentMenuOption ? Color::Yellow : Color::Red);
         }
+
 
         menuOptions2[3] = "SFX: 50";
         menuOptions2[4] = "Music: 50";
@@ -409,10 +410,6 @@ public:
                     }
                     else if (selectedOption == 5)
                     {
-                        // Difficult
-                    }
-                    else if (selectedOption == 6)
-                    {
                         window.close();
                     }
                     enter = true;
@@ -459,10 +456,6 @@ public:
                         }
 
                         else if (i == 5)
-                        {
-                        }
-
-                        else if (i == 6)
                             window.close();
                     }
                 }
@@ -476,11 +469,11 @@ public:
 
             for (int i = 0; i < totalMenuOptions; i++)
             {
-                text[i].setFillColor(i == selectedOption ? Color::Yellow : Color::White);
+                text[i].setFillColor(i == selectedOption ? Color::Red : Color::Yellow);
             }
 
             Vector2f finalPos = text[selectedOption].getPosition();
-            selector.setPosition(finalPos.x - 60, finalPos.y + 12);
+            selector.setPosition(finalPos.x - 50, finalPos.y + 20);
         }
 
         else if (menuState && currentMenuLevel == 1)
@@ -579,6 +572,9 @@ public:
                     else if (currentMenuOption == 2)
                     {
                     }
+                    else if (currentMenuOption == 5)
+                    {
+                    }
 
                     enter = true;
                 }
@@ -613,6 +609,9 @@ public:
                         else if (i == 2)
                         {
                         }
+                        else if (i == 5)
+                        {
+                        }
                     }
                 }
             }
@@ -625,7 +624,7 @@ public:
 
             for (int i = 0; i < totalMenuOptions2; i++)
             {
-                text2[i].setFillColor(i == currentMenuOption ? Color::Yellow : Color::White);
+                text2[i].setFillColor(i == currentMenuOption ? Color::Red : Color::Yellow);
             }
 
             text2[3].setString("SFX: " + std::to_string(sfxVolume));
@@ -638,7 +637,7 @@ public:
             }
 
             Vector2f finalPos = text2[currentMenuOption].getPosition();
-            selector.setPosition(finalPos.x - 60, finalPos.y + 12);
+            selector.setPosition(finalPos.x - 50, finalPos.y + 20);
         }
 
         else if (leaderboardState)
@@ -764,7 +763,6 @@ public:
         else if (menuState && currentMenuLevel == 0)
         {
             window.draw(backgroundSprite);
-            window.draw(title);
             window.draw(selector);
             for (int i = 0; i < totalMenuOptions; i++)
             {
@@ -775,7 +773,6 @@ public:
         else if (menuState && currentMenuLevel == 1)
         {
             window.draw(backgroundSprite);
-            window.draw(title);
             window.draw(selector);
             for (int i = 0; i < totalMenuOptions2; i++)
             {

@@ -55,6 +55,13 @@ public:
 		totalAnimations = 5;
 		indexAnimation = 0;
 
+		enemyHeight = crabHeight;
+		enemyWidth = crabWidth;
+		hit_box_factor_x = 2;  
+		hit_box_factor_y = 2;
+		hitBox_x = x + hit_box_factor_x;
+		hitBox_y = y + hit_box_factor_y;
+
 		projectile = nullptr;
 		isLockedOn = false;
 		canLock = true;
@@ -150,17 +157,16 @@ public:
 	}
 
 
-
-
 	bool handleProjectilesCollision(char** lvl, int cell_size, float player_x, float player_y, int player_width, int player_height, bool& hasKnockedBack, float& tempVelocityY,int height,int width);
 	void movement(char** lvl, Player& player, int cell_size);
 	void move_crabs(const int cell_size);
 	bool getProjectileActive();
-	bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight);
+	bool PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight);
 	bool checkCollisionWithPlayer(Player& player);
 	void update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver) override;
 	void drawExtra(RenderWindow& window, float offset_x) override;
 	bool getCrabCoordinates(char** lvl, int height, int width, int y_start, int y_end, int& j_start);
+
 
 };
 
@@ -356,6 +362,8 @@ void Crabmeat::movement(char** lvl, Player& player, int cell_size)
 
 	sprite.setPosition(x, y);
 
+	updateHitbox();
+
 	if (projectile && projectile->Active()) {
 		projectile->moveCrabProjectile();
 	}
@@ -386,7 +394,7 @@ void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 			gameOver = true;
 	}
 
-	if (!hasKnockedBack && checkCollisionWithPlayer(player)) {
+	if (!hasKnockedBack && PlayerEnemyCollision(player, crabWidth, crabHeight)) {
 
 		if (indexAnimation == UPR || indexAnimation == UPL) {
 
@@ -404,8 +412,12 @@ void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 		}
 
 		else {
+
 			hud.getLives()--;
-			if (hud.getLives() <= 0) gameOver = true;
+
+			if (hud.getLives() <= 0) 
+				gameOver = true;
+
 			hasKnockedBack = true;
 			tempVelocityY = -7;
 		}
@@ -460,9 +472,9 @@ bool Crabmeat::handleProjectilesCollision(char** lvl, int cell_size, float playe
 }
 
 
-bool Crabmeat::PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight)
+bool Crabmeat::PlayerCrabCollision(float player_x, float player_y, int Pwidth, int Pheight)
 {
-	return (player_x + Pwidth > enemy_x && player_x < enemy_x + enemyWidth && player_y + Pheight > enemy_y && player_y < enemy_y + enemyHeight);
+	return (player_x + Pwidth > x + hit_box_factor_x && player_x < x + hit_box_factor_x + (enemyWidth - 2 * hit_box_factor_x) && player_y + Pheight > y + hit_box_factor_y && player_y < y + hit_box_factor_y + (enemyHeight - 2 * hit_box_factor_y));
 }
 
 bool Crabmeat::checkCollisionWithPlayer(Player& player)
@@ -472,7 +484,7 @@ bool Crabmeat::checkCollisionWithPlayer(Player& player)
 		return false;
 	}
 
-	if (PlayerCrabCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, crabWidth, crabHeight)) {
+	if (PlayerEnemyCollision(player, crabWidth, crabHeight)) {
 
 		float bottom_of_Player = player.gety() + player.getPheight();
 		float top_of_Crab = y;

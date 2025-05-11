@@ -18,6 +18,10 @@ protected:
 	bool Alive, Moving, Attack;
 	float Start, End;
 
+	float hitBox_x, hitBox_y;
+	float enemyHeight, enemyWidth;
+	int hit_box_factor_x, hit_box_factor_y;
+
 	Texture texture;
 	Sprite sprite;
 	Animation** states;
@@ -34,6 +38,8 @@ protected:
 	void loadDeathAnimation(const string& filepath, int frameWidth, int frameHeight, float scaleX, float scaleY);
 	bool handleDeathAnimation();
 
+	RectangleShape hitBoxShape;  
+
 
 public:
 
@@ -43,10 +49,20 @@ public:
 		hp = 0;
 		Alive = false, Moving = false;
 		Start = 0, End = 0;
+		enemyHeight = 0, enemyWidth = 0;
+		hit_box_factor_x = 5*2.5f, hit_box_factor_y = 5*2.5f;
+		hitBox_x = 0, hitBox_y = 0;
 		indexAnimation = 0, totalAnimations = 0;	
 		isDying = false, deathFinished = false;    
 		deathClock.restart(), deathFrameClock.restart();        
 		deathTexture = nullptr;
+
+		hitBoxShape.setFillColor(Color::Transparent);
+		hitBoxShape.setOutlineColor(Color::Red);
+		hitBoxShape.setOutlineThickness(1.f);
+		auto width = 1.0f;
+		auto height = 1.0f;
+		hitBoxShape.setSize({ width, height });
 
 	}
 
@@ -117,9 +133,35 @@ public:
 		return !(lvl[(int)(enemy_y) / cell_size][(int)(enemy_x) / cell_size] == 's');
 	}
 
+	bool PlayerEnemyCollision(Player& player, float enemyWidth, float enemyHeight)
+	{
+		return (player.getx() + player.getPwidth() > hitBox_x && player.getx() < hitBox_x + (enemyWidth - 2 * hit_box_factor_x) && player.gety() + player.getPheight() > hitBox_y && player.gety() < hitBox_y + (enemyHeight - 2 * hit_box_factor_y));
+	}
+
 	virtual void update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver) = 0;
 	virtual void drawExtra(RenderWindow& window, float offset_x) {}
 	virtual ~Enemy() {}
+
+
+
+
+	void drawHitBox(RenderWindow& window, float offset_x) 
+	{
+		hitBoxShape.setPosition(hitBox_x - offset_x, hitBox_y);
+		window.draw(hitBoxShape);
+	}
+
+	void updateHitbox() 
+	{
+		hitBox_x = x + hit_box_factor_x;
+		hitBox_y = y + hit_box_factor_y;
+
+		//float w = enemyWidth - 2 * hit_box_factor_x;
+		//float h = enemyHeight - 2 * hit_box_factor_y;
+		//hitBoxShape.setSize(FloatRect(0, 0, w, h).getSize());  
+		//hitBoxShape.setPosition(hitBox_x, hitBox_y);
+	}
+
 };
 
 

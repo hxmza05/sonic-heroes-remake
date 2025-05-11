@@ -51,7 +51,7 @@ public:
 
 	Eggstinger() : stingerHeight(98), stingerWidth(120) {
 
-		this->hp = 15;
+		this->hp = 5;
 		this->speed = 3.0;
 		Alive = true;
         right = false;
@@ -85,6 +85,12 @@ public:
         spikeHoldDuration = 0.2f;
         spikeHold = false;
 
+        enemyHeight = stingerHeight;
+        enemyWidth = stingerWidth;
+        hit_box_factor_x = 8.0;
+        hit_box_factor_y = 8.0;
+        hitBox_x = x + hit_box_factor_x;
+        hitBox_y = y + hit_box_factor_y;
 
         stingerspikeTexture.loadFromFile("Data/spike.png");
         stingerspikeSprite.setTexture(stingerspikeTexture);
@@ -140,7 +146,6 @@ public:
 
 
 
-
 void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
 {
 
@@ -151,9 +156,9 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
 
     if (!hasKnockedBack && playerSpikeCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight()))
     {
-        //hud.getLives()--;
-        //hasKnockedBack = true;
-        //tempVelocityY = -7;
+        hud.getLives()--;
+        hasKnockedBack = true;
+        tempVelocityY = -4;
 
         // Player damage animation 
         if (hud.getLives() <= 0)
@@ -162,7 +167,7 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
         return; 
     }
 
-    if (!hasKnockedBack && PlayerStingerCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, stingerWidth, stingerHeight))
+    if (!hasKnockedBack && PlayerEnemyCollision(player, getStingerWidth(), getStingerHeight()))
     {
         if (indexAnimation == UPR || indexAnimation == UPL)
         {
@@ -170,13 +175,18 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
                 Alive = false;
             else
                 hp--;
+
+            hasKnockedBack = true;
+            tempVelocityY = -2;
+
+            //cout << "Stinger hp: " << hp <<endl;
         }
 
         else
         {
-            //hud.getLives()--;
-            //hasKnockedBack = true;
-            //tempVelocityY = -7;
+            hud.getLives()--;
+            hasKnockedBack = true;
+            tempVelocityY = -7;
 
             // Player damage animation 
 
@@ -372,8 +382,21 @@ void Eggstinger::movement(float player_x, float player_y, float player_width, ch
         sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
     }
 
-    sprite.setPosition(x, y);  
+
+    if (right) 
+    {
+        sprite.setScale(-(120.0f / 71.0f), 97.6f / 58.0f);
+        sprite.setOrigin(71.f, 0);
+    }
+    else 
+    {
+        sprite.setScale(120.0f / 71.0f, 97.6f / 58.0f);
+        sprite.setOrigin(0, 0);
+    }
+
+    sprite.setPosition(x, y);
+
+    updateHitbox();
 
 }
-
 

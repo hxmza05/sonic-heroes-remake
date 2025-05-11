@@ -20,6 +20,8 @@ class BossLevel : public Level
 	int TotalEnemyCount;
 	int cell_size;
 
+	float playerDies;
+
 	Eggstinger* stinger;
 
 public:
@@ -66,6 +68,7 @@ public:
 		moveable = nullptr;
 		falling = nullptr;
 
+		playerDies = (height - 4) * cell_size;
 
 		designlvl("bosslvl.txt");
 
@@ -137,6 +140,11 @@ public:
 
 			enemies[i]->drawExtra(window, offset_x);
 		}
+
+		if (player.gety() > playerDies)
+		{
+			gameOver = true;
+		}
 	}
 
 	void drawEnemies(RenderWindow& window, float offset_x) override
@@ -145,6 +153,9 @@ public:
 		{		
 			if (enemies[i]->alive())
 				enemies[i]->draw(window, offset_x);
+
+			//enemies[i]->drawHitBox(window, offset_x);
+
 		}
 	}
 
