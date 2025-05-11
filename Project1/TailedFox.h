@@ -2,6 +2,7 @@
 //#include"Player.h"
 using namespace sf;
 
+#define AJUMP 0
 
 class TailedFox :public Player
 {
@@ -140,6 +141,8 @@ public:
 			states[STILL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
 			states[STILL]->getSprites()[i].setScale(2, 2);
 		}
+		
+
 		delayInFollow = 30;
 	}
 	virtual void followLeader(const int const** pathToFollow)
@@ -161,6 +164,7 @@ public:
 		else
 			if(!spacePressed)
 			{
+				//soundEffects[AJUMP].;
 				velocityY = -19.5;
 				onGround = false;
 				indexAnimation = UPR;

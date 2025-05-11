@@ -22,6 +22,10 @@ using namespace sf;
 #define GLIDEL 13
 #define GLIDER 14
 
+
+#define AJUMP 0
+//#define 
+
 class Player
 {
 	int callCount;
@@ -71,6 +75,7 @@ protected:
 	float scale_x = 2.5;
 	float scale_y = 2.5;
 	Animation** states;
+
 	int indexAnimation;
 	int totalAnimations;
 	int* trail;
