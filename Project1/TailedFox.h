@@ -6,6 +6,11 @@ using namespace sf;
 
 class TailedFox :public Player
 {
+	//Clock coolDown;
+	bool hasCooleddown;
+	double flyingTime;
+	Clock fliyingClock;
+	bool restarted;
 	Texture jogLeft;
 	Texture jogRight;
 	Texture upLeft;
@@ -23,6 +28,7 @@ class TailedFox :public Player
 public:
 	TailedFox()
 	{
+		hasCooleddown = false;
 		states = new Animation * [13];
 		indexAnimation = 0;
 		totalAnimations = 13;
@@ -141,8 +147,8 @@ public:
 			states[STILL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
 			states[STILL]->getSprites()[i].setScale(2, 2);
 		}
-		
-
+		restarted = false;
+		flyingTime = 7;
 		delayInFollow = 30;
 	}
 	virtual void followLeader(const int const** pathToFollow)
@@ -153,23 +159,40 @@ public:
 	{
 
 	}
-	virtual void moveUp(bool spacePressed,int spaceCount)
+	virtual void moveUp(bool spacePressed, int& spaceCount)
 	{
-		if (spaceCount>9)
+		if (spaceCount > 9 && ((!restarted) || (restarted && fliyingClock.getElapsedTime().asSeconds() < flyingTime)) )
 		{
-;			velocityY = -2;
+			hasCooleddown = false;
+
+			if (y - 2 >= 64)
+				velocityY = -2;
+			else velocityY = 0.01;
+
 			indexAnimation = JUMPR;
 			onGround = false;
-		} 
-		else
-			if(!spacePressed)
+
+			if (!restarted)
 			{
-				//soundEffects[AJUMP].;
-				velocityY = -19.5;
-				onGround = false;
-				indexAnimation = UPR;
+				fliyingClock.restart();
+				restarted = true;
 			}
+		}
+		else if (fliyingClock.getElapsedTime().asSeconds() >= flyingTime && restarted && spaceCount > 9)
+		{
+			spaceCount = 0;
+			return;
+		}
+
+		if (!spacePressed)
+		{
+			velocityY = -19.5;
+			onGround = false;
+			indexAnimation = UPR;
+			restarted = false;
+		}
 	}
+
 	/*void useSpecialAbilty(char** lvl)
 	{
 	}*/

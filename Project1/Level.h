@@ -137,7 +137,7 @@ public:
 	{
 		return falling;
 	}
-	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD& hud,bool& ) = 0;
+	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool&) = 0;
 	virtual void drawEnemies(RenderWindow& window, float offset_x) = 0;
 
 	bool hasLevelEnded(float x)

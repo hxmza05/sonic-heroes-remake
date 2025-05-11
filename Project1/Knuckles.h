@@ -31,7 +31,7 @@ public:
 	Knuckles()
 	{
 		 GlideCount = 0;
-
+		 idxPl = 2;
 		//isGliding = false;
 		states = new Animation * [15];
 		indexAnimation = 0;
@@ -186,7 +186,7 @@ public:
 			states[BREAKR]->getSprites()[i].setScale(2, 2);
 		}
 
-		
+		invincible = false;
 		coolDown.restart();
 		delayInFollow = 30;
 	}
@@ -195,7 +195,7 @@ public:
 	{
 		
 	}
-	virtual void moveUp(bool spacePressed,int unusedHere)
+	virtual void moveUp(bool spacePressed,int& unusedHere)
 	{
 		if(!spacePressed)
 		{

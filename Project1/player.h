@@ -79,22 +79,26 @@ protected:
 	int indexAnimation;
 	int totalAnimations;
 	int* trail;
-	virtual void followLeader(const int const ** pathToFollow) = 0;
+	virtual void followLeader(const int const** pathToFollow) = 0;
 	int delayInFollow;
 	bool hasStartedFollowing;
 	bool isEven;
 	float dummyGravity;
 	bool figuringOut;
 	bool tempOnground;
+	bool invincible;
+	double flyingTime;
+	int idxPl;
 public:
 	Player()
 	{
+		invincible = false;
 		callCount = 0;
 		tempOnground = true;
 		tailed_x = -999;
 		tailed_y = -999;
 		haveBeenPutDown.restart();
-		 direction = 1;
+		direction = 1;
 
 		figuringOut = false;
 		dummyGravity = 0.8;
@@ -135,6 +139,26 @@ public:
 		hitBoxTex.loadFromFile("Data/hitBox.png");
 		hitBoxTexJump.loadFromFile("Data/hitBoxJump.png");
 		HitBoxSprite.setScale(2.5, 2.5);
+	}
+	int getIdxPl()
+	{
+			return idxPl;
+}
+	bool getInvincible()
+	{
+		return invincible;
+	}
+	double getFlyingTime()
+	{
+		return flyingTime;
+	}
+	void setFlyingTime(double b)
+	{
+		flyingTime = b;
+	}
+	void setInvincible(bool b)
+	{
+		invincible = b;
 	}
 	void decelerate(char** lvl, int w,float friction);
 	float& getx()
@@ -287,6 +311,14 @@ public:
 			return;
 		}
 	}
+	void setAccelration(float a)
+	{
+		acceleration = a;
+	}
+	void setVelcotiyX(float a)
+	{
+		velocityX = a;
+	}
 	void decelerateRight(char** lvl, int width, float friction);
 	void player_dummy_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed,int,int);
 	void autoMove(int x_coord,int y_coord,char**,int h,int w);
@@ -295,7 +327,7 @@ public:
 	void playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, const int cell_size,bool& spacePressed,int,int,bool&);
 	void moveLeft(char**lvl,int w,float friction);
 	void moveRight(char** llvl,int w,float friction);
-	virtual void moveUp(bool,int) = 0;
+	virtual void moveUp(bool,int&) = 0;
 	virtual void useSpecialAbilty(char**,int h,int w) = 0;
 	void checkDelayNow(int idx);
 	bool checkFeet(char** lvl,int h,int w);
