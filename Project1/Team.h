@@ -133,7 +133,7 @@ public:
                     float dummy = 0;
                     float dummy2 = 0;
                     bool dummybool = true;
-                    for (int j = 0, h = team[1]->getPheight(); j < 3; j += 2, h += 40)
+                    for (int j = 0, h = team[1]->getPheight(); j < 3; j += 2, h += 64)
                     {
                         if (team[j]->getAnimationIndex() == JUMPL || team[j]->getAnimationIndex() == JUMPR || team[j]->getAnimationIndex() == GLIDEL || team[j]->getAnimationIndex() == GLIDER)
                         {
@@ -249,7 +249,7 @@ public:
             //team[j]->getStates()[GLIDER][0].RunAnimation();
         }
         team[j]->getx() = team[1]->getx();
-        team[j]->gety() = team[1]->gety() + h;
+        team[j]->gety() = team[1]->gety() + h + 5;
     }
     /* bool getReset()
      {

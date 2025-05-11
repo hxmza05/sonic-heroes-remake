@@ -18,13 +18,16 @@ class HUD
 	Text label;
 	Sprite hudSprite;
 
-
+	Clock makeInvincible;
+	bool invincibleRestarted;
 	int prevScore;
 	Clock scoreScaleClock;
 	float scoreTextScale;
 public:
 	HUD()
 	{
+		invincibleRestarted = false;;
+
 		score = 0;
 		ringsCollected = 0;
 
@@ -47,10 +50,15 @@ public:
 		prevScore = 0;
 		scoreScaleClock.restart();
 		scoreTextScale = 1.f;
-
-
 	}
-
+	Clock& getInvincibleClk()
+	{
+		return makeInvincible;
+	}
+	void resetInvincibleClock()
+	{
+		makeInvincible.restart();
+	}
 	int&getScore()
 	{
 		return score;
@@ -67,22 +75,15 @@ public:
 	{
 		lives = n;
 	}
-
 	void updateTime() {
 		levelTime = timer.getElapsedTime().asSeconds();
 	}
-
 	void resetTimer() {
 		timer.restart();
 		levelTime = 0.f;
 	}
-
 	void draw(RenderWindow& window);
-
 };
-
-
-
 void HUD::draw(RenderWindow& window)
 {
 	updateTime();

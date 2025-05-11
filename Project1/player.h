@@ -21,7 +21,7 @@ using namespace sf;
 #define STILL 12
 #define GLIDEL 13
 #define GLIDER 14
-
+#define HANG
 
 #define AJUMP 0
 //#define 

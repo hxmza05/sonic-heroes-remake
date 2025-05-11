@@ -147,7 +147,7 @@ public:
 
         }
 
-
+        levelTimer = 90;
         falling = new FallingPlatform * [8];
         for (int i = 0, f = 32; i < 8; i++, f++)
             falling[i] = new FallingPlatform(64 * f, 500);

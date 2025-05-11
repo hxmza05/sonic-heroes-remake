@@ -4,7 +4,8 @@
 using namespace sf;
 #define BREAKR 15
 #define BREAKL 16
-
+#define GLIDEL 13
+#define GLIDER 14
 #define AJUMP 0
 
 class Knuckles :public Player
@@ -152,21 +153,21 @@ public:
 			states[STILL]->getSprites()[i].setScale(2, 2);
 		}
 
-		glideLeft.loadFromFile("Data/KEdgeL.png");
-		states[GLIDEL] = new Animation(6);
-		for (int i = 0, width = 0;i < 6;i++, width += 49)
+		glideLeft.loadFromFile("Data/KHang.png");
+		states[GLIDEL] = new Animation(8);
+		for (int i = 0, width = 0;i < 8;i++, width += 49)
 		{
-			states[GLIDEL]->getSprites()[i].setTexture(edgeLeft);
-			states[GLIDEL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[GLIDEL]->getSprites()[i].setTexture(glideLeft);
+			states[GLIDEL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49, 50));
 			states[GLIDEL]->getSprites()[i].setScale(2, 2);
 
 		}
-		glideRight.loadFromFile("Data/KEdgeR.png");
-		states[GLIDER] = new Animation(6);
-		for (int i = 0, width = 0;i < 6;i++, width += 49)
+		glideRight.loadFromFile("Data/KHang.png");
+		states[GLIDER] = new Animation(8);
+		for (int i = 0, width = 0;i < 8;i++, width += 49)
 		{
-			states[GLIDER]->getSprites()[i].setTexture(edgeRight);
-			states[GLIDER]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[GLIDER]->getSprites()[i].setTexture(glideRight);
+			states[GLIDER]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49, 50));
 			states[GLIDER]->getSprites()[i].setScale(2, 2);
 		}
 		breakL.loadFromFile("Data/KBreakL.png");

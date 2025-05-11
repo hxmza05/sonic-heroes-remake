@@ -43,6 +43,7 @@ class Level2 : public Level
 public:
 	Level2() 
 	{
+        levelTimer = 120;
         backGround.loadFromFile("Data/bgLvl2O.jpg");
         backGroundSprite.setTexture(backGround);
         unsigned int bgWidth = backGround.getSize().x;

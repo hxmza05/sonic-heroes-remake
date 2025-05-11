@@ -64,6 +64,7 @@ public:
 			falling[i] = new FallingPlatform(64 * f, 350);
 		moveable = new MoveablePlatform(0, 0, 0, 0);
 		levelEnd = (295 - 5) * 64;
+		levelTimer = 150;
 	}
 	char getMapValues(int val)
 	{
