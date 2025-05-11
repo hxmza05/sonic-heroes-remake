@@ -285,8 +285,7 @@ void Player::playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, 
 }
 void Player::decelerate(char** lvl, int width,float friction)
 {
-    /*cout << "\n\nIn decelration : \n friction : "<<friction<<endl;
-    cout << "Vecloity before frition : " << velocityX;*/
+
     int tempAnimationIndex = STILL;
     if (velocityX > 0)
     {

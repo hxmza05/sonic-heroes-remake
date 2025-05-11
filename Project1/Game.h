@@ -74,7 +74,7 @@ public:
         level[1] = new Level2();
         level[2] = new Level3();
         level[3] = new BossLevel();
-        levelIndex = 2;
+        levelIndex = 0;
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
         bufferSpriteEnd.setTexture(buffer);
@@ -150,6 +150,7 @@ public:
             return;
         }
         levelIndex++;
+        if(levelIndex != 3)
         level[levelIndex]->loadAndPlaceCollectibles();
         team.getPlayer()[team.getPlayerIndex()]->getx() = 150;
         team.getPlayer()[team.getPlayerIndex()]->gety() = 150;
@@ -158,6 +159,10 @@ public:
         buffer_start = 4 * 64;
         buffer_end = 9 * 64;
         offset_x = 0;
+        if (levelIndex == 3)
+        {
+            cout << "LEVEL $ it is  \n ";
+        }
     }
     HUD &getHUD()
     {
@@ -456,6 +461,10 @@ public:
         }
         if (hud.getLives() <= 0 || gameOver)
         {
+            if (levelIndex == 3)
+            {
+                cout << "game over hugai h level 3 k bad ";
+            }
             gameOver = true;
             window.draw(gameover);
         }

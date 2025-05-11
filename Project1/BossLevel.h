@@ -143,7 +143,7 @@ public:
 
 		if (player.gety() > playerDies)
 		{
-			gameOver = true;
+			//gameOver = true;
 		}
 	}
 
@@ -151,6 +151,9 @@ public:
 	{
 		for (int i = 0; i < enemyCount; ++i)
 		{		
+			cout << "Stinger Alive? " << enemies[0]->alive() << endl;
+
+
 			if (enemies[i]->alive())
 				enemies[i]->draw(window, offset_x);
 

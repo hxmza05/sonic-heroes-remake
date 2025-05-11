@@ -38,7 +38,7 @@ protected:
 	void loadDeathAnimation(const string& filepath, int frameWidth, int frameHeight, float scaleX, float scaleY);
 	bool handleDeathAnimation();
 
-	RectangleShape hitBoxShape;  
+	//RectangleShape hitBoxShape;  
 
 
 public:
@@ -57,12 +57,10 @@ public:
 		deathClock.restart(), deathFrameClock.restart();        
 		deathTexture = nullptr;
 
-		hitBoxShape.setFillColor(Color::Transparent);
-		hitBoxShape.setOutlineColor(Color::Red);
-		hitBoxShape.setOutlineThickness(1.f);
-		auto width = 1.0f;
-		auto height = 1.0f;
-		hitBoxShape.setSize({ width, height });
+		//hitBoxShape.setFillColor(Color::Transparent);
+		//hitBoxShape.setOutlineColor(Color::Red);
+		//hitBoxShape.setOutlineThickness(1.f);
+		//hitBoxShape.setSize(FloatRect(0, 0, 1, 1).getSize());
 
 	}
 
@@ -141,16 +139,13 @@ public:
 	virtual void update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver) = 0;
 	virtual void drawExtra(RenderWindow& window, float offset_x) {}
 	virtual ~Enemy() {}
-
-
-
-
+	/*
 	void drawHitBox(RenderWindow& window, float offset_x) 
 	{
 		hitBoxShape.setPosition(hitBox_x - offset_x, hitBox_y);
 		window.draw(hitBoxShape);
 	}
-
+	*/
 	void updateHitbox() 
 	{
 		hitBox_x = x + hit_box_factor_x;
@@ -181,25 +176,27 @@ void Enemy::loadDeathAnimation(const string& filepath, int frameWidth, int frame
 
 }
 
-bool Enemy::handleDeathAnimation() {
+bool Enemy::handleDeathAnimation() 
+{
 
-	if (!Alive && !deathFinished) {
+	if (!Alive && isDying)
+	{
 
 		indexAnimation = totalAnimations - 1;
 
-		if (deathFrameClock.getElapsedTime().asSeconds() >= 1.f) {
+		if (deathFrameClock.getElapsedTime().asMilliseconds() >= 50) 
+		{
 			states[indexAnimation]->RunAnimation();
 			deathFrameClock.restart();
 		}
 
 		sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
 
-		if (deathClock.getElapsedTime().asSeconds() >= 40.f) {
+		if (deathClock.getElapsedTime().asMilliseconds() >= 200) 
+		{
 			deathFinished = true;
 		}
-
 		return true; 
 	}
-
 	return false;  
 }

@@ -152,6 +152,8 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
     if (!Alive)
         return;
 
+    cout << "Eggstinger update running!" << endl;
+
     movement(player.getx(), player.gety(), player.getPwidth(), lvl, cell_size);
 
     if (!hasKnockedBack && playerSpikeCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight()))
