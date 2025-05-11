@@ -276,6 +276,8 @@ void Crabmeat::movement(char** lvl, Player& player, int cell_size)
 
 			projectile->setCrabProjectileVelocity(crabCenterX, crabCenterY, vx, vy);
 
+
+
 			cout << "Projectile Fired" << endl;
 			cout << "dx: " << dx << " dy: " << dy << " distance: " << distance << endl;
 			cout << "vx: " << vx << " vy: " << vy << endl;
@@ -387,6 +389,8 @@ void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 
 	if (handleProjectilesCollision(lvl, cell_size, player.getx(), player.gety(), player.getPwidth(), player.getPheight(), hasKnockedBack, tempVelocityY, 14, 200)) 
 	{
+
+
 		hud.getLives()--;
 		onGround = false;
 

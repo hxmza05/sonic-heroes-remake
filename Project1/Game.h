@@ -13,7 +13,9 @@
 #include "Rings.h"
 #include "GlobalFunctions.h"
 #include "HUD.h"
- #include"FallingPlatform.h"
+#include"FallingPlatform.h"
+#include"Audio.h"
+
 class Game
 {
     // some score and other stuff
@@ -34,6 +36,7 @@ class Game
     int hit_box_factor_y;
     Clock makeInvincible;
 
+    Audio* audio;
 
 
 
@@ -72,8 +75,8 @@ public:
         level = new Level * [3];
         level[0] = new Level1();
         level[1] = new Level2();
-        level[2] = new Level3();
-        level[3] = new BossLevel();
+        //level[2] = new Level3();
+        //level[3] = new BossLevel();
         levelIndex = 0;
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
@@ -105,6 +108,11 @@ public:
     int getLevelIndex()
     {
         return levelIndex;
+    }
+    void setupLevelAudio() {
+        if (level[levelIndex]) {
+            level[levelIndex]->setAudio(audio);
+        }
     }
 
     bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int player_x, int player_y, int cell_size, int velocityY, int height, int width)
@@ -150,6 +158,7 @@ public:
             return;
         }
         levelIndex++;
+        level[levelIndex]->setAudio(audio);
         if(levelIndex != 3)
         level[levelIndex]->loadAndPlaceCollectibles();
         team.getPlayer()[team.getPlayerIndex()]->getx() = 150;
@@ -167,6 +176,9 @@ public:
     HUD &getHUD()
     {
         return hud;
+    }
+    void setAudio(Audio* a) { 
+        audio = a; 
     }
     void saveGame(string& playerName)
     {

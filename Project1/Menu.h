@@ -15,7 +15,6 @@ class Menu
 
 private:
 
-    Audio* audio;
 
     static const int totalMenuOptions = 6;
     const char* menuOptions[totalMenuOptions] = { "New Game", "Load Game", "Continue", "Options", "Leader Board", "Exit" };
@@ -79,14 +78,6 @@ private:
     int indexAnimation;
     int totalAnimations;
 
-    SoundBuffer moveBuffer;
-    SoundBuffer selectBuffer;
-    SoundBuffer backBuffer;
-
-    Sound moveSound;
-    Sound selectSound;
-    Sound backSound;
-
     Music menuMusic;
 
     Texture backgroundTexture;
@@ -132,6 +123,7 @@ private:
     float blackScreenDuration;
 
     bool gameLoaded;
+    bool gameON;
 
     Texture labelBgTexture;
     Sprite labelBgSprite;
@@ -148,9 +140,7 @@ private:
     Sprite creditsSp;
 
     Texture levelSelectBg;
-    Sprite levelSelectSp;
-
-    
+    Sprite levelSelectSp;  
 
     float selectorX_main[6] = { 392, 388.5, 414, 430.5, 359, 474 };   
     float selectorY_main[6] = { 399, 474, 549, 624, 699, 774 };
@@ -158,12 +148,15 @@ private:
     float selectorX_sub[6] = { 387, 438, 437.5, 450, 439.5, 451 };   
     float selectorY_sub[6] = { 395, 470, 545, 620, 695, 770 };
 
+    Audio* audio;
+
+
 
 
 
 
 public:
-    Menu(int screenWidth, int screenHeigth, Leaderboard* lb, Audio* ad) : leaderboard(lb), audio(ad)
+    Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : leaderboard(lb)
     {
         gameLoaded = false;
         selectedOption = 0;
@@ -184,6 +177,7 @@ public:
         leaderboardState = false;
         enteringName = false;
         enter = false;
+        gameON = false;
 
         segaFrameDuration = 0.08;
         segaSoundDelay = 2.4f; 
@@ -246,22 +240,10 @@ public:
         nameBox.setOutlineThickness(2);
         nameBox.setPosition(295, 395);
 
-        moveBuffer.loadFromFile("Audio/MenuButton.wav");
-        selectBuffer.loadFromFile("Audio/Select.wav");
-        backBuffer.loadFromFile("Audio/BackButton.wav");
-
-        moveSound.setBuffer(moveBuffer);
-        selectSound.setBuffer(selectBuffer);
-        backSound.setBuffer(backBuffer);
-
-        moveSound.setVolume(50);
-        selectSound.setVolume(50);
-        backSound.setVolume(50);
-
-        menuMusic.openFromFile("Audio/MenuMusic.ogg");
+        menuMusic.openFromFile("Audio/Level2.ogg");
         menuMusic.setLoop(true);
         menuMusic.setVolume(musicVolume);
-        // menuMusic.play();
+        //menuMusic.play();
 
         ringTexture.loadFromFile("Sprites/rings.png");
         selectorClock.restart();
@@ -361,7 +343,9 @@ public:
     {
         return gameState;
     }
-
+    bool isgameOn() {
+        return gameON;
+    }
     bool isEnteringName()
     {
         return enteringName;
@@ -392,7 +376,12 @@ public:
         enteringName = false;
         gameState = true;
     }
-
+    void setAudio(Audio* a) 
+    {
+        audio = a;
+        audio->setSFXVolume((float)sfxVolume);
+        audio->setMusicVolume((float)musicVolume);
+    }
     void update(RenderWindow& window,Game*game)
     {
 
@@ -480,11 +469,13 @@ public:
             {
                 if (!enter)
                 {
-                    selectSound.play();
+                    audio->playSound(audio->getSelect());
 
                     if (selectedOption == 0)
                     {
                         enteringName = true;
+                        gameON = true;
+                        //menuMusic.pause();
                     }
                     else if (selectedOption == 1)
                     {
@@ -522,7 +513,7 @@ public:
 
             if (selectedOption != lastSelectedOption)
             {
-                moveSound.play();
+                audio->playSound(audio->getMenuButton());
                 lastSelectedOption = selectedOption;
             }
 
@@ -539,7 +530,7 @@ public:
         {
             if (Keyboard::isKeyPressed(Keyboard::Escape) || Keyboard::isKeyPressed(Keyboard::M))
             {
-                backSound.play();
+                audio->playSound(audio->getBackButton());
 
                 if (currentSubMenuPage > 0)
                 {
@@ -563,7 +554,7 @@ public:
                         }
 
                         arrowUp = true;
-                        moveSound.play();
+                        audio->playSound(audio->getMenuButton());
                     }
                 }
 
@@ -579,7 +570,7 @@ public:
                         if (currentMenuOption >= totalMenuOptions2)
                             currentMenuOption = 0;
                         arrowDown = true;
-                        moveSound.play();
+                        audio->playSound(audio->getMenuButton());
                     }
                 }
 
@@ -592,16 +583,13 @@ public:
                     if (currentMenuOption == 3 && sfxVolume < 50)
                     {
                         sfxVolume++;
-                        moveSound.setVolume(sfxVolume);
-                        selectSound.setVolume(sfxVolume);
-                        backSound.setVolume(sfxVolume);
-                        audio->setSFXVolume((float)sfxVolume);
+                        audio->setMusicVolume((float)musicVolume);
+
                     }
                     else if (currentMenuOption == 4 && musicVolume < 50)
                     {
                         musicVolume++;
                         menuMusic.setVolume(musicVolume);
-                        audio->setMusicVolume((float)musicVolume);
                     }
                 }
 
@@ -610,9 +598,8 @@ public:
                     if (currentMenuOption == 3 && sfxVolume > 0)
                     {
                         sfxVolume--;
-                        moveSound.setVolume(sfxVolume);
-                        selectSound.setVolume(sfxVolume);
-                        backSound.setVolume(sfxVolume);
+                        audio->setMusicVolume((float)musicVolume);
+
                     }
                     else if (currentMenuOption == 4 && musicVolume > 0)
                     {
@@ -625,7 +612,7 @@ public:
                 {
                     if (!enter)
                     {
-                        selectSound.play();
+                        audio->playSound(audio->getSelect());
 
                         if (currentMenuOption == 0) 
                             currentSubMenuPage = 4; // ChoosLevel
@@ -650,7 +637,7 @@ public:
        
                 if (currentMenuOption != lastCurrentMenuOption)
                 {
-                    moveSound.play();
+                    audio->playSound(audio->getMenuButton());
                     lastCurrentMenuOption = currentMenuOption;
                 }
 
@@ -677,7 +664,7 @@ public:
                     {
                         selectedLevelIndex = (selectedLevelIndex - 1 + totalLevels) % totalLevels;
                         arrowUp = true;
-                        moveSound.play();
+                        audio->playSound(audio->getMenuButton());
                     }
                 }
 
@@ -691,7 +678,7 @@ public:
                     {
                         selectedLevelIndex = (selectedLevelIndex + 1) % totalLevels;
                         arrowDown = true;
-                        moveSound.play();
+                        audio->playSound(audio->getMenuButton());
                     }
                 }
 
@@ -703,7 +690,7 @@ public:
                 {
                     if (!enter)
                     {
-                        selectSound.play();
+                        audio->playSound(audio->getSelect());
                         // Use selectedLevelIndex for game->startLevel(selectedLevelIndex);
                         currentSubMenuPage = 0;
                         currentMenuLevel = 0;
@@ -727,7 +714,7 @@ public:
             leaderboard->sortScores();
             if (Keyboard::isKeyPressed(Keyboard::M) || Keyboard::isKeyPressed(Keyboard::Escape))
             {
-                backSound.play(); 
+                audio->playSound(audio->getBackButton());
                 leaderboardState = false;
                 menuState = true;
             }

@@ -216,12 +216,16 @@ public:
 	{
 		return falling;
 	}
-  
+    void setAudio(Audio* a) override {
+        audio = a;
+        audio->playLevelMusicByIndex(audio->getLevel2Music());
+    }
+
     void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool& gameOver) override
     {
         for (int i = 0; i < enemyCount; ++i)
         {
-            if (!enemies[i]->alive())
+            if (!enemies[i]->alive() && enemies[i]->deathDone())
                 continue;
 
             enemies[i]->update(lvl, player, cell_size, hasKnockedBack, tempVelocity, onGround, indexAnimation, hud, gameOver);

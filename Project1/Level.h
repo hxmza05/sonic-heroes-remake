@@ -9,6 +9,7 @@
 #include"Extralives.h"
 #include"SpecialBoost.h"
 #include"FallingPlatform.h"
+#include"Audio.h"
 using namespace std;
 #include"Animation.h"
 #include <SFML/Graphics.hpp>
@@ -64,6 +65,8 @@ protected:
 	 Sprite backGroundSprite;
 	 float scX;
 	 float scY;
+
+	 Audio* audio;
 
 
 public:
@@ -132,7 +135,9 @@ public:
 	{
 		return friction;
 	}
-
+	virtual void setAudio(Audio* a) {
+		audio = a;
+	}
 	 FallingPlatform** getFalling()
 	{
 		return falling;
@@ -146,6 +151,7 @@ public:
 			return true;
 		return false;
 	}
+
 
 	void setRingTextures(Texture* r, Texture* re) {
 		ringTex = r;

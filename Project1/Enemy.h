@@ -3,10 +3,13 @@
 using namespace std;
 using namespace sf;
 #include"Animation.h"
+#include "Player.h"
 #include "HUD.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
+
+
 
 class Enemy 
 {
@@ -64,7 +67,6 @@ public:
 
 	}
 
-	
 	float& getX() {
 		return x;
 	}
@@ -89,6 +91,7 @@ public:
 		this->Alive = status; 
 	}
 
+
 	void setAnimation(int animationIndex) {
 		indexAnimation = animationIndex;
 	}
@@ -97,7 +100,6 @@ public:
 		states[indexAnimation]->RunAnimation();
 		sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
 	}
-
 
 	void setPosition(float startX, float startY, float Start, float End) {
 

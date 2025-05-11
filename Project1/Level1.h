@@ -7,6 +7,7 @@
 #include "FallingPlatform.h"
 #include "HUD.h"
 
+
 class Level1 : public Level
 {
     MoveablePlatform* moveable;
@@ -32,8 +33,6 @@ class Level1 : public Level
     int batStart;
     int batEnd;
     Batbrain* bats;
-
-
    
     int j_start;
     int cell_size;
@@ -88,7 +87,6 @@ public:
         for (int i = 0; i < crabCount; i++) {
 
             crab = new Crabmeat();
-
             if (crab->getCrabCoordinates(lvl, height, width, crab_start, crab_end, j_start))
             {
                 crab->move_crabs(cell_size);
@@ -106,7 +104,6 @@ public:
         for (int i = 0; i < beeCount; i++) {
 
             beebot = new Beebot();
-
             if (beebot->getBeebotCoordinates(lvl, height, width, bee_start, bee_end, j_start, occupiedColumns))
             {
                 beebot->move_beebots(cell_size);
@@ -153,6 +150,8 @@ public:
             falling[i] = new FallingPlatform(64 * f, 500);
         moveable = new MoveablePlatform(1000, 450, 850, 1500);
         levelEnd = 195 * 64;
+
+
     }
     MoveablePlatform* getMoveable() override
     {
@@ -218,6 +217,10 @@ public:
         file.close();
     }
 
+    void setAudio(Audio* a) override {
+        audio = a;
+        audio->playLevelMusicByIndex(audio->getLevel1Music());
+    }
 
     void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool& gameOver) override
     {

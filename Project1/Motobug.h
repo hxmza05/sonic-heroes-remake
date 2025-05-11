@@ -1,11 +1,12 @@
 #pragma once
 #include <iostream>
-#include "Enemy.h"
 #include "Player.h"
 #include "HUD.h"
+#include "Enemy.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
+
 
 
 class Motobug : public Enemy
@@ -152,6 +153,7 @@ void Motobug::movement(float player_x, float player_y) {
 	else if ((player_x >= Start && player_x <= End) && (abs(player_y - y) < 64)) {
 
 		setAttack(); 
+
 
 		indexAnimation = 1;
 

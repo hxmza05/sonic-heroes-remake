@@ -1,7 +1,7 @@
 #pragma once
 #include<fstream>
-#include"Level.h"
 #include"MoveablePlatform.h"
+#include"Level.h"
 
 class BossLevel : public Level
 {
@@ -120,6 +120,10 @@ public:
 		}
 		file.close();
 	}
+	void setAudio(Audio* a) override {
+		audio = a;
+		audio->playLevelMusicByIndex(audio->getBossMusic());
+	}
 
 	virtual FallingPlatform** getFalling()
 	{
@@ -133,7 +137,7 @@ public:
 	{
 		for (int i = 0; i < enemyCount; ++i)
 		{
-			if (!enemies[i]->alive())
+			if (!enemies[i]->alive() && enemies[i]->deathDone())
 				continue;  
 
 			enemies[i]->update(lvl, player, cell_size, hasKnockedBack, tempVelocity, onGround, indexAnimation, hud, gameOver);

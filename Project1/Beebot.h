@@ -4,7 +4,7 @@
 #include "Projectile.h"
 #include "Player.h"
 #include "HUD.h"
-
+#include "Audio.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -203,6 +203,7 @@ void Beebot::update(char** lvl, Player& player, int cell_size, bool& hasKnockedB
 				if (Alive) 
 				{
 					setAlive(false);
+
 					isDying = true;
 					deathClock.restart();
 					deathFrameClock.restart();
@@ -292,6 +293,7 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 							projectiles = new Projectile();
 
 						projectiles->setPosition(beeCenterX, y + getbeeHeight() / 2.0f, projectileX, projectileY, 4.0f);
+
 					}
 				}
 

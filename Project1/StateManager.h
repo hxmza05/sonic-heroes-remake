@@ -22,15 +22,16 @@
 #include"Team.h"
 #include"Game.h"
 #include"StateManager.h"
+#include"Audio.h"
 
 class StateManager
 {
+	Audio audio;
 	Menu *menu;
 	Game* game;
 	int stateIndex;
 	RenderWindow& window;
 	Leaderboard* leaderboard;
-	Audio audio;
 	int screen_x ;
 	int screen_y ;
 
@@ -43,10 +44,16 @@ public:
 		screen_x = 1200;
 		screen_y = 900;
 		
-		stateIndex = 1;
+		stateIndex = 0;
 		//menu = new Menu(screen_x, screen_y, &leaderboard);
-		menu = new Menu(screen_x, screen_y, leaderboard, &audio);
+		menu = new Menu(screen_x, screen_y, leaderboard);
+		menu->setAudio(&audio);
 		game = new Game();
+		game->setAudio(&audio);
+		game->setupLevelAudio();
+
+              
+
 	}
 	int getStateIndex()
 	{

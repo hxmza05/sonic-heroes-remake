@@ -124,6 +124,10 @@ public:
 	{
 		return nullptr;
 	}
+	void setAudio(Audio* a) override {
+		audio = a;
+		audio->playLevelMusicByIndex(audio->getLevel3Music());
+	}
 
 	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD&,bool&)
 	{
@@ -133,7 +137,7 @@ public:
 	{
 		for (int i = 0; i < enemyCount; ++i)
 		{
-			if (!enemies[i]->deathDone())
+			if (!enemies[i]->deathDone() && enemies[i]->deathDone())
 				enemies[i]->draw(window, offset_x);
 		}
 	}

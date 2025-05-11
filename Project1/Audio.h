@@ -1,22 +1,19 @@
 #pragma once
 #include <iostream>
-#include"Menu.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-
 
 
 class Audio {
 
 private:
 
-    SoundBuffer sfxBuffers[23];
-    Sound sfx[23];
+    SoundBuffer* sfxBuffers;
+    Sound* sfx;
     Music levelMusic;
 
     float sfxVolume;
     float musicVolume;
-
 
     int MENU_BUTTON;
     int SELECT;
@@ -43,10 +40,29 @@ private:
     int CRUMBLE;
     int TOTAL_SFX;
 
+    int LEVEL1_MUSIC;
+    int LEVEL2_MUSIC;
+    int LEVEL3_MUSIC;
+    int BOSS_MUSIC;
+    int TOTAL_MUSIC;
+    string musicPaths[4];
+
 
 public:
 
     Audio() {
+
+        LEVEL1_MUSIC = 0;
+        LEVEL2_MUSIC = 1;
+        LEVEL3_MUSIC = 2;
+        BOSS_MUSIC = 3;
+        TOTAL_MUSIC = 4;
+
+        musicPaths[LEVEL1_MUSIC] = "Audio/Level1.ogg";
+        musicPaths[LEVEL2_MUSIC] = "Audio/Level2.ogg";
+        musicPaths[LEVEL3_MUSIC] = "Audio/Level3.ogg";
+        musicPaths[BOSS_MUSIC] = "Audio/BossLevel.ogg";
+
 
         MENU_BUTTON = 0;
         SELECT = 1;
@@ -76,7 +92,124 @@ public:
         sfxVolume = 50;
         musicVolume = 50;
 
+        sfx = new Sound[TOTAL_SFX];
+        sfxBuffers = new SoundBuffer[TOTAL_SFX];
+
     }
+
+
+    int getMenuButton() {
+        return MENU_BUTTON;
+    }
+
+    int getSelect() {
+        return SELECT;
+    }
+
+    int getBackButton() {
+        return BACK_BUTTON;
+    }
+
+    int getJump() {
+        return JUMP;
+    }
+
+    int getFlying() {
+        return FLYING;
+    }
+
+    int getSkidding() {
+        return SKIDDING;
+    }
+
+    int getHurt() {
+        return HURT;
+    }
+
+    int getOneUp() {
+        return ONE_UP;
+    }
+
+    int getRing() {
+        return RING;
+    }
+
+    int getTired() {
+        return TIRED;
+    }
+
+    int getDestroy() {
+        return DESTROY;
+    }
+
+    int getExplosion() {
+        return EXPLOSION;
+    }
+
+    int getShot() {
+        return SHOT;
+    }
+
+    int getBossHit() {
+        return BOSS_HIT;
+    }
+
+    int getSpikes() {
+        return SPIKES;
+    }
+
+    int getSignPost() {
+        return SIGN_POST;
+    }
+
+    int getTimeWarp() {
+        return TIME_WARP;
+    }
+
+    int getScoreAdd() {
+        return SCORE_ADD;
+    }
+
+    int getScoreTotal() {
+        return SCORE_TOTAL;
+    }
+
+    int getAchievement() {
+        return ACHIEVEMENT;
+    }
+
+    int getSpecialWarp() {
+        return SPECIAL_WARP;
+    }
+
+    int getGlassSmash() {
+        return GLASS_SMASH;
+    }
+
+    int getCrumble() {
+        return CRUMBLE;
+    }
+
+    int getTotalSfx() {
+        return TOTAL_SFX;
+    }
+
+    int getLevel1Music() {
+        return LEVEL1_MUSIC;
+    }
+
+    int getLevel2Music() {
+        return LEVEL2_MUSIC;
+    }
+
+    int getLevel3Music() {
+        return LEVEL3_MUSIC;
+    }
+
+    int getBossMusic() {
+        return BOSS_MUSIC;
+    }
+
 
     void loadAllSounds();
     void playSound(int Soundid);
@@ -84,124 +217,84 @@ public:
     void setSFXVolume(float volume);
     void setMusicVolume(float volume);
 
+    void playLevelMusicByIndex(int index) {
+
+        if (index < 0 || index >= TOTAL_MUSIC) {
+            return;
+        }
+
+        levelMusic.stop();
+
+        if (levelMusic.openFromFile(musicPaths[index])) {
+            levelMusic.setLoop(true);
+            levelMusic.setVolume(musicVolume);
+            levelMusic.play();
+        }
+    }
+
+
+    ~Audio() {
+        delete[] sfx;
+        delete[] sfxBuffers;
+    }
+
 };
 
 
 
-
-
 void Audio::setMusicVolume(float vol) {
+
     musicVolume = vol;
     levelMusic.setVolume(musicVolume);
 }
 
-
 void Audio::setSFXVolume(float vol) {
+
     sfxVolume = vol;
-    for (int i = 0; i < TOTAL_SFX; ++i) {
+
+    for (int i = 0; i < TOTAL_SFX; i++) {
         sfx[i].setVolume(sfxVolume);
     }
 }
 
-
 void Audio::playLevelMusic(const string& path) {
 
-    levelMusic.stop(); 
+    levelMusic.stop();
 
     if (levelMusic.openFromFile(path)) {
         levelMusic.setLoop(true);
         levelMusic.setVolume(musicVolume);
         levelMusic.play();
     }
-
 }
 
 void Audio::playSound(int id) {
 
-    if (id < 0 || id >= TOTAL_SFX) 
+    if (id < 0 || id >= TOTAL_SFX) {
         return;
+    }
 
-    if (sfx[id].getStatus() == Sound::Playing)
+    if (sfx[id].getStatus() == Sound::Playing) {
         sfx[id].stop();
+    }
 
-    sfx[id].setVolume(sfxVolume); 
+    sfx[id].setVolume(sfxVolume);
     sfx[id].play();
-
 }
-
 
 void Audio::loadAllSounds() {
 
-    sfxBuffers[MENU_BUTTON].loadFromFile("Audio/MenuButton.wav");
-    sfx[MENU_BUTTON].setBuffer(sfxBuffers[MENU_BUTTON]);
+    string paths[23] = {
+        "Audio/MenuButton.wav", "Audio/Select.wav", "Audio/BackButton.wav", "Audio/Jump.wav",
+        "Audio/Flying.wav", "Audio/Skidding.wav", "Audio/Hurt.wav", "Audio/1Up.wav",
+        "Audio/Ring.wav", "Audio/Tired.wav", "Audio/Destroy.wav", "Audio/Explosion.wav",
+        "Audio/Shot.wav", "Audio/BossHit.wav", "Audio/Spikes.wav", "Audio/SignPost.wav",
+        "Audio/TimeWarp.wav", "Audio/ScoreAdd.wav", "Audio/ScoreTotal.wav", "Audio/Achievement.wav",
+        "Audio/SpecialWarp.wav", "Audio/GlassSmash.wav", "Audio/Crumble.wav"
+    };
 
-    sfxBuffers[SELECT].loadFromFile("Audio/Select.wav");
-    sfx[SELECT].setBuffer(sfxBuffers[SELECT]);
-
-    sfxBuffers[BACK_BUTTON].loadFromFile("Audio/BackButton.wav");
-    sfx[BACK_BUTTON].setBuffer(sfxBuffers[BACK_BUTTON]);
-
-    sfxBuffers[JUMP].loadFromFile("Audio/Jump.wav");
-    sfx[JUMP].setBuffer(sfxBuffers[JUMP]);
-
-    sfxBuffers[FLYING].loadFromFile("Audio/Flying.wav");
-    sfx[FLYING].setBuffer(sfxBuffers[FLYING]);
-
-    sfxBuffers[SKIDDING].loadFromFile("Audio/Skidding.wav");
-    sfx[SKIDDING].setBuffer(sfxBuffers[SKIDDING]);
-
-    sfxBuffers[HURT].loadFromFile("Audio/Hurt.wav");
-    sfx[HURT].setBuffer(sfxBuffers[HURT]);
-
-    sfxBuffers[ONE_UP].loadFromFile("Audio/1Up.wav");
-    sfx[ONE_UP].setBuffer(sfxBuffers[ONE_UP]);
-
-    sfxBuffers[RING].loadFromFile("Audio/Ring.wav");
-    sfx[RING].setBuffer(sfxBuffers[RING]);
-
-    sfxBuffers[TIRED].loadFromFile("Audio/Tired.wav");
-    sfx[TIRED].setBuffer(sfxBuffers[TIRED]);
-
-    sfxBuffers[DESTROY].loadFromFile("Audio/Destroy.wav");
-    sfx[DESTROY].setBuffer(sfxBuffers[DESTROY]);
-
-    sfxBuffers[EXPLOSION].loadFromFile("Audio/Explosion.wav");
-    sfx[EXPLOSION].setBuffer(sfxBuffers[EXPLOSION]);
-
-    sfxBuffers[SHOT].loadFromFile("Audio/Shot.wav");
-    sfx[SHOT].setBuffer(sfxBuffers[SHOT]);
-
-    sfxBuffers[BOSS_HIT].loadFromFile("Audio/BossHit.wav");
-    sfx[BOSS_HIT].setBuffer(sfxBuffers[BOSS_HIT]);
-
-    sfxBuffers[SPIKES].loadFromFile("Audio/Spikes.wav");
-    sfx[SPIKES].setBuffer(sfxBuffers[SPIKES]);
-
-    sfxBuffers[SIGN_POST].loadFromFile("Audio/SignPost.wav");
-    sfx[SIGN_POST].setBuffer(sfxBuffers[SIGN_POST]);
-
-    sfxBuffers[TIME_WARP].loadFromFile("Audio/TimeWarp.wav");
-    sfx[TIME_WARP].setBuffer(sfxBuffers[TIME_WARP]);
-
-    sfxBuffers[SCORE_ADD].loadFromFile("Audio/ScoreAdd.wav");
-    sfx[SCORE_ADD].setBuffer(sfxBuffers[SCORE_ADD]);
-
-    sfxBuffers[SCORE_TOTAL].loadFromFile("Audio/ScoreTotal.wav");
-    sfx[SCORE_TOTAL].setBuffer(sfxBuffers[SCORE_TOTAL]);
-
-    sfxBuffers[ACHIEVEMENT].loadFromFile("Audio/Achievement.wav");
-    sfx[ACHIEVEMENT].setBuffer(sfxBuffers[ACHIEVEMENT]);
-
-    sfxBuffers[SPECIAL_WARP].loadFromFile("Audio/SpecialWarp.wav");
-    sfx[SPECIAL_WARP].setBuffer(sfxBuffers[SPECIAL_WARP]);
-
-    sfxBuffers[GLASS_SMASH].loadFromFile("Audio/GlassSmash.wav");
-    sfx[GLASS_SMASH].setBuffer(sfxBuffers[GLASS_SMASH]);
-
-    sfxBuffers[CRUMBLE].loadFromFile("Audio/Crumble.wav");
-    sfx[CRUMBLE].setBuffer(sfxBuffers[CRUMBLE]);
-
-    for (int i = 0; i < TOTAL_SFX; ++i) {
+    for (int i = 0; i < TOTAL_SFX; i++) {
+        sfx[i].setBuffer(sfxBuffers[i]);
         sfx[i].setVolume(sfxVolume);
     }
 }
