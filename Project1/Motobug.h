@@ -58,7 +58,8 @@ public:
 
 		enemyHeight = MotobugHeight;
 		enemyWidth = MotobugWidth;
-
+		hitBox_x = x + hit_box_factor_x;
+		hitBox_y = y + hit_box_factor_y;
 
 		MotoBugStart = 0;
 		MotoBugEnd = 0;
@@ -219,7 +220,7 @@ void Motobug::movement(float player_x, float player_y) {
 
 	sprite.setPosition(x, y);
 
-	//updateHitbox();
+	updateHitbox();
 
 }
 
@@ -236,7 +237,7 @@ void Motobug::update(char** lvl, Player& player, int cell_size, bool& hasKnocked
 
 	if (!hasKnockedBack)
 	{
-		if (PlayerBugCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, getMotobugWidth(), getMotobugHeight()))
+		if (PlayerEnemyCollision(player, MotobugWidth, MotobugHeight))
 		{
 			if (indexAnimation == UPR || indexAnimation == UPL)
 			{

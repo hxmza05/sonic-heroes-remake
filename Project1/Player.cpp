@@ -288,8 +288,8 @@ void Player::playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, 
 }
 void Player::decelerate(char** lvl, int width,float friction)
 {
-    cout << "\n\nIn decelration : \n friction : "<<friction<<endl;
-    cout << "Vecloity before frition : " << velocityX;
+    //cout << "\n\nIn decelration : \n friction : "<<friction<<endl;
+    //cout << "Vecloity before frition : " << velocityX;
     int tempAnimationIndex = STILL;
     if (velocityX > 0)
     {
@@ -322,15 +322,15 @@ void Player::decelerate(char** lvl, int width,float friction)
     }
     else
     {
-        cout << "Collisoin Detected ";
+        //cout << "Collisoin Detected ";
         velocityX = 0;
     }
-    cout << "VeloctiyX  after frictio = " << velocityX << endl << endl;
+    //cout << "VeloctiyX  after frictio = " << velocityX << endl << endl;
 }
 void Player::decelerateRight(char** lvl, int width, float friction)
 {
-    cout << "\n\nIn decelration : \n friction : " << friction << endl;
-    cout << "Vecloity before frition : " << velocityX;
+    //cout << "\n\nIn decelration : \n friction : " << friction << endl;
+    //cout << "Vecloity before frition : " << velocityX;
     int tempAnimationIndex = STILL;
     if (velocityX > 0)
     {
@@ -363,10 +363,10 @@ void Player::decelerateRight(char** lvl, int width, float friction)
     }
     else
     {
-        cout << "Collisoin Detected ";
+        //cout << "Collisoin Detected ";
         velocityX = 0;
     }
-    cout << "VeloctiyX  after frictio = " << velocityX << endl << endl;
+    //cout << "VeloctiyX  after frictio = " << velocityX << endl << endl;
 }
 
 void Player::moveLeft(char** lvl, int width ,float friction)
@@ -380,11 +380,11 @@ void Player::moveLeft(char** lvl, int width ,float friction)
     int  proposed_x = x + velocityX;
     if (!checkCollision(lvl, proposed_x + hit_box_factor_x, y + hit_box_factor_y, 14, width) && !checkCollision(lvl, proposed_x + hit_box_factor_x, y + hit_box_factor_y + Pheight - 1, 14, width))
     {
-        cout << "Collsion Detecetd (LEFT) : \n";
+        //cout << "Collsion Detecetd (LEFT) : \n";
         velocityX = 0;  
         return;
     }
-    cout << "\n\nIn Left its working \n\n\n";
+    //cout << "\n\nIn Left its working \n\n\n";
     x = proposed_x;
     if (velocityX - acceleration > -max_speed)
     {
@@ -417,7 +417,7 @@ void Player::moveRight(char** lvl, int width,float friction)
     }
     if (!checkCollision(lvl, proposed_x + hit_box_factor_x, y + hit_box_factor_y, 14, width) && !checkCollision(lvl, proposed_x + hit_box_factor_x, y + hit_box_factor_y + Pheight - 1, 14, width) )
     {
-        cout << "Collsion Detecetd (RIGHT) : \n";
+        //cout << "Collsion Detecetd (RIGHT) : \n";
 
         velocityX = 0;  
         return;

@@ -49,9 +49,9 @@ public:
 		hp = 0;
 		Alive = false, Moving = false;
 		Start = 0, End = 0;
-		hitBox_x = 0, hitBox_y = 0;
 		enemyHeight = 0, enemyWidth = 0;
 		hit_box_factor_x = 5*2.5f, hit_box_factor_y = 5*2.5f;
+		hitBox_x = 0, hitBox_y = 0;
 		indexAnimation = 0, totalAnimations = 0;	
 		isDying = false, deathFinished = false;    
 		deathClock.restart(), deathFrameClock.restart();        
@@ -152,14 +152,11 @@ public:
 		hitBox_x = x + hit_box_factor_x;
 		hitBox_y = y + hit_box_factor_y;
 
-		float w = enemyWidth - 2 * hit_box_factor_x;
-		float h = enemyHeight - 2 * hit_box_factor_y;
-
-		hitBoxShape.setSize(FloatRect(0, 0, w, h).getSize());  
-		hitBoxShape.setPosition(hitBox_x, hitBox_y);
+		//float w = enemyWidth - 2 * hit_box_factor_x;
+		//float h = enemyHeight - 2 * hit_box_factor_y;
+		//hitBoxShape.setSize(FloatRect(0, 0, w, h).getSize());  
+		//hitBoxShape.setPosition(hitBox_x, hitBox_y);
 	}
-
-
 
 };
 

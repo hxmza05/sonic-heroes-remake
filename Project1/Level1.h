@@ -218,7 +218,7 @@ public:
             if (enemies[i]->alive())
                 enemies[i]->draw(window, offset_x);
 
-            enemies[i]->drawHitBox(window, offset_x);
+            //enemies[i]->drawHitBox(window, offset_x);
         }
     }
     int getCrabCount() const { return crabCount; }

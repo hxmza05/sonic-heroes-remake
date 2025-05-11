@@ -71,6 +71,8 @@ public:
 		enemyWidth = bee_width;
 		hit_box_factor_x = 7.5;
 		hit_box_factor_y = 7.5;
+		hitBox_x = x + hit_box_factor_x;
+		hitBox_y = y + hit_box_factor_y;
 
 		BeebotStart = 0;
 		BeebotEnd = 0;
@@ -192,9 +194,9 @@ void Beebot::update(char** lvl, Player& player, int cell_size, bool& hasKnockedB
 
 	if (!hasKnockedBack) {
 
-		if (PlayerBeeCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, getbeeWidth(), getbeeHeight())) {
+		if (PlayerEnemyCollision(player, getbeeWidth(), getbeeHeight())) {
 
-			if (indexAnimation == UPR || indexAnimation == UPL) {
+			if (indexAnimation == UPR || indexAnimation == UPL || indexAnimation == GLIDEL || indexAnimation == GLIDER) {
 
 				setHp(0);
 
@@ -209,6 +211,7 @@ void Beebot::update(char** lvl, Player& player, int cell_size, bool& hasKnockedB
 			}
 
 			else {
+
 				hud.getLives()--;
 				if (hud.getLives() <= 0) gameOver = true;
 				hasKnockedBack = true;
@@ -269,6 +272,7 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 					sprite = states[1]->getSprites()[2]; // charge
 
 				else {
+
 					sprite = states[1]->getSprites()[3]; // fire
 
 					if (!shotProjectile) {
@@ -393,7 +397,7 @@ void Beebot::movement(char** lvl, float player_x, float player_y, const int cell
 
 	sprite.setPosition(x, y);
 
-	//updateHitbox();
+	updateHitbox();
 
 	if (projectiles && projectiles->Active()) {
 		projectiles->move();

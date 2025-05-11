@@ -62,6 +62,8 @@ public:
 
 		enemyHeight = Batheight;
 		enemyWidth = BatWidth;
+		hitBox_x = x + hit_box_factor_x;
+		hitBox_y = y + hit_box_factor_y;
 
 		chaseCooldownClock.restart();
 		isCooldown = false;
@@ -281,7 +283,7 @@ void Batbrain::movement(char** lvl, float player_x, float player_y, const int ce
 		sprite.setOrigin(0, 0);                           
 	}
 
-	//updateHitbox();
+	updateHitbox();
 
 }
 
@@ -293,11 +295,12 @@ void Batbrain::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 		return;
 
 	movement(lvl, player.getx(), player.gety(), cell_size);
+
 	if (!hasKnockedBack)
 	{
-		if (PlayerBatCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight(), x, y, getBatBrainWidth(), getBatBrainHeight()))
+		if (PlayerEnemyCollision(player, getBatBrainWidth(), getBatBrainHeight()))
 		{
-			if (indexAnimation == UPR || indexAnimation == UPL)
+			if (indexAnimation == UPR || indexAnimation == UPL || indexAnimation == GLIDEL || indexAnimation == GLIDER)
 			{
 				setHp(0);
 
