@@ -154,20 +154,16 @@ public:
 	{
 		if (spaceCount>9)
 		{
-			//cout << "\n\n\nFLying\n\n\n";
 ;			velocityY = -2;
 			indexAnimation = JUMPR;
-			//states[JUMPR][0].RunAnimation();
 			onGround = false;
 		} 
 		else
 			if(!spacePressed)
 			{
-				//cout << "\n\n\nJumping\n\n\n";
-				velocityY = -22;
+				velocityY = -19.5;
 				onGround = false;
 				indexAnimation = UPR;
-				//states[UPR][0].RunAnimation();
 			}
 	}
 	/*void useSpecialAbilty(char** lvl)

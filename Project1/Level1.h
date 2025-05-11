@@ -9,7 +9,6 @@
 
 class Level1 : public Level
 {
-    FallingPlatform** falling;
     MoveablePlatform* moveable;
 
     int crabCount;
@@ -43,24 +42,20 @@ class Level1 : public Level
 public:
     Level1()
     {
-        backGround.loadFromFile("Data/bgLvl2O.jpg");
+        backGround.loadFromFile("Data/bg1.png");
         backGroundSprite.setTexture(backGround);
-        unsigned int bgWidth = backGround.getSize().x;
-        unsigned int bgHeight = backGround.getSize().y;
+        //hardcoded
+        unsigned int bgWidth = 1600;
+        unsigned int bgHeight = 900;
         scX = (float)1200 / bgWidth;
         scY = (float)900 / bgHeight;
         backGroundSprite.setScale(scX, scY);
       
          backGroundSprite.setScale(scX, scY);
         walls = new Sprite [4];
-        if (!wallText1.loadFromFile("Data/wall31.jpg"))
-        {
-            cerr << "\n\n\nFailed to load\n\n\n";
-        }
-        else cout << "\n\nsuccess in 1\n\n";
-        wallText1.loadFromFile("Data/wall32.png");
-        wallText2.loadFromFile("Data/wall32.png");
-        wallText3.loadFromFile("Data/wall32.png");
+        wallText1.loadFromFile("Data/brick1.png");
+        wallText2.loadFromFile("Data/brick2.png");
+        wallText3.loadFromFile("Data/brick3.png");
         walls[0].setTexture(wallText1);
         walls[1].setTexture(wallText2);
         walls[2].setTexture(wallText3);
@@ -69,7 +64,7 @@ public:
         {
             walls[i].setScale(1.03, 1.03);
         }
-        friction = 0.3;
+        friction = 0.4;
         cell_size = 64;
         height = 14;
         width = 200;

@@ -9,7 +9,6 @@
 
 class Level2 : public Level
 {
-    FallingPlatform** falling;
 	MoveablePlatform* moveable;
 
     int crabCount;
@@ -44,7 +43,6 @@ class Level2 : public Level
 public:
 	Level2() 
 	{
-        levelEnd = 242 *64;
         backGround.loadFromFile("Data/bgLvl2O.jpg");
         backGroundSprite.setTexture(backGround);
         unsigned int bgWidth = backGround.getSize().x;
@@ -60,9 +58,9 @@ public:
             cerr << "\n\n\nFailed to load\n\n\n";
         }
         else cout << "\n\nsuccess in 1\n\n";
-        wallText1.loadFromFile("Data/wall32.png");
-        wallText2.loadFromFile("Data/wall32.png");
-        wallText3.loadFromFile("Data/wall32.png");
+        wallText1.loadFromFile("Data/wall31.png");
+        wallText2.loadFromFile("Data/wall31.png");
+        wallText3.loadFromFile("Data/wall31.png");
         walls[0].setTexture(wallText1);
         walls[1].setTexture(wallText2);
         walls[2].setTexture(wallText3);

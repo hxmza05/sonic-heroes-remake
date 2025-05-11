@@ -197,7 +197,7 @@ public:
 	{
 		if(!spacePressed)
 		{
-			velocityY = -22;
+			velocityY = -19.5;
 			onGround = false;
 		}
 	}

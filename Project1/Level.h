@@ -19,6 +19,7 @@ class Level
 {
 protected:
 	int fallingCount;
+	FallingPlatform** falling;
 	float levelEnd;
 	//Collectible*** collectibles;
 	//Obstacle** obstacles;
@@ -132,7 +133,10 @@ public:
 		return friction;
 	}
 
-	virtual FallingPlatform**getFalling() = 0;
+	 FallingPlatform** getFalling()
+	{
+		return falling;
+	}
 	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD& hud,bool& ) = 0;
 	virtual void drawEnemies(RenderWindow& window, float offset_x) = 0;
 
@@ -194,8 +198,8 @@ public:
 	void loadAndPlaceCollectibles();
 	void display_level(RenderWindow& window, const int cell_size, int offset_x)
 	{
-		cout << "\n\nHeight = " << height;
-		cout << "\nWidth = " << width << endl;
+		/*cout << "\n\nHeight = " << height;
+		cout << "\nWidth = " << width << endl;*/
 		for (int i = 0; i < height; i += 1)
 		{
 			for (int j = 0; j < width; j += 1)

@@ -576,6 +576,7 @@ void Player::figureItOutYourself(float leader_x, char** lvl, float offset_x,int 
             x -= 1;
         }
     }
+    cout << "x in figutre it out x = " << x << endl;
     if (!spacePressed)
     {
         spacePressed = true;

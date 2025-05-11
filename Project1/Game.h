@@ -72,7 +72,7 @@ public:
         level = new Level * [3];
         level[0] = new Level1();
         level[1] = new Level2();
-        //level[2] = new Level3();
+        level[2] = new Level3();
         level[3] = new BossLevel();
         levelIndex = 1;
         buffer.loadFromFile("Data/bufferSprite.jpg");
@@ -150,12 +150,13 @@ public:
             return;
         }
         levelIndex++;
+        level[levelIndex]->loadAndPlaceCollectibles();
         team.getPlayer()[team.getPlayerIndex()]->getx() = 150;
         team.getPlayer()[team.getPlayerIndex()]->gety() = 150;
         team.getPlayer()[team.getPlayerIndex()]->getVelocityY() = 15;
         team.getPlayer()[team.getPlayerIndex()]->getOnGround() = true;
         buffer_start = 4 * 64;
-        buffer_end = 13 * 64;
+        buffer_end = 9 * 64;
         offset_x = 0;
     }
     HUD &getHUD()
@@ -164,6 +165,7 @@ public:
     }
     void play(RenderWindow& window)
     {
+        //cout << "level = " << levelIndex<<endl;
         if (levelIndex == 3)
         {
             team.setplayerIndex(0);
@@ -236,8 +238,8 @@ public:
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
                 team.jump();
-                cout << "Jumped\n\n";
-                cout << "onground  in (space ) = " << team.getPlayer()[team.getPlayerIndex()]->getOnGround()<<endl;
+                //cout << "Jumped\n\n";
+                //cout << "onground  in (space ) = " << team.getPlayer()[team.getPlayerIndex()]->getOnGround()<<endl;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() && Akey.getElapsedTime().asMilliseconds() > 500)
             {
@@ -302,12 +304,12 @@ public:
                 team.getPlayer()[team.getPlayerIndex()][0].player_gravity(level[levelIndex][0].getLvl(), offset_y, offset_x, 64, team.getSpacePressed(), level[levelIndex]->getHeight(), level[levelIndex]->getWidth(), gameOver);
             team.storePath();
             team.autoMoveFollowers(level[levelIndex]->getLvl(), offset_x,level[levelIndex]->getWidth());
-            if (levelIndex != 3 && level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
+            if (levelIndex != 0 && levelIndex != 3  && level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
             {
-                cout << "Buffers working\n";
+                //cout << "Buffers working\n";
                 if (buffer_end < (level[levelIndex]->getWidth() - 5) * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() >= buffer_end)
                 {
-                    cout << "Buffers updaintg";
+                    //cout << "Buffers updaintg";
                     buffer_end = team.getPlayer()[team.getPlayerIndex()][0].getx();
                     buffer_start = buffer_end - 320;
                     offset_x += 3;
@@ -407,8 +409,8 @@ public:
             window.draw(gameover);
         }
 
-         draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
-         draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);
+         /*draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
+         draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
     }
    
     void saveGame(string&playerName)

@@ -307,10 +307,11 @@ public:
 	{
 		y = _y;
 	}
-	void setTailedCoords(float x, float y)
+	void setTailedCoords(float _x, float _y)
 	{
-		tailed_x = x;
-		tailed_y = y;
+		tailed_x = _x;
+		tailed_y = _y;
+		cout << "tailed_X = " << tailed_x << "   tailed_y = " << tailed_y <<" in  stter" << endl;
 		tempOnground = true;
 	}
 	//void detectYourself();

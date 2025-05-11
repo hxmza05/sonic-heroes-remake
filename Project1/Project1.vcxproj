@@ -152,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Audio.h" />
     <ClInclude Include="BossLevel.h" />
     <ClInclude Include="Extralives.h" />
     <ClInclude Include="FallingPlatform.h" />
