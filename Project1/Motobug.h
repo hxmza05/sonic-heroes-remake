@@ -246,6 +246,7 @@ void Motobug::update(char** lvl, Player& player, int cell_size, bool& hasKnocked
 				if (hp <= 0 && Alive) {
 					setAlive(false);
 					isDying = true;
+					handleDeathAnimation();
 					deathClock.restart();
 					deathFrameClock.restart();
 					hud.getScore() += 100;

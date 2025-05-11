@@ -6,6 +6,7 @@
 #include "Leaderboard.h"
 #include "Animation.h"
 #include"Game.h"
+#include"Audio.h"
 using namespace sf;
 using namespace std;
 
@@ -13,6 +14,8 @@ class Menu
 {
 
 private:
+
+    Audio* audio;
 
     static const int totalMenuOptions = 6;
     const char* menuOptions[totalMenuOptions] = { "New Game", "Load Game", "Continue", "Options", "Leader Board", "Exit" };
@@ -147,7 +150,7 @@ private:
     Texture levelSelectBg;
     Sprite levelSelectSp;
 
-
+    
 
     float selectorX_main[6] = { 392, 388.5, 414, 430.5, 359, 474 };   
     float selectorY_main[6] = { 399, 474, 549, 624, 699, 774 };
@@ -160,7 +163,7 @@ private:
 
 
 public:
-    Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : leaderboard(lb)
+    Menu(int screenWidth, int screenHeigth, Leaderboard* lb, Audio* ad) : leaderboard(lb), audio(ad)
     {
         gameLoaded = false;
         selectedOption = 0;
@@ -592,11 +595,13 @@ public:
                         moveSound.setVolume(sfxVolume);
                         selectSound.setVolume(sfxVolume);
                         backSound.setVolume(sfxVolume);
+                        audio->setSFXVolume((float)sfxVolume);
                     }
                     else if (currentMenuOption == 4 && musicVolume < 50)
                     {
                         musicVolume++;
                         menuMusic.setVolume(musicVolume);
+                        audio->setMusicVolume((float)musicVolume);
                     }
                 }
 

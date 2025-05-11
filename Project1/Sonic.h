@@ -19,6 +19,7 @@ using namespace sf;
 #define STILL 12
 #define GLIDEL 13
 #define GLIDER 14
+#define AJUMP 0
 
 class Sonic :public Player
 {
@@ -179,6 +180,11 @@ public:
 			states[GLIDER]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49, 50));
 			states[GLIDER]->getSprites()[i].setScale(2, 2);
 		}
+		
+
+
+
+
 
 		delayInFollow = 25;
 		max_speed = 15;

@@ -30,19 +30,22 @@ class StateManager
 	int stateIndex;
 	RenderWindow& window;
 	Leaderboard* leaderboard;
+	Audio audio;
 	int screen_x ;
 	int screen_y ;
+
 public:
 	StateManager(Leaderboard* leaderboard, RenderWindow& w) :window(w)
 	{
 		this->leaderboard = leaderboard;
+		audio.loadAllSounds();
 		//window = w;
 		screen_x = 1200;
 		screen_y = 900;
 		
 		stateIndex = 0;
 		//menu = new Menu(screen_x, screen_y, &leaderboard);
-		menu = new Menu(screen_x, screen_y, leaderboard);
+		menu = new Menu(screen_x, screen_y, leaderboard, &audio);
 		game = new Game();
 	}
 	int getStateIndex()

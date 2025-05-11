@@ -74,7 +74,7 @@ public:
         level[1] = new Level2();
         level[2] = new Level3();
         level[3] = new BossLevel();
-        levelIndex = 2;
+        levelIndex = 0;
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
         bufferSpriteEnd.setTexture(buffer);
@@ -162,6 +162,57 @@ public:
     HUD &getHUD()
     {
         return hud;
+    }
+    void saveGame(string& playerName)
+    {
+        ofstream out("savefile.txt");
+        if (!out) return;
+
+        out << playerName << "\n";  // assuming you have playerName stored somewhere
+        out << levelIndex << "\n";
+        out << hud.getLives() << "\n";
+        out << team.getPlayerIndex() << "\n";
+        out << team.getPlayer()[team.getPlayerIndex()][0].getx() << "\n";
+        out << team.getPlayer()[team.getPlayerIndex()][0].gety() << "\n";
+        out << hud.getRings() << "\n"; // if you store this somewhere
+        out << hud.getScore() << "\n"; // assuming you track it
+        /*cout << level[levelIndex]->getTotalEnemyCount();
+        cout << level[levelIndex]->getEnemies();*/
+        /*for (int i = 0;i < level[levelIndex]->getTotalEnemyCount();i++)
+        {
+            out << (int)level[levelIndex]->getEnemies()[i]->alive()<<"\n";
+            cout << level[levelIndex]->getEnemies()[i]->alive() << "\n";
+        }*/
+        out.close();
+    }
+    bool loadGame(string& playerName)
+    {
+        ifstream in("savefile.txt");
+        if (!in) return false;
+
+        string name;
+        float x, y;
+        int hp, playerIdx;
+        int sc;
+
+        getline(in, name);
+        playerName = name;
+
+        in >> levelIndex >> hp >> playerIdx >> x >> y >> hud.getRings() /*>> enemiesDefeated*/ >> sc;
+        /*   for (int i = 0;i < level[levelIndex]->getTotalEnemyCount();i++)
+           {
+               bool b;
+               in >> b;
+               level[levelIndex]->getEnemies()[i]->setAlive(b);
+           }*/
+        team.setPlayerIndex(playerIdx);
+        hud.setLives(hp);
+
+        team.getPlayer()[playerIdx]->setx(x);
+        team.getPlayer()[playerIdx]->sety(y);
+
+        in.close();
+        return true;
     }
     void play(RenderWindow& window)
     {
@@ -413,57 +464,7 @@ public:
          draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
     }
    
-    void saveGame(string&playerName)
-    {
-        ofstream out("savefile.txt");
-        if (!out) return;
-
-        out << playerName << "\n";  // assuming you have playerName stored somewhere
-        out << levelIndex << "\n";
-        out << hud.getLives() << "\n";
-        out << team.getPlayerIndex() << "\n";
-        out << team.getPlayer()[team.getPlayerIndex()][0].getx() << "\n";
-        out << team.getPlayer()[team.getPlayerIndex()][0].gety() << "\n";
-        out << hud.getRings() << "\n"; // if you store this somewhere
-        out << hud.getScore() << "\n"; // assuming you track it
-        /*cout << level[levelIndex]->getTotalEnemyCount();
-        cout << level[levelIndex]->getEnemies();*/
-        /*for (int i = 0;i < level[levelIndex]->getTotalEnemyCount();i++)
-        {
-            out << (int)level[levelIndex]->getEnemies()[i]->alive()<<"\n";
-            cout << level[levelIndex]->getEnemies()[i]->alive() << "\n";
-        }*/
-        out.close();
-    }
-    bool loadGame(string& playerName) 
-    {
-        ifstream in("savefile.txt");
-        if (!in) return false;
-
-        string name;
-        float x, y;
-        int hp, playerIdx;
-        int sc;
-
-        getline(in, name);
-        playerName = name;
-
-        in >> levelIndex >> hp >> playerIdx >> x >> y >> hud.getRings() /*>> enemiesDefeated*/ >> sc;
-     /*   for (int i = 0;i < level[levelIndex]->getTotalEnemyCount();i++)
-        {
-            bool b;
-            in >> b;
-            level[levelIndex]->getEnemies()[i]->setAlive(b);
-        }*/
-        team.setPlayerIndex(playerIdx);
-        hud.setLives(hp);
-        
-        team.getPlayer()[playerIdx]->setx(x);
-        team.getPlayer()[playerIdx]->sety(y);
-
-        in.close();
-        return true;
-    }
+    
 
 
 };

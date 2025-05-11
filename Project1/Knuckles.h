@@ -5,7 +5,7 @@ using namespace sf;
 #define BREAKR 15
 #define BREAKL 16
 
-
+#define AJUMP 0
 
 class Knuckles :public Player
 {
@@ -185,6 +185,8 @@ public:
 			states[BREAKR]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
 			states[BREAKR]->getSprites()[i].setScale(2, 2);
 		}
+
+		
 		coolDown.restart();
 		delayInFollow = 30;
 	}
@@ -197,6 +199,7 @@ public:
 	{
 		if(!spacePressed)
 		{
+
 			velocityY = -19.5;
 			onGround = false;
 		}
