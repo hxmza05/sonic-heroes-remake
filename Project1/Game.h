@@ -150,6 +150,7 @@ public:
             return;
         }
         levelIndex++;
+        level[levelIndex]->loadAndPlaceCollectibles();
         team.getPlayer()[team.getPlayerIndex()]->getx() = 150;
         team.getPlayer()[team.getPlayerIndex()]->gety() = 150;
         team.getPlayer()[team.getPlayerIndex()]->getVelocityY() = 15;
