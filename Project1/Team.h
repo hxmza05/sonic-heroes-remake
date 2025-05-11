@@ -8,6 +8,8 @@
 #include "TailedFox.h"
 #include "Knuckles.h"
 #include "time.h"
+#include "Audio.h"
+
 class Team
 {
     Player** team;
@@ -21,6 +23,8 @@ class Team
     int spaceCount;
     bool isFlying;
     int isNotFlyingCount;
+
+    Audio* audio;
 
 public:
     Team()
@@ -111,6 +115,14 @@ public:
     {
         return spaceCount;
     }
+    void setAudio(Audio* a) 
+    { 
+        audio = a; 
+        for (int i = 0; i < 3; ++i) {
+            team[i]->setAudio(a);
+        }
+    }
+
     void autoMoveFollowers(char** lvl, float offsetx, int width)
     {
         for (int i = 0; i < 3; i++)

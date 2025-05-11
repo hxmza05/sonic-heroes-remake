@@ -2,6 +2,7 @@
 #include<iostream>
 using namespace std;
 #include"Animation.h"
+#include "Audio.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
@@ -89,6 +90,9 @@ protected:
 	bool invincible;
 	double flyingTime;
 	int idxPl;
+
+	Audio* audio;
+
 public:
 	Player()
 	{
@@ -139,6 +143,10 @@ public:
 		hitBoxTex.loadFromFile("Data/hitBox.png");
 		hitBoxTexJump.loadFromFile("Data/hitBoxJump.png");
 		HitBoxSprite.setScale(2.5, 2.5);
+	}
+	void setGravity(float g)
+	{
+		gravity = g;
 	}
 	int getIdxPl()
 	{
@@ -318,6 +326,10 @@ public:
 	void setVelcotiyX(float a)
 	{
 		velocityX = a;
+	}
+	void setAudio(Audio* a) 
+	{ 
+		audio = a; 
 	}
 	void decelerateRight(char** lvl, int width, float friction);
 	void player_dummy_gravity(char** lvl, float& offset_y, float& offset_x, const int cell_size, bool& spacePressed,int,int);

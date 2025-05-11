@@ -16,8 +16,9 @@ class Level3 : public Level
 	Motobug** MotoBugs;
 	Batbrain** bats;
 public:
-	Level3(char** level = nullptr, Enemy*** e = nullptr)
+	Level3(Audio* ad)
 	{
+		this->audio = ad;
 		backGround.loadFromFile("Data/lvl3Bg.jpeg");
 		backGroundSprite.setTexture(backGround);
 		unsigned int bgWidth = 626;
@@ -38,7 +39,7 @@ public:
 		{
 			walls[i].setScale(2, 2);
 		}
-		friction = 0.3;
+		friction = 0.4;
 		height = 14;
 		width = 300;
 		lvl = new char* [height];
@@ -125,6 +126,10 @@ public:
 	{
 		return nullptr;
 	}
+	void setAudio(Audio* a) override {
+		audio = a;
+		audio->playLevelMusicByIndex(audio->getLevel3Music());
+	}
 
 	virtual void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player,HUD&,bool&)
 	{
@@ -134,7 +139,7 @@ public:
 	{
 		for (int i = 0; i < enemyCount; ++i)
 		{
-			if (!enemies[i]->deathDone())
+			if (!enemies[i]->deathDone() && enemies[i]->deathDone())
 				enemies[i]->draw(window, offset_x);
 		}
 	}

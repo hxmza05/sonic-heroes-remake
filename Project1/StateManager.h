@@ -22,9 +22,11 @@
 #include"Team.h"
 #include"Game.h"
 #include"StateManager.h"
+#include"Audio.h"
 
 class StateManager
 {
+	Audio audio;
 	Menu *menu;
 	Game* game;
 	Clock leaderBoardClk;
@@ -34,19 +36,28 @@ class StateManager
 	int screen_x ;
 	int screen_y ;
 	bool showLeaderBoard;
+
 public:
 	StateManager(Leaderboard* leaderboard, RenderWindow& w) :window(w)
 	{
 		showLeaderBoard = false;
 		this->leaderboard = leaderboard;
+		audio.loadAllSounds();
 		//window = w;
 		screen_x = 1200;
 		screen_y = 900;
 		
-		stateIndex = 1;
+		stateIndex = 0;
 		//menu = new Menu(screen_x, screen_y, &leaderboard);
 		menu = new Menu(screen_x, screen_y, leaderboard);
-		game = new Game();
+		menu->setAudio(&audio);
+		game = new Game(&audio);
+
+
+
+
+              
+
 	}
 	int getStateIndex()
 	{

@@ -4,6 +4,7 @@
 #include "Projectile.h"
 #include "Player.h"
 #include "HUD.h"
+#include "Audio.h"
 using namespace std;
 using namespace sf;
 #include <SFML/Graphics.hpp>
@@ -276,6 +277,10 @@ void Crabmeat::movement(char** lvl, Player& player, int cell_size)
 
 			projectile->setCrabProjectileVelocity(crabCenterX, crabCenterY, vx, vy);
 
+			if (audio) {
+				audio->playSound(audio->getShot());
+			}
+
 			cout << "Projectile Fired" << endl;
 			cout << "dx: " << dx << " dy: " << dy << " distance: " << distance << endl;
 			cout << "vx: " << vx << " vy: " << vy << endl;
@@ -387,6 +392,11 @@ void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 
 	if (handleProjectilesCollision(lvl, cell_size, player.getx(), player.gety(), player.getPwidth(), player.getPheight(), hasKnockedBack, tempVelocityY, 14, 200)) 
 	{
+
+		if (audio) {
+			audio->playSound(audio->getExplosion());
+		}
+
 		hud.getLives()--;
 		onGround = false;
 
@@ -403,6 +413,9 @@ void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 			if (hp <= 0 && Alive)
 			{
 				setAlive(false);
+				if (audio) {
+					audio->playSound(audio->getDestroy());
+				}
 				isDying = true;
 				deathClock.restart();
 				deathFrameClock.restart();

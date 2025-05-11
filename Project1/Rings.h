@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "Collectibles.h"
+#include "Audio.h"
 using namespace std;
 using namespace sf;
 #include <SFML/Graphics.hpp>
@@ -124,6 +125,9 @@ public:
         if (player.getx() + player.getPwidth() > ring_x && player.getx() < ring_x + ringWidth && player.gety() + player.getPheight() > ring_y && player.gety() < ring_y + ringHeight) {
             collect();
             result++;
+            if (audio) {
+                audio->playSound(audio->getRing());
+            }
             lvl[y][x] = 's';
             return true;
         }

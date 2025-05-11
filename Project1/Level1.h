@@ -7,6 +7,7 @@
 #include "FallingPlatform.h"
 #include "HUD.h"
 
+
 class Level1 : public Level
 {
     MoveablePlatform* moveable;
@@ -32,16 +33,15 @@ class Level1 : public Level
     int batStart;
     int batEnd;
     Batbrain* bats;
-
-
    
     int j_start;
     int cell_size;
 
 
 public:
-    Level1()
+    Level1(Audio* ad) 
     {
+        this->audio = ad;
         backGround.loadFromFile("Data/bg1.png");
         backGroundSprite.setTexture(backGround);
         //hardcoded
@@ -64,7 +64,7 @@ public:
         {
             walls[i].setScale(1.03, 1.03);
         }
-        friction = 0.4;
+        friction = 0.3;
         cell_size = 64;
         height = 14;
         width = 200;
@@ -88,6 +88,7 @@ public:
         for (int i = 0; i < crabCount; i++) {
 
             crab = new Crabmeat();
+            crab->setAudio(audio);
 
             if (crab->getCrabCoordinates(lvl, height, width, crab_start, crab_end, j_start))
             {
@@ -106,6 +107,7 @@ public:
         for (int i = 0; i < beeCount; i++) {
 
             beebot = new Beebot();
+            beebot->setAudio(audio);
 
             if (beebot->getBeebotCoordinates(lvl, height, width, bee_start, bee_end, j_start, occupiedColumns))
             {
@@ -124,6 +126,7 @@ public:
         for (int i = 0; i < motobugCount; i++) {
 
             motobugs = new Motobug();
+            motobugs->setAudio(audio);
 
             if (motobugs->getMotobugCoordinates(lvl, height, width, motobug_start, motobug_end, j_start))
             {
@@ -140,6 +143,7 @@ public:
         for (int i = 0; i < batbrainCount; ++i) {
 
             bats = new Batbrain();
+            bats->setAudio(audio);
 
             if (bats->getBatbrainCoordinates(lvl, height, width, batStart, batEnd, cell_size)) {
                 enemies[enemyCount++] = bats;
@@ -153,6 +157,8 @@ public:
             falling[i] = new FallingPlatform(64 * f, 500);
         moveable = new MoveablePlatform(1000, 450, 850, 1500);
         levelEnd = 195 * 64;
+
+
     }
     MoveablePlatform* getMoveable() override
     {
@@ -218,6 +224,10 @@ public:
         file.close();
     }
 
+    void setAudio(Audio* a) override {
+        audio = a;
+        audio->playLevelMusicByIndex(audio->getLevel1Music());
+    }
 
     void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool& gameOver) override
     {

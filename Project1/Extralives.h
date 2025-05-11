@@ -1,5 +1,6 @@
 #pragma once
 #include "Collectibles.h"
+#include "Audio.h"
 
 class ExtraLife : public Collectibles {
 
@@ -28,6 +29,9 @@ public:
         if (player.getx() + player.getPwidth() > life_x && player.getx() < life_x + 64 && player.gety() + player.getPheight() > life_y && player.gety() < life_y + 64) {
             collect();
             result++;
+            if (audio) {
+                audio->playSound(audio->getOneUp());
+            }
             lvl[y][x] = 's';
             return true;
         }

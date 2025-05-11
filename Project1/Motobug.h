@@ -1,11 +1,13 @@
 #pragma once
 #include <iostream>
-#include "Enemy.h"
 #include "Player.h"
 #include "HUD.h"
+#include "Enemy.h"
+#include "Audio.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
+
 
 
 class Motobug : public Enemy
@@ -153,6 +155,11 @@ void Motobug::movement(float player_x, float player_y) {
 
 		setAttack(); 
 
+		if (audio) {
+			audio->playSound(audio->getSpikes());
+		}
+
+
 		indexAnimation = 1;
 
 		if (player_x > x + offset) {
@@ -245,7 +252,11 @@ void Motobug::update(char** lvl, Player& player, int cell_size, bool& hasKnocked
 
 				if (hp <= 0 && Alive) {
 					setAlive(false);
+					if (audio) {
+						audio->playSound(audio->getDestroy());
+					}
 					isDying = true;
+					handleDeathAnimation();
 					deathClock.restart();
 					deathFrameClock.restart();
 					hud.getScore() += 100;

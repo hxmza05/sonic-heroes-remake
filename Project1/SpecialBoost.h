@@ -1,5 +1,7 @@
 #pragma once
 #include "Collectibles.h"
+#include "Audio.h"
+
 
 class SpecialBoost : public Collectibles {
 
@@ -29,6 +31,9 @@ public:
 
             collect();
             result = 1;
+            if (audio) {
+                audio->playSound(audio->getSpecialWarp());
+            }
             lvl[y][x] = 's';
             return true;
         }

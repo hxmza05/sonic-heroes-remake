@@ -41,9 +41,10 @@ class Level2 : public Level
     int cell_size;
 
 public:
-	Level2() 
+	Level2(Audio* ad) 
 	{
         levelTimer = 120;
+        this->audio = ad;
         backGround.loadFromFile("Data/bgLvl2O.jpg");
         backGroundSprite.setTexture(backGround);
         unsigned int bgWidth = backGround.getSize().x;
@@ -70,7 +71,7 @@ public:
         {
             walls[i].setScale(1.03, 1.03);
         }
-        friction = 0.5;
+        friction = 0.2;
         cell_size = 64;
         cout << "LEVEL 2 COnstructor being loaded : " << endl;
 		height = 14;
@@ -93,6 +94,7 @@ public:
         for (int i = 0; i < crabCount; i++) {
 
             crab = new Crabmeat();
+            crab->setAudio(audio);
 
             if (crab->getCrabCoordinates(lvl, height, width, crab_start, crab_end, j_start))
             {
@@ -111,6 +113,7 @@ public:
         for (int i = 0; i < beeCount; i++) {
 
             beebot = new Beebot();
+            beebot->setAudio(audio);
 
             if (beebot->getBeebotCoordinates(lvl, height, width, bee_start, bee_end, j_start, occupiedColumns))
             {
@@ -129,6 +132,7 @@ public:
         for (int i = 0; i < motobugCount; i++) {
 
             motobugs = new Motobug();
+            motobugs->setAudio(audio);
 
             if (motobugs->getMotobugCoordinates(lvl, height, width, motobug_start, motobug_end, j_start))
             {
@@ -145,6 +149,7 @@ public:
         for (int i = 0; i < batbrainCount; ++i) {
 
             bats = new Batbrain();
+            bats->setAudio(audio);
 
             if (bats->getBatbrainCoordinates(lvl, height, width, batStart, batEnd, cell_size)) {
                 enemies[enemyCount++] = bats;
@@ -217,12 +222,16 @@ public:
 	{
 		return falling;
 	}
-  
+    void setAudio(Audio* a) override {
+        audio = a;
+        audio->playLevelMusicByIndex(audio->getLevel2Music());
+    }
+
     void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool& gameOver) override
     {
         for (int i = 0; i < enemyCount; ++i)
         {
-            if (!enemies[i]->alive())
+            if (!enemies[i]->alive() && enemies[i]->deathDone())
                 continue;
 
             enemies[i]->update(lvl, player, cell_size, hasKnockedBack, tempVelocity, onGround, indexAnimation, hud, gameOver);

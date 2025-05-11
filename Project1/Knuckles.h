@@ -7,6 +7,7 @@ using namespace sf;
 #define GLIDEL 13
 #define GLIDER 14
 #define AJUMP 0
+#include "Audio.h"
 
 class Knuckles :public Player
 {
@@ -233,6 +234,9 @@ public:
 			}
 			cout << "BreakCalled";
 			Break(lvl,14,width);
+			if (audio && GlideCount == 0) {
+				audio->playSound(audio->getSpecialWarp());
+			}
 			//coolDown.restart();
 		}
 		states[indexAnimation]->RunAnimation();
@@ -256,6 +260,10 @@ public:
 		// If block is breakable
 		if (checkCollisionExceptSpikes(lvl, checkX, checkY,height,width))
 		{
+			if (audio) {
+				audio->playSound(audio->getGlassSmash());
+			}
+
 			lvl[tileY][tileX] = 's'; // Mark it as emptyspace pwnow
 			cout << "Collision Detected and Block Broken\n";
 		}
@@ -263,6 +271,11 @@ public:
 		tileY = checkY / 64;
 		if (checkCollisionExceptSpikes(lvl, checkX, checkY,height,width))
 		{
+
+			if (audio) {
+				audio->playSound(audio->getGlassSmash());
+			}
+
 			lvl[tileY][tileX] = 's'; // Mark it as emptyspace pwnow
 			cout << "Collision Detected and Block Broken\n";
 		}

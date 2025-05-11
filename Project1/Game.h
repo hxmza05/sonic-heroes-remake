@@ -13,7 +13,11 @@
 #include "Rings.h"
 #include "GlobalFunctions.h"
 #include "HUD.h"
+
+#include"Audio.h"
+
 #include "FallingPlatform.h"
+
 class Game
 {
     // some score and other stuff
@@ -33,6 +37,12 @@ class Game
     int hit_box_factor_x;
     int hit_box_factor_y;
     Clock makeInvincible;
+
+    Audio* audio;
+
+
+
+
     Clock specialBoostClock;
     bool specialBoostUsed;
 
@@ -52,7 +62,7 @@ class Game
     ////////////////////////////
 
 public:
-    Game()
+    Game(Audio* ad) : audio(ad)
     {
         specialBoostUsed = false;
         font.loadFromFile("Fonts/scoreFont.ttf");
@@ -62,16 +72,27 @@ public:
         gameover.setPosition(320, 350);
         gameover.setFillColor(Color::Red);
 
+        team.setAudio(audio);
+
         gameOver = false;
         cell_size = 64;
         // team = Team();
         // level = new * Level();
         level = new Level * [3];
-        level[0] = new Level1();
-        level[1] = new Level2();
-        level[2] = new Level3();
-        level[3] = new BossLevel();
-        levelIndex = 0;
+        level[0] = new Level1(audio);
+        level[0]->setAudio(audio);
+
+        level[1] = new Level2(audio);
+        level[1]->setAudio(audio);
+
+        level[2] = new Level3(audio);
+        level[2]->setAudio(audio);
+
+       /* level[3] = new BossLevel(audio);
+        level[3]->setAudio(audio);*/
+
+
+        levelIndex = 1;
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
         bufferSpriteEnd.setTexture(buffer);
@@ -88,6 +109,7 @@ public:
         int width = level[levelIndex]->getWidth();
 
         level[levelIndex]->loadAndPlaceCollectibles();
+
 
         ringsCollected = 0;
         BoostStatus = false;
@@ -154,12 +176,20 @@ public:
             return;
         }
         levelIndex++;
+        level[levelIndex]->setAudio(audio);
         if (levelIndex != 3)
             level[levelIndex]->loadAndPlaceCollectibles();
         team.getPlayer()[team.getPlayerIndex()]->getx() = 150;
         team.getPlayer()[team.getPlayerIndex()]->gety() = 150;
         team.getPlayer()[team.getPlayerIndex()]->getVelocityY() = 15;
         team.getPlayer()[team.getPlayerIndex()]->getOnGround() = true;
+        if (levelIndex == 2)
+        {
+            for (int i = 0;i < 3;i++)
+            {
+                team.getPlayer()[i]->setGravity(0.4);
+            }
+        }
         buffer_start = 4 * 64;
         buffer_end = 9 * 64;
         offset_x = 0;
@@ -173,6 +203,9 @@ public:
     HUD& getHUD()
     {
         return hud;
+    }
+    void setTeamAudio(Audio* a) { 
+        team.setAudio(a);
     }
     void saveGame(string& playerName)
     {
@@ -307,6 +340,8 @@ public:
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
                 team.jump();
+                //audio->playSound(audio->getJump());
+
                 // cout << "Jumped\n\n";
                 // cout << "onground  in (space ) = " << team.getPlayer()[team.getPlayerIndex()]->getOnGround()<<endl;
             }

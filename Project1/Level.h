@@ -9,6 +9,7 @@
 #include"Extralives.h"
 #include"SpecialBoost.h"
 #include"FallingPlatform.h"
+#include"Audio.h"
 using namespace std;
 #include"Animation.h"
 #include <SFML/Graphics.hpp>
@@ -65,6 +66,8 @@ protected:
 	 Sprite backGroundSprite;
 	 float scX;
 	 float scY;
+
+	 Audio* audio;
 
 
 public:
@@ -137,6 +140,15 @@ public:
 	{
 		return levelTimer;
 	}
+	virtual void setAudio(Audio* a) {
+		audio = a;
+
+		for (int i = 0; i < enemyCount; i++) {
+			if (enemies[i]) {
+				enemies[i]->setAudio(audio);
+			}
+		}
+	}
 	 FallingPlatform** getFalling()
 	{
 		return falling;
@@ -150,6 +162,7 @@ public:
 			return true;
 		return false;
 	}
+
 
 	void setRingTextures(Texture* r, Texture* re) {
 		ringTex = r;
@@ -296,7 +309,9 @@ void Level::placeRingsFromMap(Texture* ringTex, Texture* ringEffect) {
 		for (int j = 0; j < width; ++j) {
 
 			if (lvl[i][j] == 'r') {
-				rings[index++] = new Ring(j, i, ringTex, ringEffect);
+				rings[index] = new Ring(j, i, ringTex, ringEffect);
+				rings[index]->setAudio(audio);
+				index++;
 			}
 		}
 	}
@@ -326,7 +341,9 @@ void Level::placeExtraLivesFromMap() {
 		for (int j = 0; j < width; ++j) {
 
 			if (lvl[i][j] == 'l') {
-				lives[index++] = new ExtraLife(j, i, lifeTex);
+				lives[index] = new ExtraLife(j, i, lifeTex);
+				lives[index]->setAudio(audio);
+				index++;
 			}
 		}
 	}
@@ -355,7 +372,9 @@ void Level::placeBoostsFromMap() {
 		for (int j = 0; j < width; ++j) {
 
 			if (lvl[i][j] == 'j') {
-				boosts[index++] = new SpecialBoost(j, i, boostTex);
+				boosts[index] = new SpecialBoost(j, i, boostTex);
+				boosts[index]->setAudio(audio);
+				index++;
 			}
 		}
 	}

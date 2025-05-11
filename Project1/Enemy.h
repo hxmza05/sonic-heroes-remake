@@ -3,10 +3,14 @@
 using namespace std;
 using namespace sf;
 #include"Animation.h"
+#include "Player.h"
 #include "HUD.h"
+#include "Audio.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
+
+
 
 class Enemy 
 {
@@ -40,6 +44,8 @@ protected:
 
 	//RectangleShape hitBoxShape;  
 
+	Audio* audio;
+
 
 public:
 
@@ -64,7 +70,6 @@ public:
 
 	}
 
-	
 	float& getX() {
 		return x;
 	}
@@ -89,6 +94,11 @@ public:
 		this->Alive = status; 
 	}
 
+	void setAudio(Audio* a) 
+	{ 
+		audio = a; 
+	}
+
 	void setAnimation(int animationIndex) {
 		indexAnimation = animationIndex;
 	}
@@ -97,7 +107,6 @@ public:
 		states[indexAnimation]->RunAnimation();
 		sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
 	}
-
 
 	void setPosition(float startX, float startY, float Start, float End) {
 

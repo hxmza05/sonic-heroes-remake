@@ -3,6 +3,7 @@
 using namespace sf;
 
 #define AJUMP 0
+#include "Audio.h"
 
 class TailedFox :public Player
 {
@@ -163,6 +164,10 @@ public:
 	{
 		if (spaceCount > 9 && ((!restarted) || (restarted && fliyingClock.getElapsedTime().asSeconds() < flyingTime)) )
 		{
+			if (audio && !audio->isSoundPlaying(audio->getFlying())) {
+				audio->playSound(audio->getFlying());
+			}
+
 			hasCooleddown = false;
 
 			if (y - 2 >= 64)
@@ -180,6 +185,10 @@ public:
 		}
 		else if (fliyingClock.getElapsedTime().asSeconds() >= flyingTime && restarted && spaceCount > 9)
 		{
+			if (audio) {
+				audio->playSound(audio->getTired());
+			}
+
 			spaceCount = 0;
 			return;
 		}

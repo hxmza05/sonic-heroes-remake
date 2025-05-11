@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Player.h"
 #include "HUD.h"
+#include "Audio.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -173,10 +174,18 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
     {
         if (indexAnimation == UPR || indexAnimation == UPL)
         {
-            if (hp == 0)
+            if (hp == 0) {
                 Alive = false;
-            else
+                if (audio) {
+                    audio->playSound(audio->getDestroy());
+                }
+            }
+            else {
                 hp--;
+                if (hp > 0 && audio) {
+                    audio->playSound(audio->getBossHit());
+                }
+            }
 
             hasKnockedBack = true;
             tempVelocityY = -2;
