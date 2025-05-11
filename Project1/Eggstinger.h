@@ -27,25 +27,24 @@ private:
 	int targetTileJ;
 	Clock diveClock;
 
-
     const float stingerHeight;
     const float stingerWidth;
 
     Texture stingerspikeTexture;
     Sprite stingerspikeSprite;
+    Texture stingerTexture;
 
     float spikeHeightShown;    
     float maxSpikeHeight;      
     float spikeGrowSpeed; 
     float spikeOffsetY;
 
-
-
     Clock spikeHoldClock;
     float spikeHoldDuration; 
     bool spikeHold;
 
 
+    Clock animationClock;
 
 
 public:
@@ -58,6 +57,9 @@ public:
         right = false;
 		this->x = 0;
 		this->y = 0;
+        totalAnimations = 1; 
+        indexAnimation = 0;
+        animationClock.restart();
 
 		hoverHeight = 2 * 64;
 		targetY = 8 * 64/* - 97.6f + 5.f*/;
@@ -90,10 +92,17 @@ public:
         stingerspikeSprite.setScale(1.5f, -0.5f);
 
 
-		texture.loadFromFile("Sprites/eggstinger.png");
-		sprite.setTexture(texture);
-		sprite.setTextureRect(IntRect(0, 0, 150, 122));
-		sprite.setScale(0.8f, 0.8f);
+        states = new Animation * [totalAnimations];
+        states[0] = new Animation(6); 
+        stingerTexture.loadFromFile("Sprites/stinger.png");
+
+        for (int i = 0, width = 0; i < 6; i++, width += 426 / 6) 
+        {
+            states[0]->getSprites()[i].setTexture(stingerTexture);
+            states[0]->getSprites()[i].setTextureRect(IntRect(width, 0, 71, 58));
+            states[0]->getSprites()[i].setScale(120.0f / 71.0f, 97.6f / 58.0f);
+        }
+
 
 
 	}
@@ -183,7 +192,6 @@ void Eggstinger::drawExtra(RenderWindow& window, float offset_x) {
 }
 
 
-
 bool Eggstinger::PlayerStingerCollision(float player_x, float player_y, int Pwidth, int Pheight, float enemy_x, float enemy_y, const float enemyWidth, const float enemyHeight)
 {
     return (player_x + Pwidth > enemy_x && player_x < enemy_x + enemyWidth && player_y + Pheight > enemy_y && player_y < enemy_y + enemyHeight);
@@ -224,6 +232,7 @@ void Eggstinger::movement(float player_x, float player_y, float player_width, ch
     if (!Alive) {
         return;
     }
+
 
     if (!isDiving && !isRising && !isTrackingBeforeDive && diveClock.getElapsedTime().asSeconds() >= 10.0f)
     {
@@ -349,7 +358,22 @@ void Eggstinger::movement(float player_x, float player_y, float player_width, ch
         }
     }
 
-    sprite.setPosition(x, y);
+    if (isDiving || isRising) {
+        sprite = states[indexAnimation]->getSprites()[5];
+    }
+
+    else {
+
+        if (animationClock.getElapsedTime().asSeconds() >= 0.2f) {
+            states[indexAnimation]->RunAnimation();
+            animationClock.restart();
+        }
+
+        sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
+    }
+
+    sprite.setPosition(x, y);  
+
 }
 
 

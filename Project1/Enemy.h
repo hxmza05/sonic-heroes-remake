@@ -24,17 +24,15 @@ protected:
 	int indexAnimation;
 	int totalAnimations;
 
+	bool isDying;          
+	bool deathFinished;    
 
+	Clock deathClock;             
+	Clock deathFrameClock;      
+	Texture* deathTexture;
 
-	Animation* deathAnim;     // Pointer to smoke death animation
-	Texture smoke0;
-	Texture smoke1;
-	bool isDying = false;     // Flag to start death animation
-	bool deathFinished = false; // Flag when animation ends
-	Clock deathClock;         // To time last frame and delay deletion
-
-	Clock deathFrameClock;        // Controls delay between death frames
-
+	void loadDeathAnimation(const string& filepath, int frameWidth, int frameHeight, float scaleX, float scaleY);
+	bool handleDeathAnimation();
 
 
 public:
@@ -45,68 +43,31 @@ public:
 		hp = 0;
 		Alive = false, Moving = false;
 		Start = 0, End = 0;
-		indexAnimation = 0, totalAnimations = 0;
+		indexAnimation = 0, totalAnimations = 0;	
+		isDying = false, deathFinished = false;    
+		deathClock.restart(), deathFrameClock.restart();        
+		deathTexture = nullptr;
 
-
-		smoke0.loadFromFile("Sprites/death0.png");
-		smoke1.loadFromFile("Sprites/death1.png");
-
-		deathAnim = new Animation(5); // 2 frames from smoke0, 3 from smoke1
-
-		int i = 0;
-		// First 2 frames from smoke0 (104x51  52x51 each)
-		for (int x = 0; x < 2; ++x, ++i) {
-			deathAnim->getSprites()[i].setTexture(smoke0);
-			deathAnim->getSprites()[i].setTextureRect(IntRect(x * 52, 0, 52, 51));
-			deathAnim->getSprites()[i].setScale(1.5f, 1.5f);
-		}
-
-		deathAnim->getSprites()[i].setTexture(smoke1);
-		deathAnim->getSprites()[i++].setTextureRect(IntRect(0, 0, 33, 31));   // Frame 1
-
-		deathAnim->getSprites()[i].setTexture(smoke1);
-		deathAnim->getSprites()[i++].setTextureRect(IntRect(33, 0, 30, 31));  // Frame 2
-
-		deathAnim->getSprites()[i].setTexture(smoke1);
-		deathAnim->getSprites()[i++].setTextureRect(IntRect(63, 0, 21, 31));  // Frame 3
-		
-		for (int j = i - 3; j < i; ++j)
-			deathAnim->getSprites()[j].setScale(2.f, 2.f);
-
-
-
-		
 	}
 
 	
 	float& getX() {
-
 		return x;
 	}
 
 	float& getY() {
-
 		return y;
 	}
 
 	float& getHp() {
-
 		return hp;
 	}
 
 	bool& alive() {
-
 		return Alive;
 	}
 
 	void setHp(float x) {
-
-		if (hp == 0)
-		{
-			Alive = false;
-			hp = 0;
-		}
-
 		hp = x;
 	}
 
@@ -147,6 +108,9 @@ public:
 		return sprite;
 	}
 
+	bool deathDone() const {
+		return deathFinished;
+	}
 
 	bool checkWallCollisionWithEnemy(char** lvl, float enemy_x, float enemy_y, const int cell_size = 64) {
 
@@ -156,45 +120,44 @@ public:
 	virtual void update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver) = 0;
 	virtual void drawExtra(RenderWindow& window, float offset_x) {}
 	virtual ~Enemy() {}
+};
 
 
-	void triggerDeath() {
+void Enemy::loadDeathAnimation(const string& filepath, int frameWidth, int frameHeight, float scaleX, float scaleY)
+{
 
-		if (!isDying) {
-			isDying = true;
-			deathAnim->reset();
+	Texture* deathTex = new Texture();
+	deathTex->loadFromFile(filepath);  
+	states[totalAnimations - 1] = new Animation(40);  
+
+	for (int i = 0; i < 40; ++i) {
+		int count = i % 4;
+		states[totalAnimations - 1]->getSprites()[i].setTexture(*deathTex);
+		states[totalAnimations - 1]->getSprites()[i].setTextureRect(IntRect(count * frameWidth, 0, frameWidth, frameHeight));
+		states[totalAnimations - 1]->getSprites()[i].setScale(scaleX, scaleY);
+	}
+
+}
+
+bool Enemy::handleDeathAnimation() {
+
+	if (!Alive && !deathFinished) {
+
+		indexAnimation = totalAnimations - 1;
+
+		if (deathFrameClock.getElapsedTime().asSeconds() >= 1.f) {
+			states[indexAnimation]->RunAnimation();
 			deathFrameClock.restart();
 		}
-	}
 
-	bool playDeathAnimation(RenderWindow& window, float offset_x) {
+		sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
 
-		if (!isDying) 
-			return false;
-
-		if (deathFrameClock.getElapsedTime().asMilliseconds() >= 800) {
-
-			if (deathAnim->getIndex() < deathAnim->getLength() - 1) {
-				deathAnim->RunAnimation(); 
-				deathFrameClock.restart();
-			}
-
-			else {
-				deathFinished = true;
-				return true;
-			}
+		if (deathClock.getElapsedTime().asSeconds() >= 40.f) {
+			deathFinished = true;
 		}
 
-		Sprite& frame = deathAnim->getSprites()[deathAnim->getIndex()];
-		frame.setPosition(x - offset_x, y);
-		window.draw(frame);
-		return false;
-
+		return true; 
 	}
 
-	bool hasDeathFinished() {
-		return deathFinished;
-	}
-
-
-};
+	return false;  
+}

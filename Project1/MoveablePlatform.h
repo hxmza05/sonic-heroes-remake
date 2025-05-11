@@ -83,7 +83,7 @@ public:
 			if (movePlayerAsWell)
 				player_x -= 3;
 		}
-		return returnState;
+		return movePlayerAsWell;
 	}
 	bool checkCollisionWithPlayer(float player_x, float player_y, int player_width, int playerheight)
 	{

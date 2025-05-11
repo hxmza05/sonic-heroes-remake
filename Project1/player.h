@@ -54,6 +54,9 @@ class Player
 	Sprite HitBoxSprite;
 
 protected:
+	Clock coolDown;
+	bool specialAbilityUsed;
+	Clock specialAbiltyClock;
 	float tailed_x;
 	float tailed_y;
 	float acceleration;
@@ -348,5 +351,12 @@ public:
 
 		//HitBoxSprite.setPosition(x + hit_box_factor_x, y + hit_box_factor_y);
 	}
-
+	bool &getSpecialAbiltyUsed()
+	{
+		return specialAbilityUsed;
+	}
+	virtual void spinDash(char** lvl, float w, float f)
+	{
+		cout << "LVL wala spindash\n";
+	}
 };

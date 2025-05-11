@@ -39,6 +39,11 @@
     <ClInclude Include="Collectibles.h" />
     <ClInclude Include="FallingPlatform.h" />
     <ClInclude Include="HUD.h" />
+<<<<<<< HEAD
+    <ClInclude Include="Extralives.h" />
+    <ClInclude Include="SpecialBoost.h" />
+=======
     <ClInclude Include="ExtraLife.h" />
+>>>>>>> 68398f8ab59e7d15a73ab40bcb8e321ab944e5fd
   </ItemGroup>
 </Project>

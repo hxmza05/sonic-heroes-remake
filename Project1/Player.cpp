@@ -75,7 +75,6 @@ void Player::player_gravity(char** lvl, float& offset_y, float& offset_x, const 
     char bottom_right_down = lvl[row_bottom][col_right];
     char bottom_mid_down = lvl[row_bottom][col_mid];
 
-    // Top sprite check (for transparent air tiles under player)
     int row_top = (int)(offset_y + hit_box_factor_y + 39) / cell_size;
 
     if (row_top < 0)
@@ -91,7 +90,6 @@ void Player::player_gravity(char** lvl, float& offset_y, float& offset_x, const 
     bool forMiddle = topMiddle == 's';
     bool forRight = topRight == 's';
 
-    // Ground collision
     if ((bottom_left_down == 'w' || bottom_mid_down == 'w' || bottom_right_down == 'w' ||
         bottom_left_down == 'e' || bottom_mid_down == 'e' || bottom_right_down == 'e' ||
         bottom_left_down == 'q' || bottom_mid_down == 'q' || bottom_right_down == 'q') &&
@@ -107,7 +105,6 @@ void Player::player_gravity(char** lvl, float& offset_y, float& offset_x, const 
         onGround = false;
     }
 
-    // Gravity update
     if (!onGround)
     {
         velocityY += gravity;
@@ -288,8 +285,8 @@ void Player::playerVirtualGravity(char** lvl, float& offset_y, float& offset_x, 
 }
 void Player::decelerate(char** lvl, int width,float friction)
 {
-    cout << "\n\nIn decelration : \n friction : "<<friction<<endl;
-    cout << "Vecloity before frition : " << velocityX;
+    /*cout << "\n\nIn decelration : \n friction : "<<friction<<endl;
+    cout << "Vecloity before frition : " << velocityX;*/
     int tempAnimationIndex = STILL;
     if (velocityX > 0)
     {
@@ -322,15 +319,15 @@ void Player::decelerate(char** lvl, int width,float friction)
     }
     else
     {
-        cout << "Collisoin Detected ";
+        //cout << "Collisoin Detected ";
         velocityX = 0;
     }
-    cout << "VeloctiyX  after frictio = " << velocityX << endl << endl;
+    //cout << "VeloctiyX  after frictio = " << velocityX << endl << endl;
 }
 void Player::decelerateRight(char** lvl, int width, float friction)
 {
-    cout << "\n\nIn decelration : \n friction : " << friction << endl;
-    cout << "Vecloity before frition : " << velocityX;
+    //cout << "\n\nIn decelration : \n friction : " << friction << endl;
+    //cout << "Vecloity before frition : " << velocityX;
     int tempAnimationIndex = STILL;
     if (velocityX > 0)
     {

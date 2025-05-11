@@ -52,7 +52,7 @@ public:
 		Start = 0;
 		End = 0;
 
-		totalAnimations = 6;
+		totalAnimations = 5;
 		indexAnimation = 0;
 
 		projectile = nullptr;
@@ -113,6 +113,12 @@ public:
 			states[3]->getSprites()[i].setTextureRect(IntRect(width, 0, 312/3, 66));
 			states[3]->getSprites()[i].setScale(0.577f, 0.666f);
 		}
+
+		// deatg
+
+
+		loadDeathAnimation("Sprites/death0.png", 41, 42, 1.5f, 1.5f);
+
 
 
 	}
@@ -365,6 +371,10 @@ bool Crabmeat::getProjectileActive() {
 
 void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
 {
+
+	if (handleDeathAnimation()) 
+		return;
+
 	movement(lvl, player, cell_size);
 
 	if (handleProjectilesCollision(lvl, cell_size, player.getx(), player.gety(), player.getPwidth(), player.getPheight(), hasKnockedBack, tempVelocityY, 14, 200)) 
@@ -379,10 +389,18 @@ void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 	if (!hasKnockedBack && checkCollisionWithPlayer(player)) {
 
 		if (indexAnimation == UPR || indexAnimation == UPL) {
+
 			setHp(0);
-			triggerDeath();
-			setAlive(false);
-			hud.getScore() += 150;
+
+			if (hp <= 0 && Alive)
+			{
+				setAlive(false);
+				isDying = true;
+				deathClock.restart();
+				deathFrameClock.restart();
+				hud.getScore() += 150;
+			}
+
 		}
 
 		else {
@@ -396,15 +414,6 @@ void Crabmeat::update(char** lvl, Player& player, int cell_size, bool& hasKnocke
 
 
 void Crabmeat::drawExtra(RenderWindow& window, float offset_x)  {
-
-	if (isDying && !deathFinished) {
-
-		if (playDeathAnimation(window, offset_x)) 
-		{
-		}
-
-		return; 
-	}
 
 	if (projectile && projectile->Active()) {
 		projectile->draw(window, offset_x);

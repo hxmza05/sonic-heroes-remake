@@ -109,4 +109,26 @@ public:
     {
         return ringHeight * 0.75f;
     }
+
+    bool handleCollision(Player& player, char** lvl, int cell_size, int& result) override {
+
+        if (!isActive()) 
+            return false;
+
+        float ring_x = x * cell_size;
+        float ring_y = y * cell_size + 12;
+        float rawWidths[4] = { 66, 56, 32, 53 };
+        float ringWidth = rawWidths[getIndex()] * 0.75f;
+        float ringHeight = 66 * 0.75f;
+
+        if (player.getx() + player.getPwidth() > ring_x && player.getx() < ring_x + ringWidth && player.gety() + player.getPheight() > ring_y && player.gety() < ring_y + ringHeight) {
+            collect();
+            result++;
+            lvl[y][x] = 's';
+            return true;
+        }
+        return false;
+    }
+
+
 };

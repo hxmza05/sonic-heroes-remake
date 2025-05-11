@@ -12,16 +12,6 @@ class Level1 : public Level
     FallingPlatform** falling;
     MoveablePlatform* moveable;
 
-
-
-
-
-
-
-
-
-
-
     int crabCount;
     int crab_start;
     int crab_end;
@@ -53,6 +43,32 @@ class Level1 : public Level
 public:
     Level1()
     {
+        backGround.loadFromFile("Data/bgLvl2O.jpg");
+        backGroundSprite.setTexture(backGround);
+        unsigned int bgWidth = backGround.getSize().x;
+        unsigned int bgHeight = backGround.getSize().y;
+        scX = (float)1200 / bgWidth;
+        scY = (float)900 / bgHeight;
+        backGroundSprite.setScale(scX, scY);
+      
+         backGroundSprite.setScale(scX, scY);
+        walls = new Sprite [4];
+        if (!wallText1.loadFromFile("Data/wall31.jpg"))
+        {
+            cerr << "\n\n\nFailed to load\n\n\n";
+        }
+        else cout << "\n\nsuccess in 1\n\n";
+        wallText1.loadFromFile("Data/wall32.png");
+        wallText2.loadFromFile("Data/wall32.png");
+        wallText3.loadFromFile("Data/wall32.png");
+        walls[0].setTexture(wallText1);
+        walls[1].setTexture(wallText2);
+        walls[2].setTexture(wallText3);
+        walls[3].setTexture(wallText4);
+        for (int i = 0;i < 3;i++)
+        {
+            walls[i].setScale(1.03, 1.03);
+        }
         friction = 0.3;
         cell_size = 64;
         height = 14;
@@ -63,33 +79,7 @@ public:
             lvl[i] = new char[width];
         }
         designlvl("lvl1.txt");
-/*<<< HEAD
-        crabCount = 5;
-        crabIndex = 0;
-        crabs = new Crabmeat * [crabCount];
-        for (int i = 0; i < crabCount; i++)
-        {
-            crabs[i] = new Crabmeat();
-        }
-        crab_start = 5;
-        crab_end = 9;
-        for (int i = 0; i < crabCount; ++i)
-        {
-            crabs[i]->getCrabCoordinates(lvl, height, width, crab_start, crab_end);
-        }
-        crabs[0]->move_crabs(crabs, crabIndex, crabCount, cell_size);
-        beeCount = 5;
-        beeIndex = 0;
-        beebots = new Beebot * [beeCount];
-        for (int i = 0; i < beeCount; i++)
-        {
-            beebots[i] = new Beebot();
-        }
-        bee_start = 5;
-        bee_end = 8;
-        beebots[0]->getBeebotCoordinates(lvl, height, width, bee_start, bee_end);
-        beebots[0]->move_beebots(beebots, beeIndex, beeCount, cell_size);
-=======*/
+
 
         enemyCount = 0;
         TotalEnemyCount = 17;
@@ -163,27 +153,6 @@ public:
         }
 
 
-
-        /*
-
->>>>>>> 6da9bdbf96a072d5143329fde596d3864afcf47d
-        motobugCount = 5;
-        motobugIndex = 0;
-        motobugs = new Motobug * [motobugCount];
-        for (int i = 0; i < motobugCount; i++)
-        {
-            motobugs[i] = new Motobug();
-        }
-        motobug_start = 10;
-        motobug_end = 12;
-        motobugs[0]->getMotobugCoordinates(lvl, height, width, motobug_start, motobug_end);
-        motobugs[0]->move_motobugs(motobugs, motobugIndex, motobugCount, cell_size);
-<<<<<<< HEAD
-=======
-        */
-
-
-//>>>>>>> 6da9bdbf96a072d5143329fde596d3864afcf47d
         falling = new FallingPlatform * [8];
         for (int i = 0, f = 32; i < 8; i++, f++)
             falling[i] = new FallingPlatform(64 * f, 500);
@@ -220,6 +189,10 @@ public:
             return 'r';
         case 6:
             return 'i';
+        case 7:
+            return 'j';
+        case 8:
+            return 'l';
         case 9:
             return 'b';
 
@@ -229,7 +202,6 @@ public:
     }
     void designlvl(const char* filename)
     {
-        //cout << "\n\n\nIn desgin function\n\n\n";
 
         ifstream file(filename);
         if (!file.is_open())
@@ -256,7 +228,7 @@ public:
     {
         for (int i = 0; i < enemyCount; ++i)
         {
-            if (!enemies[i]->alive())
+            if (!enemies[i]->alive() && enemies[i]->deathDone())
                 continue;
 
             enemies[i]->update(lvl, player, cell_size, hasKnockedBack, tempVelocity, onGround, indexAnimation, hud, gameOver);

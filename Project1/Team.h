@@ -319,6 +319,8 @@ public:
         {
             team[2]->useSpecialAbilty(lvl, height, width);
         }
+        if (playerIndex == 0)
+            team[0]->useSpecialAbilty(lvl, height, width);
     }
     void animate()
     {

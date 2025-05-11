@@ -164,7 +164,7 @@ public:
 			if(!spacePressed)
 			{
 				//cout << "\n\n\nJumping\n\n\n";
-				velocityY = -19.6;
+				velocityY = -22;
 				onGround = false;
 				indexAnimation = UPR;
 				//states[UPR][0].RunAnimation();

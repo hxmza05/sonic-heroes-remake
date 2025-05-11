@@ -44,11 +44,35 @@ class Level2 : public Level
 public:
 	Level2() 
 	{
-        friction = 0.1;
-        cell_size = 64;
+        levelEnd = 242 *64;
+        backGround.loadFromFile("Data/bgLvl2O.jpg");
+        backGroundSprite.setTexture(backGround);
+        unsigned int bgWidth = backGround.getSize().x;
+        unsigned int bgHeight = backGround.getSize().y;
+        scX = (float)1200 / bgWidth;
+        scY = (float)900 / bgHeight;
+        backGroundSprite.setScale(scX, scY);
 
+        backGroundSprite.setScale(scX, scY);
+        walls = new Sprite[4];
+        if (!wallText1.loadFromFile("Data/wall31.jpg"))
+        {
+            cerr << "\n\n\nFailed to load\n\n\n";
+        }
+        else cout << "\n\nsuccess in 1\n\n";
+        wallText1.loadFromFile("Data/wall32.png");
+        wallText2.loadFromFile("Data/wall32.png");
+        wallText3.loadFromFile("Data/wall32.png");
+        walls[0].setTexture(wallText1);
+        walls[1].setTexture(wallText2);
+        walls[2].setTexture(wallText3);
+        walls[3].setTexture(wallText4);
+        for (int i = 0;i < 3;i++)
+        {
+            walls[i].setScale(1.03, 1.03);
+        }
+        friction = 0.5;
         cell_size = 64;
-
         cout << "LEVEL 2 COnstructor being loaded : " << endl;
 		height = 14;
 		width = 250;
@@ -129,10 +153,10 @@ public:
 
         }
 
-        falling = new FallingPlatform * [8];
-        for (int i = 0, f = 32; i < 8; i++, f++)
-            falling[i] = new FallingPlatform(64 * f, 500);
-		moveable = new MoveablePlatform(0,0,0,0);
+        falling = new FallingPlatform * [fallingCount = 15];
+        for (int i = 0, f = 64; i < fallingCount; i++, f++)
+            falling[i] = new FallingPlatform(64 * f, 350);
+		moveable = new MoveablePlatform(35*64,7*64,35*64,44*64);
         levelEnd = 245 * 64;
 	}
     char getMapValues(int val)
@@ -153,6 +177,10 @@ public:
             return 'r';
         case 6:
             return 'i';
+        case 7:
+            return 'j';
+        case 8:
+            return 'l';
         case 9:
             return 'b';
 
@@ -186,11 +214,11 @@ public:
 	{
 		return moveable;
 	}
-	virtual FallingPlatform* *getFalling()
+	virtual FallingPlatform**getFalling()
 	{
 		return falling;
 	}
-
+  
     void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool& gameOver) override
     {
         for (int i = 0; i < enemyCount; ++i)
