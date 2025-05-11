@@ -231,7 +231,7 @@ public:
             temp.setPosition(x, y);
             text[i] = temp;
 
-            text[i].setFillColor(i == selectedOption ? Color::Yellow : Color::Red); 
+            text[i].setFillColor(i == selectedOption ? Color::Red : Color::Yellow); 
         }
 
         for (int i = 0; i < totalMenuOptions2; i++)
@@ -247,7 +247,7 @@ public:
 
             temp.setPosition(x, y);
             text2[i] = temp;
-            text2[i].setFillColor(i == currentMenuOption ? Color::Yellow : Color::Red);
+            text2[i].setFillColor(i == currentMenuOption ? Color::Red : Color::Yellow);
         }
 
 
@@ -473,7 +473,7 @@ public:
             }
 
             Vector2f finalPos = text[selectedOption].getPosition();
-            selector.setPosition(finalPos.x - 50, finalPos.y + 20);
+            selector.setPosition(finalPos.x - 50, finalPos.y + 24);
         }
 
         else if (menuState && currentMenuLevel == 1)
@@ -637,7 +637,7 @@ public:
             }
 
             Vector2f finalPos = text2[currentMenuOption].getPosition();
-            selector.setPosition(finalPos.x - 50, finalPos.y + 20);
+            selector.setPosition(finalPos.x - 50, finalPos.y + 24);
         }
 
         else if (leaderboardState)
