@@ -22,10 +22,6 @@ class HUD
 	int prevScore;
 	Clock scoreScaleClock;
 	float scoreTextScale;
-
-
-
-
 public:
 	HUD()
 	{
@@ -33,7 +29,7 @@ public:
 		ringsCollected = 0;
 
 		lives = 100;
-		lives = 5;
+		lives = 50;
 		timer.restart();
 		levelTime = 0.f;
 

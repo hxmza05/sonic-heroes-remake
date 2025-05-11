@@ -18,31 +18,25 @@ class Level3 : public Level
 public:
 	Level3(char** level = nullptr, Enemy*** e = nullptr)
 	{
-		backGround.loadFromFile("Data/bgLvl2O.jpg");
+		backGround.loadFromFile("Data/lvl3Bg.jpeg");
 		backGroundSprite.setTexture(backGround);
-		unsigned int bgWidth = backGround.getSize().x;
-		unsigned int bgHeight = backGround.getSize().y;
+		unsigned int bgWidth = 626;
+		unsigned int bgHeight = 357;
 		scX = (float)1200 / bgWidth;
 		scY = (float)900 / bgHeight;
 		backGroundSprite.setScale(scX, scY);
-
 		backGroundSprite.setScale(scX, scY);
 		walls = new Sprite[4];
-		if (!wallText1.loadFromFile("Data/wall31.jpg"))
-		{
-			cerr << "\n\n\nFailed to load\n\n\n";
-		}
-		else cout << "\n\nsuccess in 1\n\n";
-		wallText1.loadFromFile("Data/wall32.png");
-		wallText2.loadFromFile("Data/wall32.png");
-		wallText3.loadFromFile("Data/wall32.png");
+		wallText1.loadFromFile("Data/wallvl31.png");
+		wallText2.loadFromFile("Data/wallvl32.png");
+		wallText3.loadFromFile("Data/wallvl33.png");
 		walls[0].setTexture(wallText1);
 		walls[1].setTexture(wallText2);
 		walls[2].setTexture(wallText3);
 		walls[3].setTexture(wallText4);
 		for (int i = 0;i < 3;i++)
 		{
-			walls[i].setScale(1.03, 1.03);
+			walls[i].setScale(2, 2);
 		}
 		friction = 0.3;
 		height = 14;
@@ -63,8 +57,12 @@ public:
 			MotoBugs[i] = new Motobug();
 			bats[i] = new Batbrain();
 		}
+		falling = new FallingPlatform * [fallingCount = 15];
+		for (int i = 0, f = 64; i < fallingCount; i++, f++)
+			falling[i] = new FallingPlatform(64 * f, 350);
 		moveable = new MoveablePlatform(0, 0, 0, 0);
 		designlvl("lvl3.txt");
+		levelEnd = (width - 5) * 64;
 	}
 	char getMapValues(int val)
 	{
