@@ -376,6 +376,12 @@ public:
         audio->setMusicVolume((float)musicVolume);
         audio->playLevelMusicByIndex(audio->getLevel2Music());
     }
+    void returnToMenuFromGame()
+    {
+        gameState = false;
+        menuState = true;
+        enteringName = false;
+    }
 
     void update(RenderWindow& window,Game*game)
     {

@@ -53,6 +53,7 @@ class Game
     int levelIndex;
     int cell_size;
     Clock Akey;
+    bool wantToReturnToMenu;
 
     ////////////////////////////
     Clock levelTimer;
@@ -117,6 +118,8 @@ public:
         BoostStatus = false;
         randomLives = 0;
         jumpSFXClock.restart();
+        wantToReturnToMenu = false;
+
     }
     void setLevelIndex(int index)
     {
@@ -264,9 +267,23 @@ public:
             return true;
         return false;
     }
+    bool WantToReturnToMenu() {
+        return wantToReturnToMenu;
+    }
+
+    void resetReturnToMenuFlag() {
+        wantToReturnToMenu = false;
+    }
+
     bool play(RenderWindow& window)
     {
         // cout << "level = " << levelIndex<<endl;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+        {
+            wantToReturnToMenu = true;
+            return true;
+        }
+
         if (levelIndex == 3)
         {
             team.setplayerIndex(0);

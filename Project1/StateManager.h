@@ -106,13 +106,26 @@ public:
 			{
 				if (game->play(window))
 				{
-					showLeaderBoard = true;
-					stateIndex = 2;
-					leaderBoardClk.restart();
-					window.clear();
-
+					if (game->WantToReturnToMenu())
+					{
+						stateIndex = 0;
+						menu->returnToMenuFromGame();
+						menu->setAudio(&audio);
+						audio.playLevelMusicByIndex(audio.getBossMusic());
+						game->resetReturnToMenuFlag(); 
+						continue;
+					}
+					else
+					{
+						showLeaderBoard = true;
+						stateIndex = 2;
+						leaderBoardClk.restart();
+						window.clear();
+					}
 				}
+
 			}
+
 			if (stateIndex == 2)
 				if (leaderBoardClk.getElapsedTime().asMilliseconds() < 7000)
 				{
