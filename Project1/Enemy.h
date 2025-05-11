@@ -139,7 +139,6 @@ public:
 	virtual void update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver) = 0;
 	virtual void drawExtra(RenderWindow& window, float offset_x) {}
 	virtual ~Enemy() {}
-
 	/*
 	void drawHitBox(RenderWindow& window, float offset_x) 
 	{

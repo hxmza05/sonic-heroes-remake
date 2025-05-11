@@ -22,6 +22,9 @@ using namespace sf;
 
 class Sonic :public Player
 {
+	//bool specialAbi
+	bool directionSpecial;
+	bool restarted;
 	Texture jogLeft;
 	Texture jogRight;
 	Texture upLeft;
@@ -179,6 +182,8 @@ public:
 
 		delayInFollow = 25;
 		max_speed = 15;
+		specialAbilityUsed = false;
+		restarted = false;
 	}
 
 	virtual void followLeader(const int const **pathToFollow)
@@ -189,15 +194,47 @@ public:
 	{
 		if(!spacePressed)
 		{
-			velocityY = -19.6;
+			velocityY = -22;
 			onGround = false;
 		}
 	}
 	void useSpecialAbilty(char**lvl,int h,int w)
 	{
+		if(!specialAbilityUsed && coolDown.getElapsedTime().asSeconds() > 3)
+		{
+			specialAbilityUsed = true;
+			specialAbiltyClock.restart();
+			directionSpecial = direction;
+			if (direction)
+			{
+				velocityX = 5;
+			}
+			else velocityX = -5;
+			acceleration = 1;
+		}
 	}
-	/*void glideAndFollowTails()
+	void spinDash(char**lvl,float width,float friction)
 	{
-
-	}*/
+		if (specialAbiltyClock.getElapsedTime().asMilliseconds() > 500)
+		{
+			if(!restarted)
+			{
+				coolDown.restart();
+				restarted = true;
+			}
+			specialAbilityUsed = false;
+			acceleration = 0.2;
+			velocityX = 0;
+			return;
+		}
+		restarted = false;
+		if (directionSpecial)
+		{
+			moveRight(lvl, width, 0.1);
+		}
+		if (!directionSpecial)
+		{
+			moveLeft(lvl, width, 0.1);
+		}
+	}
 };

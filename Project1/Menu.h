@@ -107,8 +107,10 @@ private:
     Clock transitionClock;
     float blackScreenDuration = 0.5f;
 
-
     bool gameLoaded;
+
+    RectangleShape textBackground;
+
 
 public:
     Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : leaderboard(lb)
@@ -253,6 +255,11 @@ public:
 
         menuOptions2[3] = "SFX: 50";
         menuOptions2[4] = "Music: 50";
+
+        textBackground.setSize(Vector2f(horizontal_x, vertical_y / 1.8f));  // Adjust height as needed
+        textBackground.setPosition(0, vertical_y / 2.6f);                   // Align with text Y-start
+        textBackground.setFillColor(Color(255, 255, 255, 80));              // Semi-transparent white
+
     }
 
     bool isGameStateActive()

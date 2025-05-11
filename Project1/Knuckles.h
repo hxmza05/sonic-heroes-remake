@@ -10,7 +10,6 @@ using namespace sf;
 class Knuckles :public Player
 {
 	int GlideCount;
-	Clock coolDown;
 	Texture jogLeft;
 	Texture jogRight;
 	Texture upLeft;
@@ -198,7 +197,7 @@ public:
 	{
 		if(!spacePressed)
 		{
-			velocityY = -19;
+			velocityY = -22;
 			onGround = false;
 		}
 	}
@@ -244,7 +243,7 @@ public:
 		int tileY = checkY / 64;
 
 		//  checking bounds here firstxly
-		if (tileX < 0 || tileX >= 200 || tileY < 0 || tileY >= 14)
+		if (tileX < 0  || tileY < 0 || tileY >= 14)
 			return;
 		if (checkCollisionSpikes(lvl, checkX, checkY,height,width))
 		{

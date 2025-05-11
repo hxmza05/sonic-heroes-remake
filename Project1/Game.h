@@ -13,7 +13,7 @@
 #include "Rings.h"
 #include "GlobalFunctions.h"
 #include "HUD.h"
-// #include"FallingPlatform.h"
+ #include"FallingPlatform.h"
 class Game
 {
     // some score and other stuff
@@ -35,22 +35,8 @@ class Game
     Clock makeInvincible;
 
 
-    Texture backGround;
-    Sprite backGroundSprite;
 
-    Texture wallTex1;
-    Sprite wallSprite1;
 
-    Texture wall2;
-    Sprite wall2Sprite;
-
-    Texture wall3;
-    Sprite wall3Sprite;
-
-    Texture spikesTexture;
-    Sprite spikes;
-
-    Sprite* walls;
 
 
     Team team;
@@ -88,39 +74,18 @@ public:
         level[1] = new Level2();
         //level[2] = new Level3();
         level[3] = new BossLevel();
-        levelIndex = 3;
+        levelIndex = 1;
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
         bufferSpriteEnd.setTexture(buffer);
         buffer_start = 4 * 64;
-        buffer_end = 13 * 64;
+        buffer_end = 9 * 64;
         offset_x = 0;
         offset_y = 0;
         leftRight = false;
         hit_box_factor_x = 8 * 2.5;
         hit_box_factor_y = 5 * 2.5;
 
-
-        backGround.loadFromFile("Data/bg1.png");
-        backGroundSprite.setTexture(backGround);
-
-        wallTex1.loadFromFile("Data/brick1.png");
-        wallSprite1.setTexture(wallTex1);
-
-        wall2.loadFromFile("Data/brick2.png");
-        wall2Sprite.setTexture(wall2);
-
-        wall3.loadFromFile("Data/brick3.png");
-        wall3Sprite.setTexture(wall3);
-
-        spikesTexture.loadFromFile("Data/spike.png");
-        spikes.setTexture(spikesTexture);
-
-        walls = new Sprite[4];
-        walls[0] = wallSprite1;
-        walls[1] = wall2Sprite;
-        walls[2] = wall3Sprite;
-        walls[3] = spikes;
          
         spaceCount = 0;
         int height = level[levelIndex]->getHeight();
@@ -178,50 +143,6 @@ public:
         bufferSprite.setPosition(buffer_coord, 500);
         window.draw(bufferSprite);
     }
-    void draw_bg(RenderWindow& window, Sprite& bgSprite, int offset_x)
-    {
-        bgSprite.setPosition(0, 0);
-        window.draw(bgSprite);
-    }
-
-    void display_level(RenderWindow& window, const int height, const int width, char** lvl, Sprite* walls, const int cell_size, int offset_x)
-    {
-        for (int i = 0; i < height; i += 1)
-        {
-            for (int j = 0; j < width; j += 1)
-            {
-                if (lvl[i][j] == 's')
-                    continue;
-                else if (lvl[i][j] == 'w')
-                {
-                    walls[0].setPosition(j * cell_size - offset_x, i * cell_size);
-                    window.draw(walls[0]);
-                }
-                else if (lvl[i][j] == 'q')
-                {
-                    walls[1].setPosition(j * cell_size - offset_x, i * cell_size);
-                    window.draw(walls[1]);
-                }
-                else if (lvl[i][j] == 'e')
-                {
-                    walls[2].setPosition(j * cell_size - offset_x, i * cell_size);
-                    window.draw(walls[2]);
-                }
-                else if (lvl[i][j] == 'p')
-                {
-                    walls[3].setPosition(j * cell_size - offset_x, i * cell_size);
-                    window.draw(walls[3]);
-                }
-                else if (lvl[i][j] == 'i')
-                {
-                    walls[3].setScale(1.f, -1.f);
-                    walls[3].setPosition(j * cell_size - offset_x, (i + 1) * cell_size);
-                    window.draw(walls[3]);
-                    walls[3].setScale(1.f, 1.f);
-                }
-            }
-        }
-    }
     void updateLevel()
     {
         if (levelIndex == 3)
@@ -241,7 +162,6 @@ public:
     {
         return hud;
     }
-
     void play(RenderWindow& window)
     {
         if (levelIndex == 3)
@@ -264,7 +184,7 @@ public:
                     if (buffer_start > 4 * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() <= buffer_start)
                     {
                         buffer_start = team.getPlayer()[team.getPlayerIndex()][0].getx();
-                        buffer_end = buffer_start + 576;
+                        buffer_end = buffer_start + 320;
                         offset_x += team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
                     }
                     leftRight = true;
@@ -285,10 +205,10 @@ public:
                 if (checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety(), 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() - 1 , 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() / 2, 14, level[levelIndex]->getWidth()))
                 {
                     team.getPlayer()[team.getPlayerIndex()][0].moveRight(level[levelIndex]->getLvl(), level[levelIndex]->getWidth(), level[levelIndex]->getFriction());
-                    if (buffer_end < 196 * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() >= buffer_end)
+                    if (buffer_end < (level[levelIndex]->getWidth() - 5) * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() >= buffer_end)
                     {
                         buffer_end = team.getPlayer()[team.getPlayerIndex()][0].getx();
-                        buffer_start = buffer_end - 576;
+                        buffer_start = buffer_end - 320;
                         offset_x += team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
                     }
                     leftRight = true;
@@ -302,7 +222,7 @@ public:
 
                     }
                     if (team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() >= 0)
-                        team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() = 15;
+                            team.getPlayer()[team.getPlayerIndex()][0].getVelocityY() = 15;
                 }
             }
             else
@@ -316,6 +236,8 @@ public:
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
                 team.jump();
+                cout << "Jumped\n\n";
+                cout << "onground  in (space ) = " << team.getPlayer()[team.getPlayerIndex()]->getOnGround()<<endl;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack() && Akey.getElapsedTime().asMilliseconds() > 500)
             {
@@ -325,6 +247,27 @@ public:
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
                 team.useSpecial(level[levelIndex]->getLvl(),14,level[levelIndex]->getWidth());
+                team.getPlayer()[team.getPlayerIndex()]->getSpecialAbiltyUsed() = true;
+            }
+            if (team.getPlayer()[team.getPlayerIndex()]->getSpecialAbiltyUsed() == true && team.getPlayerIndex() == 0)
+            {
+                //cout << "SpinDash being called";
+                team.getPlayer()[0]->spinDash(level[levelIndex]->getLvl(), level[levelIndex]->getWidth(), level[levelIndex]->getFriction());
+                if (checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety(), 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() - 1, 14, level[levelIndex]->getWidth()) && checkCollision(level[levelIndex][0].getLvl(), team.getPlayer()[team.getPlayerIndex()][0].getx() + team.getPlayer()[team.getPlayerIndex()][0].getPwidth() + 15 - 1, team.getPlayer()[team.getPlayerIndex()][0].gety() + team.getPlayer()[team.getPlayerIndex()][0].getPheight() / 2, 14, level[levelIndex]->getWidth()))
+                {
+                    if (buffer_start > 4 * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() <= buffer_start)
+                    {
+                        buffer_start = team.getPlayer()[team.getPlayerIndex()][0].getx();
+                        buffer_end = buffer_start + 320;
+                        offset_x += team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
+                    }
+                    if (buffer_end < (level[levelIndex]->getWidth() - 5) * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() >= buffer_end)
+                    {
+                        buffer_end = team.getPlayer()[team.getPlayerIndex()][0].getx();
+                        buffer_start = buffer_end - 320;
+                        offset_x += team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
+                    }
+                }
             }
             if (team.getSpacePressed())
             {
@@ -361,19 +304,39 @@ public:
             team.autoMoveFollowers(level[levelIndex]->getLvl(), offset_x,level[levelIndex]->getWidth());
             if (levelIndex != 3 && level[levelIndex]->getMoveable()->move(team.getPlayer()[team.getPlayerIndex()][0].getx(), team.getPlayer()[team.getPlayerIndex()][0].gety(), team.getPlayer()[team.getPlayerIndex()][0].getPwidth(), team.getPlayer()[team.getPlayerIndex()][0].getPheight(), team.getPlayer()[team.getPlayerIndex()]->getOnGround()))
             {
-                if (team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() != STILL)
+                cout << "Buffers working\n";
+                if (buffer_end < (level[levelIndex]->getWidth() - 5) * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() >= buffer_end)
                 {
-                    team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex() = STILL;
+                    cout << "Buffers updaintg";
+                    buffer_end = team.getPlayer()[team.getPlayerIndex()][0].getx();
+                    buffer_start = buffer_end - 320;
+                    offset_x += 3;
                 }
+                if (buffer_start > 4 * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() <= buffer_start)
+                {
+                    buffer_start = team.getPlayer()[team.getPlayerIndex()][0].getx();
+                    buffer_end = buffer_start + 320;
+                    offset_x -= 3;
+                }
+                team.getPlayer()[team.getPlayerIndex()]->getOnGround() = true;
+                for (int i = 0;i < 3;i++)
+                {
+                    if (team.getPlayerIndex() == i)
+                        continue;
+                    team.getPlayer()[i]->gety() = team.getPlayer()[team.getPlayerIndex()]->gety();
+                }
+                team.getSpacePressed() = false;
             }
         }
-        draw_bg(window, backGroundSprite, offset_x);
+        //draw_bg(window, backGroundSprite, offset_x);
+        level[levelIndex]->draw_bg(window);
         if (levelIndex != 3 && !gameOver)
             level[levelIndex]->getMoveable()->draw(window, offset_x);
 
-        display_level(window, level[levelIndex][0].getHeight(), level[levelIndex][0].getWidth(), level[levelIndex][0].getLvl(), walls, 64, offset_x);
+        //display_level(window, level[levelIndex][0].getHeight(), level[levelIndex][0].getWidth(), level[levelIndex][0].getLvl(), walls, 64, offset_x);
+        level[levelIndex]->display_level(window, 64, offset_x);
         if (levelIndex != 3 &&  !gameOver)
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < level[levelIndex]->getFallingCount(); i++)
                 level[levelIndex]->getFalling()[i]->draw(window, offset_x);
 
         if (!gameOver) {
@@ -400,11 +363,11 @@ public:
             }
         }
 
-        team.draw(window, offset_x);
+        //team.draw(window, offset_x);
 
 
         if (levelIndex != 3 && !gameOver)
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < level[levelIndex]->getFallingCount(); i++)
             {
                 level[levelIndex]->getFalling()[i]->shouldItActivate(team.getPlayer()[team.getPlayerIndex()]->getx());
                 if (level[levelIndex]->getFalling()[i]->getActivated())
@@ -416,7 +379,6 @@ public:
         if (!gameOver)
         level[levelIndex]->handleEnemies(window, team.getPlayer()[team.getPlayerIndex()]->getx(), team.getPlayer()[team.getPlayerIndex()]->gety(), team.getPlayer()[team.getPlayerIndex()]->getPwidth(), team.getPlayer()[team.getPlayerIndex()]->getPheight(), team.getPlayer()[team.getPlayerIndex()]->getHasKnockedBack(), team.getPlayer()[team.getPlayerIndex()]->getTempVelocityY(), team.getPlayer()[team.getPlayerIndex()]->getOnGround(), team.getPlayer()[team.getPlayerIndex()]->getAnimationIndex(), offset_x, team.getPlayer()[team.getPlayerIndex()][0], hud, gameOver);
         //team.getPlayer()[team.getPlayerIndex()]->drawHitBox(window);
-        
         if (!gameOver)
             team.animate();
         if (levelIndex != 3)

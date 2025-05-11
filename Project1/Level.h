@@ -8,6 +8,7 @@
 #include"HUD.h"
 #include"Extralives.h"
 #include"SpecialBoost.h"
+#include"FallingPlatform.h"
 using namespace std;
 #include"Animation.h"
 #include <SFML/Graphics.hpp>
@@ -17,6 +18,7 @@ using namespace sf;
 class Level
 {
 protected:
+	int fallingCount;
 	float levelEnd;
 	//Collectible*** collectibles;
 	//Obstacle** obstacles;
@@ -51,13 +53,22 @@ protected:
 	 Enemy** enemies;
 	 int enemyCount;
 
+	 Sprite* walls;
+	 Texture wallText1;
+	 Texture wallText2;
+	 Texture wallText3;
+	 Texture wallText4;
 
-
+	 Texture backGround;
+	 Sprite backGroundSprite;
+	 float scX;
+	 float scY;
 
 
 public:
 	Level(char** level = nullptr) :endMark(0)
 	{
+		wallText4.loadFromFile("Data/Spike.png");
 
 	}
 	virtual void designlvl(const char* filename) = 0;
@@ -181,7 +192,56 @@ public:
 	void placeExtraLivesFromMap();
 	void placeBoostsFromMap();
 	void loadAndPlaceCollectibles();
-
+	void display_level(RenderWindow& window, const int cell_size, int offset_x)
+	{
+		cout << "\n\nHeight = " << height;
+		cout << "\nWidth = " << width << endl;
+		for (int i = 0; i < height; i += 1)
+		{
+			for (int j = 0; j < width; j += 1)
+			{
+				if (lvl[i][j] == 's')
+					continue;
+				else if (lvl[i][j] == 'w')
+				{
+					walls[0].setPosition(j * cell_size - offset_x, i * cell_size);
+					window.draw(walls[0]);
+				}
+				else if (lvl[i][j] == 'q')
+				{
+					//cout << "i*c"
+					walls[1].setPosition(j * cell_size - offset_x, i * cell_size);
+					window.draw(walls[1]);
+				}
+				else if (lvl[i][j] == 'e')
+				{
+					walls[2].setPosition(j * cell_size - offset_x, i * cell_size);
+					window.draw(walls[2]);
+				}
+				else if (lvl[i][j] == 'p')
+				{
+					walls[3].setPosition(j * cell_size - offset_x, i * cell_size);
+					window.draw(walls[3]);
+				}
+				else if (lvl[i][j] == 'i')
+				{
+					walls[3].setScale(1.f, -1.f);
+					walls[3].setPosition(j * cell_size - offset_x, (i + 1) * cell_size);
+					window.draw(walls[3]);
+					walls[3].setScale(1.f, 1.f);
+				}
+			}
+		}
+	}
+	void draw_bg(RenderWindow& window)
+	{
+		backGroundSprite.setPosition(0, 0);
+		window.draw(backGroundSprite);
+	}
+	int getFallingCount()
+	{
+		return fallingCount;
+	}
 
 };
 
