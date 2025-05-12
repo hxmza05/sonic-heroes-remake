@@ -186,6 +186,9 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
                 if (audio) {
                     audio->playSound(audio->getDestroy());
                 }
+                isDying = true;
+                deathClock.restart();
+                deathFrameClock.restart();
             }
             else {
                 hp--;
@@ -262,9 +265,8 @@ void Eggstinger::movement(float player_x, float player_y, float player_width, ch
     const float platformY = 8 * cell_size;
     const int platformRow = 8;
 
-    if (!Alive) {
+    if (!Alive || isDying)
         return;
-    }
 
 
     if (!isDiving && !isRising && !isTrackingBeforeDive && diveClock.getElapsedTime().asSeconds() >= 10.0f)

@@ -256,7 +256,6 @@ void Motobug::update(char** lvl, Player& player, int cell_size, bool& hasKnocked
 						audio->playSound(audio->getDestroy());
 					}
 					isDying = true;
-					handleDeathAnimation();
 					deathClock.restart();
 					deathFrameClock.restart();
 					hud.getScore() += 100;
