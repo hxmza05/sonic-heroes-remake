@@ -65,7 +65,7 @@ public:
         BOSS_MUSIC = 3;
         TOTAL_MUSIC = 4;
 
-        musicPaths[LEVEL1_MUSIC] = "Audio/Level1.ogg";
+        musicPaths[LEVEL1_MUSIC] = "Audio/labrynth.ogg";
         musicPaths[LEVEL2_MUSIC] = "Audio/Level2.ogg";
         musicPaths[LEVEL3_MUSIC] = "Audio/Level3.ogg";
         musicPaths[BOSS_MUSIC] = "Audio/BossLevel.ogg";

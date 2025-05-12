@@ -64,7 +64,7 @@ public:
         {
             walls[i].setScale(1.03, 1.03);
         }
-        friction = 0.4;
+        friction = 0.3;
         cell_size = 64;
         height = 14;
         width = 200;

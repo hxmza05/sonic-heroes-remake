@@ -65,7 +65,7 @@ public:
 		{
 			walls[i].setScale(2, 2);
 		}
-		friction = 0.3;
+		friction = 0.4;
 		height = 14;
 		width = 300;
 		lvl = new char* [height];

@@ -37,6 +37,7 @@ class StateManager
 	int screen_y ;
 
 	bool showLeaderBoard;
+
 public:
 	StateManager(Leaderboard* leaderboard, RenderWindow& w) :window(w)
 	{

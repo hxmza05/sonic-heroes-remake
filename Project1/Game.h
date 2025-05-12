@@ -96,6 +96,7 @@ public:
 
 
         levelIndex = 2;
+
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
         bufferSpriteEnd.setTexture(buffer);
@@ -184,13 +185,19 @@ public:
 
         levelIndex++;
         level[levelIndex]->setAudio(audio);
-
         if (levelIndex != 3)
             level[levelIndex]->loadAndPlaceCollectibles();
         team.getPlayer()[team.getPlayerIndex()]->getx() = 150;
         team.getPlayer()[team.getPlayerIndex()]->gety() = 150;
         team.getPlayer()[team.getPlayerIndex()]->getVelocityY() = 15;
         team.getPlayer()[team.getPlayerIndex()]->getOnGround() = true;
+        if (levelIndex == 2)
+        {
+            for (int i = 0;i < 3;i++)
+            {
+                team.getPlayer()[i]->setGravity(0.4);
+            }
+        }
         buffer_start = 4 * 64;
         buffer_end = 9 * 64;
         offset_x = 0;

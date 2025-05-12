@@ -144,6 +144,10 @@ public:
 		hitBoxTexJump.loadFromFile("Data/hitBoxJump.png");
 		HitBoxSprite.setScale(2.5, 2.5);
 	}
+	void setGravity(float g)
+	{
+		gravity = g;
+	}
 	int getIdxPl()
 	{
 			return idxPl;

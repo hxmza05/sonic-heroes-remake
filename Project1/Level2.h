@@ -70,7 +70,7 @@ public:
         {
             walls[i].setScale(1.03, 1.03);
         }
-        friction = 0.5;
+        friction = 0.2;
         cell_size = 64;
         cout << "LEVEL 2 COnstructor being loaded : " << endl;
 		height = 14;

@@ -136,6 +136,11 @@ public:
 	{
 		return friction;
 	}
+
+	double getTimer()
+	{
+		return levelTimer;
+	}
 	virtual void setAudio(Audio* a) {
 		audio = a;
 
@@ -144,10 +149,6 @@ public:
 				enemies[i]->setAudio(audio);
 			}
 		}
-	}
-	double getTimer()
-	{
-		return levelTimer;
 	}
 	 FallingPlatform** getFalling()
 	{
