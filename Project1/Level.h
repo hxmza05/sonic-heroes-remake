@@ -266,6 +266,61 @@ public:
 		return fallingCount;
 	}
 
+	/*
+	
+	~Level() {
+
+		if (falling) {
+			for (int i = 0; i < fallingCount; ++i) {
+				delete falling[i];
+			}
+			delete[] falling;
+		}
+
+		if (rings) {
+			for (int i = 0; i < ringCount; ++i) {
+				delete rings[i];
+			}
+			delete[] rings;
+		}
+
+		if (lives) {
+			for (int i = 0; i < livesCount; ++i) {
+				delete lives[i];
+			}
+			delete[] lives;
+		}
+
+		if (boosts) {
+			for (int i = 0; i < boostCount; ++i) {
+				delete boosts[i];
+			}
+			delete[] boosts;
+		}
+
+		if (enemies) {
+			for (int i = 0; i < enemyCount; ++i) {
+				delete enemies[i];
+			}
+			delete[] enemies;
+		}
+
+		if (lvl) {
+			for (int i = 0; i < height; ++i) {
+				delete[] lvl[i];
+			}
+			delete[] lvl;
+		}
+
+		delete ringTex;
+		delete ringEffect;
+		delete lifeTex;
+		delete boostTex;
+		delete audio;
+	}
+
+	*/
+
 };
 
 

@@ -145,4 +145,11 @@ public:
 		}
 
 	}
+	/*
+	~StateManager()
+	{
+		delete menu;
+		delete game;
+	}
+	*/
 };

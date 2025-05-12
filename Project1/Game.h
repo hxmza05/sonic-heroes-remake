@@ -104,7 +104,7 @@ public:
         level[3] = new BossLevel(audio);
         level[3]->setAudio(audio);
 
-        levelIndex = 3;
+        levelIndex = 0;
         if (levelIndex == 2)
         {
             for (int i = 0;i < 3;i++)
@@ -664,4 +664,14 @@ public:
         return false;
        
     }
+    /*
+    ~Game()
+    {
+        for (int i = 0; i < 4; ++i)
+        {
+            delete level[i];
+        }
+        delete[] level;
+    }
+    */
 };

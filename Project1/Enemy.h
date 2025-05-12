@@ -166,6 +166,15 @@ public:
 		//hitBoxShape.setPosition(hitBox_x, hitBox_y);
 	}
 
+	/*
+	~Enemy() {
+		if (deathTexture) {
+			delete deathTexture;
+			deathTexture = nullptr;
+		}
+	}
+	*/
+
 };
 
 

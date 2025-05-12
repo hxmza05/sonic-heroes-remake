@@ -239,6 +239,31 @@ public:
     int getTotalEnemyCount() const { return TotalEnemyCount; }
     Eggstinger* getStinger() { return nullptr; }
 
+    /*
+    ~Level1()
+    {
+        for (int i = 0; i < height; i++)
+        {
+            delete[] lvl[i];
+        }
+        delete[] lvl;
 
+        for (int i = 0; i < enemyCount; i++)
+        {
+            delete enemies[i];
+        }
+        delete[] enemies;
+
+        for (int i = 0; i < 8; i++)
+        {
+            delete falling[i];
+        }
+        delete[] falling;
+
+        delete[] occupiedColumns;
+
+        delete moveable;
+    }
+    */
  
 };

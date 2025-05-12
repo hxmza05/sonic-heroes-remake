@@ -98,7 +98,13 @@ public:
 	virtual void collect() {}
 	virtual bool handleCollision(Player& player, char** lvl, int cell_size, int& result) = 0;
 
+	/*
+	~Collectibles() {
 
+		delete texture;
+		delete afterEffect;
+	}
+	*/
 };
 
 

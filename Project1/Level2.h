@@ -253,5 +253,30 @@ public:
             }
     }
 
+    /*
+    ~Level2()
+    {
+        for (int i = 0; i < height; i++)
+        {
+            delete[] lvl[i];
+        }
+        delete[] lvl;
 
+        for (int i = 0; i < enemyCount; i++)
+        {
+            delete enemies[i];
+        }
+        delete[] enemies;
+
+        delete[] occupiedColumns;
+
+        for (int i = 0; i < fallingCount; i++)
+        {
+            delete falling[i];
+        }
+        delete[] falling;
+
+        delete moveable;
+    }
+    */
 };
