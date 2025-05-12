@@ -52,7 +52,7 @@ public:
 
 	Eggstinger() : stingerHeight(98), stingerWidth(120) {
 
-		this->hp = 5;
+		this->hp = 20;
 		this->speed = 3.0;
 		Alive = true;
         right = false;
@@ -111,6 +111,8 @@ public:
         }
 
 
+        loadDeathAnimation("Sprites/stingerdeath.png", 41, 42, 3.f, 3.f);
+
 
 	}
 
@@ -150,7 +152,7 @@ public:
 void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
 {
 
-    if (!Alive)
+    if (handleDeathAnimation() || !Alive)
         return;
 
     cout << "Eggstinger update running!" << endl;
