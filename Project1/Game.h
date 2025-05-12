@@ -53,6 +53,7 @@ class Game
     int levelIndex;
     int cell_size;
     Clock Akey;
+    bool wantToReturnToMenu;
 
     ////////////////////////////
     Clock levelTimer;
@@ -64,7 +65,7 @@ class Game
     ////////////////////////////
 
 public:
-    Game(Audio* ad,int l = 2) : audio(ad)
+    Game(Audio* ad,int l = 0) : audio(ad)
     {
         specialBoostUsed = false;
         font.loadFromFile("Fonts/scoreFont.ttf");
@@ -83,22 +84,12 @@ public:
         level = new Level * [3];
         level[0] = new Level1(audio);
         level[0]->setAudio(audio);
-
         level[1] = new Level2(audio);
         level[1]->setAudio(audio);
-
-        level[2] = new Level3(audio);
         level[2]->setAudio(audio);
-
-       /* level[3] = new BossLevel(audio);
-        level[3]->setAudio(audio);*/
-
-
         level[3] = new BossLevel(audio);
         level[3]->setAudio(audio);
-
-
-        levelIndex = 2;
+        levelIndex = 3;
         if (levelIndex == 2)
         {
             for (int i = 0;i < 3;i++)
@@ -106,6 +97,7 @@ public:
                 team.getPlayer()[i]->setGravity(0.6);
             }
         }
+
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
         bufferSpriteEnd.setTexture(buffer);
@@ -128,6 +120,8 @@ public:
         BoostStatus = false;
         randomLives = 0;
         jumpSFXClock.restart();
+        wantToReturnToMenu = false;
+
     }
     void setLevelIndex(int index)
     {
@@ -286,9 +280,23 @@ public:
             return true;
         return false;
     }
+    bool WantToReturnToMenu() {
+        return wantToReturnToMenu;
+    }
+
+    void resetReturnToMenuFlag() {
+        wantToReturnToMenu = false;
+    }
+
     bool play(RenderWindow& window)
     {
         // cout << "level = " << levelIndex<<endl;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+        {
+            wantToReturnToMenu = true;
+            return true;
+        }
+
         if (levelIndex == 3)
         {
             team.setplayerIndex(0);
@@ -598,8 +606,8 @@ public:
         {
             if (levelIndex == 3)
             {
-                cout << "game over hugai h level 3 k bad ";
-                cout << "GameOver " << gameOver;
+               /* cout << "game over hugai h level 3 k bad ";
+                cout << "GameOver " << gameOver;*/
 				cout << hud.getLives() << endl;
             }
             gameOver = true;

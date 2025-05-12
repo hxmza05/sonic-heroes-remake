@@ -28,12 +28,6 @@ class Level1 : public Level
     int motobug_end;
     Motobug* motobugs;
 
-
-    int batbrainCount;
-    int batStart;
-    int batEnd;
-    Batbrain* bats;
-   
     int j_start;
     int cell_size;
 
@@ -77,7 +71,7 @@ public:
 
 
         enemyCount = 0;
-        TotalEnemyCount = 17;
+        TotalEnemyCount = 15;
         enemies = new Enemy * [TotalEnemyCount];
 
         j_start = 5;
@@ -136,20 +130,6 @@ public:
 
         }
         
-        batbrainCount = 2;
-        batStart = 0;
-        batEnd = 0;
-
-        for (int i = 0; i < batbrainCount; ++i) {
-
-            bats = new Batbrain();
-            bats->setAudio(audio);
-
-            if (bats->getBatbrainCoordinates(lvl, height, width, batStart, batEnd, cell_size)) {
-                enemies[enemyCount++] = bats;
-            }
-
-        }
 
         levelTimer = 90;
         falling = new FallingPlatform * [8];
@@ -255,7 +235,7 @@ public:
     int getCrabCount() const { return crabCount; }
     int getBeeCount() const { return beeCount; }
     int getMotobugCount() const { return motobugCount; }
-    int getBatbrainCount() const { return batbrainCount; }
+    //int getBatbrainCount() const { return batbrainCount; }
     int getEnemyCount() const { return enemyCount; }
     int getTotalEnemyCount() const { return TotalEnemyCount; }
     

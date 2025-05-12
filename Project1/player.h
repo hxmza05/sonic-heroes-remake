@@ -107,7 +107,7 @@ public:
 		figuringOut = false;
 		dummyGravity = 0.8;
 		isEven = 0;
-		x = 289*64;
+		x = 150;
 		y = 150;
 		hitBox_x = x;
 		hitBox_y = y;
