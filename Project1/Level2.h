@@ -42,6 +42,8 @@ class Level2 : public Level
 public:
 	Level2(Audio* ad) 
 	{
+        levelTimer = 120;
+        this->audio = ad;
         this->audio = ad;
         levelTimer = 120;
         backGround.loadFromFile("Data/bgLvl2O.jpg");
@@ -191,6 +193,8 @@ public:
             return 's';
         }
     }
+    Eggstinger* getStinger() { return nullptr; }
+
     void designlvl(const char* filename)
     {
 

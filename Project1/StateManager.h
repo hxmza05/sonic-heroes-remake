@@ -35,8 +35,11 @@ class StateManager
 	Leaderboard* leaderboard;
 	int screen_x ;
 	int screen_y ;
-
 	bool showLeaderBoard;
+
+
+
+	//bool showLeaderBoard;
 
 public:
 	StateManager(Leaderboard* leaderboard, RenderWindow& w) :window(w)
@@ -48,7 +51,7 @@ public:
 		screen_x = 1200;
 		screen_y = 900;
 		
-		stateIndex = 0;
+		stateIndex = 1;
 		//menu = new Menu(screen_x, screen_y, &leaderboard);
 		menu = new Menu(screen_x, screen_y, leaderboard);
 		menu->setAudio(&audio);

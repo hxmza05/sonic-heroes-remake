@@ -52,13 +52,14 @@ public:
 
 	Eggstinger() : stingerHeight(98), stingerWidth(120) {
 
-		this->hp = 5;
+		isDying = false;
+		this->hp = 1;
 		this->speed = 3.0;
 		Alive = true;
         right = false;
 		this->x = 0;
 		this->y = 0;
-        totalAnimations = 1; 
+        totalAnimations = 2; 
         indexAnimation = 0;
         animationClock.restart();
 
@@ -102,6 +103,7 @@ public:
         states = new Animation * [totalAnimations];
         states[0] = new Animation(6); 
         stingerTexture.loadFromFile("Sprites/stinger.png");
+        isDying = false;
 
         for (int i = 0, width = 0; i < 6; i++, width += 426 / 6) 
         {
@@ -110,6 +112,10 @@ public:
             states[0]->getSprites()[i].setScale(120.0f / 71.0f, 97.6f / 58.0f);
         }
 
+
+
+        loadDeathAnimation("Sprites/stingerdeath.png", 41, 42, 3.f, 3.f);
+        deathFinished = false;
 
 	}
 
@@ -149,7 +155,7 @@ public:
 void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
 {
 
-    if (!Alive)
+    if (handleDeathAnimation())
         return;
 
     cout << "Eggstinger update running!" << endl;
@@ -179,10 +185,13 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
         if (indexAnimation == UPR || indexAnimation == UPL)
         {
             if (hp == 0) {
-                Alive = false;
+                setAlive(false);
                 if (audio) {
                     audio->playSound(audio->getDestroy());
                 }
+                isDying = true;
+                deathClock.restart();
+                deathFrameClock.restart();
             }
             else {
                 hp--;
@@ -258,11 +267,6 @@ void Eggstinger::movement(float player_x, float player_y, float player_width, ch
 {
     const float platformY = 8 * cell_size;
     const int platformRow = 8;
-
-    if (!Alive) {
-        return;
-    }
-
 
     if (!isDiving && !isRising && !isTrackingBeforeDive && diveClock.getElapsedTime().asSeconds() >= 10.0f)
     {

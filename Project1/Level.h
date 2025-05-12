@@ -132,11 +132,11 @@ public:
 	{
 		return nullptr;
 	}
+	virtual Eggstinger* getStinger() = 0;
 	float& getFriction()
 	{
 		return friction;
 	}
-
 	double getTimer()
 	{
 		return levelTimer;
@@ -150,6 +150,7 @@ public:
 			}
 		}
 	}
+	
 	 FallingPlatform** getFalling()
 	{
 		return falling;

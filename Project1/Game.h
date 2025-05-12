@@ -21,6 +21,9 @@
 class Game
 {
     // some score and other stuff
+    Text youWin;
+    Clock youWinClk;
+    bool youwinrestarted;
     Text gameover;
     Font font;
     HUD hud;
@@ -65,7 +68,7 @@ class Game
     ////////////////////////////
 
 public:
-    Game(Audio* ad) : audio(ad)
+    Game(Audio* ad,int l = 0) : audio(ad)
     {
         specialBoostUsed = false;
         font.loadFromFile("Fonts/scoreFont.ttf");
@@ -75,7 +78,17 @@ public:
         gameover.setPosition(320, 350);
         gameover.setFillColor(Color::Red);
 
+
+
+        youwinrestarted = false;
+		youWin.setFont(font);
+		youWin.setString("YOU WIN");
+		youWin.setScale(4.3, 4.3);
+		youWin.setPosition(320, 350);
+		youWin.setFillColor(Color::Yellow);
         team.setAudio(audio);
+
+
 
         gameOver = false;
         cell_size = 64;
@@ -84,18 +97,21 @@ public:
         level = new Level * [3];
         level[0] = new Level1(audio);
         level[0]->setAudio(audio);
-
         level[1] = new Level2(audio);
         level[1]->setAudio(audio);
-
         level[2] = new Level3(audio);
         level[2]->setAudio(audio);
-
         level[3] = new BossLevel(audio);
         level[3]->setAudio(audio);
 
-
         levelIndex = 3;
+        if (levelIndex == 2)
+        {
+            for (int i = 0;i < 3;i++)
+            {
+                team.getPlayer()[i]->setGravity(0.6);
+            }
+        }
 
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
@@ -138,6 +154,7 @@ public:
 
         if ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size >= height)
         {
+			 cout << "Game Over in spikes check\n";
             gameOver = true;
             if (!gameOverRestarted)
             {
@@ -187,15 +204,19 @@ public:
         level[levelIndex]->setAudio(audio);
         if (levelIndex != 3)
             level[levelIndex]->loadAndPlaceCollectibles();
-        team.getPlayer()[team.getPlayerIndex()]->getx() = 150;
-        team.getPlayer()[team.getPlayerIndex()]->gety() = 150;
-        team.getPlayer()[team.getPlayerIndex()]->getVelocityY() = 15;
+		for (int i = 0;i < 3;i++)
+		{
+            team.getPlayer()[i]->getx() = 450;
+            team.getPlayer()[i]->gety() = 400;
+            team.getPlayer()[i]->getVelocityY() = 15;
+            team.getPlayer()[i]->setGravity(1);
+        }
         team.getPlayer()[team.getPlayerIndex()]->getOnGround() = true;
         if (levelIndex == 2)
         {
             for (int i = 0;i < 3;i++)
             {
-                team.getPlayer()[i]->setGravity(0.4);
+                team.getPlayer()[i]->setGravity(0.6);
             }
         }
         buffer_start = 4 * 64;
@@ -355,7 +376,22 @@ public:
             {
                 leftRight = false;
                 if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+                {
                     team.getPlayer()[team.getPlayerIndex()]->decelerate(level[levelIndex]->getLvl(), level[levelIndex]->getWidth(), level[levelIndex]->getFriction());
+                    if (buffer_end < (level[levelIndex]->getWidth() - 5) * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() >= buffer_end)
+                    {
+                        buffer_end = team.getPlayer()[team.getPlayerIndex()][0].getx();
+                        buffer_start = buffer_end - 320;
+                        offset_x += team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
+                    }
+                    if (buffer_start > 4 * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() <= buffer_start)
+                    {
+                        buffer_start = team.getPlayer()[team.getPlayerIndex()][0].getx();
+                        buffer_end = buffer_start + 320;
+                        offset_x += team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
+                    }
+
+                }
                 else
                     team.getPlayer()[team.getPlayerIndex()][0].getVelocityX() = 0;
             }
@@ -549,6 +585,7 @@ public:
         }
         if (checkTimer())
         {
+			cout << "IN check timer\n";
             gameOver = true;
             if (!gameOverRestarted)
             {
@@ -573,18 +610,22 @@ public:
                     level[levelIndex]->getFalling()[i]->fall();
                 }
             }
-
+        if (levelIndex == 3)
+        {
+			cout << "egg stinger in game = " << level[levelIndex]->getStinger()->alive() << "\n";
+        }
         level[levelIndex]->drawEnemies(window, offset_x);
         if (level[levelIndex]->hasLevelEnded(team.getPlayer()[team.getPlayerIndex()]->getx()) || hud.getRings() > 75)
         {
             updateLevel();
         }
-
         if (hud.getLives() <= 0 || gameOver)
         {
             if (levelIndex == 3)
             {
                 cout << "game over hugai h level 3 k bad ";
+                cout << "GameOver " << gameOver;
+				cout << hud.getLives() << endl;
             }
             gameOver = true;
             if (!gameOverRestarted)
@@ -594,10 +635,33 @@ public:
             }
             window.draw(gameover);
         }
+       /* draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
+        draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
         if (gameOver && gameOverClock.getElapsedTime().asMilliseconds() > 3000)
             return true;
+        if (levelIndex == 3)
+        {
+            cout<<"death of egg stinger done ? "<<level[3]->getStinger()->deathDone();
+            cout << endl;
+        }
+        if (levelIndex == 3 && level[3]->getStinger()->deathDone())
+        {
+            if (!youwinrestarted)
+            {
+				youWinClk.restart();
+				youwinrestarted = true;
+            }
+        }
+		cout << "youwinrestarted = " << youwinrestarted << endl;
+        if (youwinrestarted && youWinClk.getElapsedTime().asMilliseconds() > 5000)
+        {
+            return true;
+        }
+		if (youwinrestarted && youWinClk.getElapsedTime().asMilliseconds() < 5000)
+		{
+			window.draw(youWin);
+		}
         return false;
-        /*draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
-        draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
+       
     }
 };

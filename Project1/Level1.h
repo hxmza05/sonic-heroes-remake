@@ -237,7 +237,7 @@ public:
     int getMotobugCount() const { return motobugCount; }
     int getEnemyCount() const { return enemyCount; }
     int getTotalEnemyCount() const { return TotalEnemyCount; }
-    
+    Eggstinger* getStinger() { return nullptr; }
 
 
  

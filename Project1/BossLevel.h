@@ -27,6 +27,7 @@ class BossLevel : public Level
 public:
 	BossLevel(Audio* ad)
 	{
+		levelTimer = 160;
 		this->audio = ad;
 		backGround.loadFromFile("Data/bgLvl2O.jpg");
 		backGroundSprite.setTexture(backGround);
@@ -81,8 +82,6 @@ public:
 		stinger->setAudio(audio);
 		stinger->setPosition(12 * cell_size, 2 * cell_size, 0, 0);
 	    enemies[enemyCount++] = stinger;
-		
-
 	}
 
 	char  getMapValues(int val)
@@ -160,12 +159,18 @@ public:
 			cout << "Stinger Alive? " << enemies[0]->alive() << endl;
 
 
-			if (enemies[i]->alive())
+			if (!enemies[i]->deathDone())
 				enemies[i]->draw(window, offset_x);
 
 			//enemies[i]->drawHitBox(window, offset_x);
 
 		}
+	}
+
+
+	Eggstinger* getStinger()
+	{
+		return stinger;
 	}
 
 	bool hasLevelEnded(float x) { return true; }
