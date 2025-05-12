@@ -49,10 +49,15 @@ private:
     int TOTAL_MUSIC;
     string musicPaths[4];
 
+    int currentlyPlayingMusic;
+
+
 
 public:
 
     Audio() {
+
+        currentlyPlayingMusic = -1;
 
         LEVEL1_MUSIC = 0;
         LEVEL2_MUSIC = 1;
@@ -212,6 +217,11 @@ public:
         return BOSS_MUSIC;
     }
 
+    int getCurrentlyPlayingMusic()  
+    { 
+        return currentlyPlayingMusic; 
+    }
+
 
     void loadAllSounds();
     void playSound(int Soundid);
@@ -220,7 +230,7 @@ public:
     void setMusicVolume(float volume);
     void playLevelMusicByIndex(int index);
     bool isSoundPlaying(int index)const ;
-
+    void stopSound(int index);
 
 
     ~Audio() {

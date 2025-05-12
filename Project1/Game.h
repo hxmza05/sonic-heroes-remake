@@ -37,6 +37,8 @@ class Game
     int hit_box_factor_x;
     int hit_box_factor_y;
     Clock makeInvincible;
+    Clock jumpSFXClock;
+
 
     Audio* audio;
 
@@ -62,7 +64,7 @@ class Game
     ////////////////////////////
 
 public:
-    Game(Audio* ad) : audio(ad)
+    Game(Audio* ad,int l = 2) : audio(ad)
     {
         specialBoostUsed = false;
         font.loadFromFile("Fonts/scoreFont.ttf");
@@ -92,7 +94,18 @@ public:
         level[3]->setAudio(audio);*/
 
 
-        levelIndex = 1;
+        level[3] = new BossLevel(audio);
+        level[3]->setAudio(audio);
+
+
+        levelIndex = 2;
+        if (levelIndex == 2)
+        {
+            for (int i = 0;i < 3;i++)
+            {
+                team.getPlayer()[i]->setGravity(0.6);
+            }
+        }
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
         bufferSpriteEnd.setTexture(buffer);
@@ -114,6 +127,7 @@ public:
         ringsCollected = 0;
         BoostStatus = false;
         randomLives = 0;
+        jumpSFXClock.restart();
     }
     void setLevelIndex(int index)
     {
@@ -131,6 +145,7 @@ public:
 
         if ((int)(offset_y + hit_box_factor_y + Pheight) / cell_size >= height)
         {
+			 cout << "Game Over in spikes check\n";
             gameOver = true;
             if (!gameOverRestarted)
             {
@@ -175,19 +190,24 @@ public:
         {
             return;
         }
+
         levelIndex++;
         level[levelIndex]->setAudio(audio);
         if (levelIndex != 3)
             level[levelIndex]->loadAndPlaceCollectibles();
-        team.getPlayer()[team.getPlayerIndex()]->getx() = 150;
-        team.getPlayer()[team.getPlayerIndex()]->gety() = 150;
-        team.getPlayer()[team.getPlayerIndex()]->getVelocityY() = 15;
+		for (int i = 0;i < 3;i++)
+		{
+            team.getPlayer()[i]->getx() = 450;
+            team.getPlayer()[i]->gety() = 400;
+            team.getPlayer()[i]->getVelocityY() = 15;
+            team.getPlayer()[i]->setGravity(1);
+        }
         team.getPlayer()[team.getPlayerIndex()]->getOnGround() = true;
         if (levelIndex == 2)
         {
             for (int i = 0;i < 3;i++)
             {
-                team.getPlayer()[i]->setGravity(0.4);
+                team.getPlayer()[i]->setGravity(0.6);
             }
         }
         buffer_start = 4 * 64;
@@ -333,14 +353,33 @@ public:
             {
                 leftRight = false;
                 if (!team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
+                {
                     team.getPlayer()[team.getPlayerIndex()]->decelerate(level[levelIndex]->getLvl(), level[levelIndex]->getWidth(), level[levelIndex]->getFriction());
+                    if (buffer_end < (level[levelIndex]->getWidth() - 5) * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() >= buffer_end)
+                    {
+                        buffer_end = team.getPlayer()[team.getPlayerIndex()][0].getx();
+                        buffer_start = buffer_end - 320;
+                        offset_x += team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
+                    }
+                    if (buffer_start > 4 * 64 && team.getPlayer()[team.getPlayerIndex()][0].getx() <= buffer_start)
+                    {
+                        buffer_start = team.getPlayer()[team.getPlayerIndex()][0].getx();
+                        buffer_end = buffer_start + 320;
+                        offset_x += team.getPlayer()[team.getPlayerIndex()][0].getVelocityX();
+                    }
+
+                }
                 else
                     team.getPlayer()[team.getPlayerIndex()][0].getVelocityX() = 0;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !team.getPlayer()[team.getPlayerIndex()][0].getHasKnockedBack())
             {
                 team.jump();
-                //audio->playSound(audio->getJump());
+
+                if (audio && jumpSFXClock.getElapsedTime().asSeconds() >= 3.f) {
+                    audio->playSound(audio->getJump());
+                    jumpSFXClock.restart();
+                }
 
                 // cout << "Jumped\n\n";
                 // cout << "onground  in (space ) = " << team.getPlayer()[team.getPlayerIndex()]->getOnGround()<<endl;
@@ -523,6 +562,7 @@ public:
         }
         if (checkTimer())
         {
+			cout << "IN check timer\n";
             gameOver = true;
             if (!gameOverRestarted)
             {
@@ -559,6 +599,8 @@ public:
             if (levelIndex == 3)
             {
                 cout << "game over hugai h level 3 k bad ";
+                cout << "GameOver " << gameOver;
+				cout << hud.getLives() << endl;
             }
             gameOver = true;
             if (!gameOverRestarted)
@@ -568,10 +610,11 @@ public:
             }
             window.draw(gameover);
         }
+       /* draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
+        draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
         if (gameOver && gameOverClock.getElapsedTime().asMilliseconds() > 3000)
             return true;
         return false;
-        /*draw_buffer(window, bufferSpriteStart, buffer_start - offset_x);
-        draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
+       
     }
 };

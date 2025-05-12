@@ -36,7 +36,6 @@ class Level2 : public Level
 
     Enemy** enemies;
     int enemyCount;
-    //int TotalEnemyCount;
     int j_start;
     int cell_size;
 
@@ -45,6 +44,8 @@ public:
 	{
         levelTimer = 120;
         this->audio = ad;
+        this->audio = ad;
+        levelTimer = 120;
         backGround.loadFromFile("Data/bgLvl2O.jpg");
         backGroundSprite.setTexture(backGround);
         unsigned int bgWidth = backGround.getSize().x;
@@ -229,7 +230,7 @@ public:
 
     void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool& gameOver) override
     {
-        for (int i = 0; i < enemyCount; ++i)
+        for (int i = 0; i < enemyCount; i++)
         {
             if (!enemies[i]->alive() && enemies[i]->deathDone())
                 continue;
@@ -243,7 +244,7 @@ public:
     void drawEnemies(RenderWindow& window, float offset_x) override
     {
         
-            for (int i = 0; i < enemyCount; ++i)
+            for (int i = 0; i < enemyCount; i++)
             {
                 if (!enemies[i]->deathDone())
                     enemies[i]->draw(window, offset_x);

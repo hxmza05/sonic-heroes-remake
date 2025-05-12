@@ -37,6 +37,7 @@ class StateManager
 	int screen_y ;
 	bool showLeaderBoard;
 
+
 public:
 	StateManager(Leaderboard* leaderboard, RenderWindow& w) :window(w)
 	{
@@ -47,7 +48,7 @@ public:
 		screen_x = 1200;
 		screen_y = 900;
 		
-		stateIndex = 0;
+		stateIndex = 1;
 		//menu = new Menu(screen_x, screen_y, &leaderboard);
 		menu = new Menu(screen_x, screen_y, leaderboard);
 		menu->setAudio(&audio);
@@ -90,10 +91,15 @@ public:
 			window.clear();
 			if (!stateIndex)
 			{
+				if (audio.getCurrentlyPlayingMusic() != audio.getBossMusic()) {
+					audio.playLevelMusicByIndex(audio.getBossMusic());
+				}
+
 				menu->work(window,event,game);
 				if (menu->isGameStateActive())
 				{
 					stateIndex = 1;
+					audio.playLevelMusicByIndex(game->getLevelIndex());
 				}
 			}
 			//cout << "State Index : " << stateIndex << endl;
@@ -105,6 +111,7 @@ public:
 					stateIndex = 2;
 					leaderBoardClk.restart();
 					window.clear();
+
 				}
 			}
 			if (stateIndex == 2)

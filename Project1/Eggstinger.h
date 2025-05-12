@@ -109,9 +109,6 @@ public:
             states[0]->getSprites()[i].setTextureRect(IntRect(width, 0, 71, 58));
             states[0]->getSprites()[i].setScale(120.0f / 71.0f, 97.6f / 58.0f);
         }
-
-
-
 	}
 
 
@@ -160,6 +157,11 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
     if (!hasKnockedBack && playerSpikeCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight()))
     {
         hud.getLives()--;
+
+        if (audio) {
+            audio->playSound(audio->getHurt());
+        }
+
         hasKnockedBack = true;
         tempVelocityY = -4;
 
@@ -196,6 +198,11 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
         else
         {
             hud.getLives()--;
+
+            if (audio) {
+                audio->playSound(audio->getHurt());
+            }
+
             hasKnockedBack = true;
             tempVelocityY = -7;
 

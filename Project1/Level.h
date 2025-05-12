@@ -149,6 +149,7 @@ public:
 			}
 		}
 	}
+	
 	 FallingPlatform** getFalling()
 	{
 		return falling;
