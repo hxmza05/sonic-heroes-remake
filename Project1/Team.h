@@ -189,8 +189,8 @@ public:
                                 team[j]->figureItOutYourself(team[playerIndex]->getx(), lvl, offsetx, width);
                             }
                         }
-                        if (!j)
-                            cout << "Sonic's coords when tails is flying = (" << team[0]->getx() << " , " << team[0]->gety() << ")\n";
+                        //if (!j)
+                            //cout << "Sonic's coords when tails is flying = (" << team[0]->getx() << " , " << team[0]->gety() << ")\n";
                     }
                
                 }
@@ -201,9 +201,9 @@ public:
                     // bool wo
                     if (playerIndex == 1 && isNotFlyingCount == 0 && isFlying && /*team[1]->getAnimationIndex() != UPR && team[1]->getAnimationIndex() != JUMPR &&*/ team[1]->getOnGround()/*&& team[1]->getAnimationIndex() == STILL*/)
                     {
-                        cout << "tailed on ground after flying\n";
+                        /*cout << "tailed on ground after flying\n";
                         cout << " and tailed coords  are : " << team[1]->getx() << " , " << team[1]->gety()<<" )\n";
-                        cout << "Sonic's coords at that moemnt = (" << team[0]->getx() << " , " << team[0]->gety() << ")\n";
+                        cout << "Sonic's coords at that moemnt = (" << team[0]->getx() << " , " << team[0]->gety() << ")\n";*/
                         team[0]->setTailedCoords(team[1]->getx() - 5, team[1]->gety() + 10);
                         team[2]->setTailedCoords(team[1]->getx() - 5, team[1]->gety() + 10);
                         team[2]->getAnimationIndex() = BREAKR;

@@ -29,31 +29,30 @@ public:
 	{
 		levelTimer = 160;
 		this->audio = ad;
-		backGround.loadFromFile("Data/bgLvl2O.jpg");
+		backGround.loadFromFile("Data/lvl3Bg.jpeg");
 		backGroundSprite.setTexture(backGround);
-		unsigned int bgWidth = backGround.getSize().x;
-		unsigned int bgHeight = backGround.getSize().y;
+		unsigned int bgWidth = 626;
+		unsigned int bgHeight = 357;
 		scX = (float)1200 / bgWidth;
 		scY = (float)900 / bgHeight;
 		backGroundSprite.setScale(scX, scY);
-
 		backGroundSprite.setScale(scX, scY);
 		walls = new Sprite[4];
-		if (!wallText1.loadFromFile("Data/wall31.jpg"))
+		if (!wallText1.loadFromFile("Data/wallvl31.jpg"))
 		{
-			cerr << "\n\n\nFailed to load\n\n\n";
+			//cerr << "\n\n\nFailed to load\n\n\n";
 		}
-		else cout << "\n\nsuccess in 1\n\n";
-		wallText1.loadFromFile("Data/wall32.png");
-		wallText2.loadFromFile("Data/wall32.png");
-		wallText3.loadFromFile("Data/wall32.png");
+		//else cout << "\n\nsuccess in 1\n\n";
+		wallText1.loadFromFile("Data/wallvl32.png");
+		wallText2.loadFromFile("Data/wallvl33.png");
+		wallText3.loadFromFile("Data/wall31.png");
 		walls[0].setTexture(wallText1);
 		walls[1].setTexture(wallText2);
 		walls[2].setTexture(wallText3);
 		walls[3].setTexture(wallText4);
 		for (int i = 0;i < 3;i++)
 		{
-			walls[i].setScale(1.03, 1.03);
+			walls[i].setScale(2, 2);
 		}
 
 
@@ -156,7 +155,7 @@ public:
 	{
 		for (int i = 0; i < enemyCount; ++i)
 		{		
-			cout << "Stinger Alive? " << enemies[0]->alive() << endl;
+			//cout << "Stinger Alive? " << enemies[0]->alive() << endl;
 
 
 			if (!enemies[i]->deathDone())

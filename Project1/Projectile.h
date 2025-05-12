@@ -130,7 +130,7 @@ void Projectile::draw(RenderWindow& window, float offset_x) {
 
 	if (active) {
 		circle.setPosition(x - offset_x, y);
-		cout << "Projectile draw: (" << x << " - " << offset_x << ", " << y << ") = (" << x - offset_x << ", " << y << ")\n";
+		//cout << "Projectile draw: (" << x << " - " << offset_x << ", " << y << ") = (" << x - offset_x << ", " << y << ")\n";
 		window.draw(circle);
 	}
 }
@@ -156,7 +156,7 @@ bool Projectile::checkCollisionWithWall(char** lvl, int cell_size, int height, i
 
 	if (tile == 'w' || tile == 'q' || tile == 'e' || tile == 'p') {
 		active = false;
-		cout << "Projectile Hit wall — deactivated" << endl;
+		//cout << "Projectile Hit wall — deactivated" << endl;
 		return true;
 	}
 
@@ -169,16 +169,16 @@ bool Projectile::handleCollision(char** lvl, int cell_size, float player_x, floa
 	if (checkCollisionWithPlayer(player_x, player_y, player_width, player_height, x, y, x_width, x_heigth))
 	{
 		active = false;	
-		cout << "Projectile Hit player  deactivated" << endl;
+		//cout << "Projectile Hit player  deactivated" << endl;
 		hasKnockedBack = true;
 		tempVelocityY = -10;
-		cout << "Knockback active ? " << hasKnockedBack << endl;
+		//cout << "Knockback active ? " << hasKnockedBack << endl;
 		return true;
 	}
 	else if (checkCollisionWithWall(lvl, cell_size,14,width)) 
 	{
 		active = false;
-		cout << "Projectile Hit wall  deactivated" << endl;
+		//cout << "Projectile Hit wall  deactivated" << endl;
 		return true;
 	}
 
@@ -193,10 +193,10 @@ bool Projectile::Active() const {
 
 void Projectile::moveCrabProjectile() {
 
-	cout << "Projectile moved to x: " << x << ", y: " << y << endl;
+	//cout << "Projectile moved to x: " << x << ", y: " << y << endl;
 
 	if (active == false) {
-		cout << "Projectile deactivated immediately for crab at X: " << x << ", Y: " << y << endl;
+		//cout << "Projectile deactivated immediately for crab at X: " << x << ", Y: " << y << endl;
 		return;
 	}
 

@@ -294,7 +294,7 @@ void Motobug::move_motobugs(const int cell_size)
 	float bug_Y = (MotoBugWalls + 1) * cell_size - MotobugHeight;
 
 	setPosition(bug_X, bug_Y, Start, End);
-	cout << "Placed bug at X: " << bug_X << ", Y: " << bug_Y << endl;
+	//cout << "Placed bug at X: " << bug_X << ", Y: " << bug_Y << endl;
 }
 
 bool Motobug::getMotobugCoordinates(char** lvl, int height, int width, int& start_x, int end_x, int& j_start)
@@ -322,7 +322,7 @@ bool Motobug::getMotobugCoordinates(char** lvl, int height, int width, int& star
 					MotoBugEnd = end;
 					MotoBugWalls = i;
 
-					std::cout << "Found bug zone from tile " << start << " to " << end << " at row " << i << std::endl;
+					//std::cout << "Found bug zone from tile " << start << " to " << end << " at row " << i << std::endl;
 
 					start_x = i;    
 					j_start = j;     

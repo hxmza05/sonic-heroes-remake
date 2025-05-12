@@ -2,7 +2,6 @@
 #include<iostream>
 #include"Enemy.h"
 #include"Collectibles.h"
-#include"Obstacle.h"
 #include"MoveablePlatform.h"
 #include"FallingPlatform.h"
 #include"HUD.h"

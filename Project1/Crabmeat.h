@@ -281,9 +281,9 @@ void Crabmeat::movement(char** lvl, Player& player, int cell_size)
 				audio->playSound(audio->getShot());
 			}
 
-			cout << "Projectile Fired" << endl;
+			/*cout << "Projectile Fired" << endl;
 			cout << "dx: " << dx << " dy: " << dy << " distance: " << distance << endl;
-			cout << "vx: " << vx << " vy: " << vy << endl;
+			cout << "vx: " << vx << " vy: " << vy << endl;*/
 
 		}
 
@@ -295,7 +295,7 @@ void Crabmeat::movement(char** lvl, Player& player, int cell_size)
 			isStoppingToShoot = false;
 			Moving = true; 
 
-			cout << "Resume ---- Crab done firing --- resumes movement " << endl;
+			//cout << "Resume ---- Crab done firing --- resumes movement " << endl;
 
 		}
 
@@ -309,7 +309,7 @@ void Crabmeat::movement(char** lvl, Player& player, int cell_size)
 		isStoppingToShoot = false;
 		Moving = true;
 
-		cout << "Recovery --- Crab resumed --- due to timeout " << endl;
+		//cout << "Recovery --- Crab resumed --- due to timeout " << endl;
 	}
 
 	if (!isStoppingToShoot) {
@@ -472,7 +472,7 @@ void Crabmeat::move_crabs(const int cell_size)
 	setPosition(crabX, crabY, Start, End);
 
 
-	cout << "Placed crab at X: " << crabX << ", Y: " << crabY << endl;
+	//cout << "Placed crab at X: " << crabX << ", Y: " << crabY << endl;
 
 }
 

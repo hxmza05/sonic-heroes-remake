@@ -15,6 +15,7 @@ class Menu
 
 private:
 
+    int level;
 
     static const int totalMenuOptions = 6;
     const char* menuOptions[totalMenuOptions] = { "New Game", "Load Game", "Continue", "Options", "Leader Board", "Exit" };
@@ -156,6 +157,7 @@ private:
 public:
     Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : leaderboard(lb)
     {
+        level = 0;
         gameLoaded = false;
         selectedOption = 0;
         currentMenuLevel = 0;
@@ -236,7 +238,7 @@ public:
         nameBox.setFillColor(Color(0, 0, 0, 150));
         nameBox.setOutlineColor(Color::Yellow);
         nameBox.setOutlineThickness(2);
-        nameBox.setPosition(295, 395);
+        nameBox.setPosition(325, 395);
 
         ringTexture.loadFromFile("Sprites/rings.png");
         selectorClock.restart();
@@ -675,7 +677,7 @@ public:
                 {
                     if (!arrowDown)
                     {
-                        selectedLevelIndex = (selectedLevelIndex + 1) % totalLevels;
+                        level = (selectedLevelIndex + 1) % totalLevels;
                         arrowDown = true;
                         audio->playSound(audio->getMenuButton());
                     }
@@ -691,6 +693,7 @@ public:
                     {
                         audio->playSound(audio->getSelect());
                         // Use selectedLevelIndex for game->startLevel(selectedLevelIndex);
+						game->setLevel(selectedLevelIndex);
                         currentSubMenuPage = 0;
                         currentMenuLevel = 0;
                         enter = true;
@@ -1055,5 +1058,9 @@ public:
             draw(window);
         }
     }
+	int getLevel()
+	{
+		return level;
+	}
 
 };

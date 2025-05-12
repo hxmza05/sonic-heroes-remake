@@ -361,7 +361,7 @@ public:
 	{
 		tailed_x = _x;
 		tailed_y = _y;
-		cout << "tailed_X = " << tailed_x << "   tailed_y = " << tailed_y <<" in  stter" << endl;
+		//cout << "tailed_X = " << tailed_x << "   tailed_y = " << tailed_y <<" in  stter" << endl;
 		tempOnground = true;
 	}
 	//void detectYourself();
@@ -381,17 +381,17 @@ public:
 	void drawHitBox(RenderWindow& window)
 	{
 		callCount++;
-		cout << "Call : " << callCount << "\n";
+		//cout << "Call : " << callCount << "\n";
 		if (!onGround)
 		{
-			cout << "Drawing in jump\n\n";
+			//cout << "Drawing in jump\n\n";
 			HitBoxSprite.setTexture(hitBoxTexJump);
 			HitBoxSprite.setScale(1,1);
 			HitBoxSprite.setPosition(x + hit_box_factor_x - 1, y + hit_box_factor_y + 5);
 		}
 		else 
 		{
-			cout << "Not drawing in jump\n\n";
+			//cout << "Not drawing in jump\n\n";
 			HitBoxSprite.setTexture(hitBoxTex);
 			HitBoxSprite.setScale(2.5, 2.5);
 			HitBoxSprite.setPosition(x + hit_box_factor_x - 1, y + hit_box_factor_y + 5);
@@ -408,6 +408,6 @@ public:
 	}
 	virtual void spinDash(char** lvl, float w, float f)
 	{
-		cout << "LVL wala spindash\n";
+		//cout << "LVL wala spindash\n";
 	}
 };

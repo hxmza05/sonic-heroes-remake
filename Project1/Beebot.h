@@ -448,7 +448,7 @@ void Beebot::move_beebots(const int cell_size)
 	setPosition(bee_X, bee_Y, patrolStart, patrolEnd);
 	beeBaseY = bee_Y;
 
-	cout << "Placed Beebot at: " << bee_X << ", " << bee_Y << endl;
+	//cout << "Placed Beebot at: " << bee_X << ", " << bee_Y << endl;
 
 }
 
@@ -496,7 +496,7 @@ bool Beebot::getBeebotCoordinates(char** lvl, int height, int width, int y_start
 							occupiedColumns[col] = true;
 						}
 
-						cout << "Placed Beebot from column " << patrolStart << " to " << patrolEnd << " at row " << i << endl;
+						//cout << "Placed Beebot from column " << patrolStart << " to " << patrolEnd << " at row " << i << endl;
 
 						j_start = j;
 
@@ -533,7 +533,7 @@ bool Beebot::handleProjectilesCollision(char** lvl, int cell_size, float player_
 			{
 				delete projectiles;
 				projectiles = nullptr;
-				cout << "Bee Projectile deleted" << endl;
+				//cout << "Bee Projectile deleted" << endl;
 			}
 			return true;
 		}
