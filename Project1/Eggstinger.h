@@ -52,7 +52,7 @@ public:
 
 	Eggstinger() : stingerHeight(98), stingerWidth(120) {
 
-		this->hp = 20;
+		this->hp = 5;
 		this->speed = 3.0;
 		Alive = true;
         right = false;
@@ -111,9 +111,6 @@ public:
         }
 
 
-        loadDeathAnimation("Sprites/stingerdeath.png", 41, 42, 3.f, 3.f);
-
-
 	}
 
 
@@ -152,7 +149,7 @@ public:
 void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
 {
 
-    if (handleDeathAnimation() || !Alive)
+    if (!Alive)
         return;
 
     cout << "Eggstinger update running!" << endl;
@@ -186,9 +183,6 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
                 if (audio) {
                     audio->playSound(audio->getDestroy());
                 }
-                isDying = true;
-                deathClock.restart();
-                deathFrameClock.restart();
             }
             else {
                 hp--;
@@ -265,8 +259,9 @@ void Eggstinger::movement(float player_x, float player_y, float player_width, ch
     const float platformY = 8 * cell_size;
     const int platformRow = 8;
 
-    if (!Alive || isDying)
+    if (!Alive) {
         return;
+    }
 
 
     if (!isDiving && !isRising && !isTrackingBeforeDive && diveClock.getElapsedTime().asSeconds() >= 10.0f)

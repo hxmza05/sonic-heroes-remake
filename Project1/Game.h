@@ -95,7 +95,7 @@ public:
         level[3]->setAudio(audio);
 
 
-        levelIndex = 2;
+        levelIndex = 3;
 
         buffer.loadFromFile("Data/bufferSprite.jpg");
         bufferSpriteStart.setTexture(buffer);
