@@ -190,7 +190,7 @@ bool Enemy::handleDeathAnimation()
 
 	if (!Alive && isDying)
 	{
-		cout << "in deathanimation : \n";
+		//cout << "in deathanimation : \n";
 		indexAnimation = totalAnimations - 1;
 
 		if (deathFrameClock.getElapsedTime().asMilliseconds() >= 50) 

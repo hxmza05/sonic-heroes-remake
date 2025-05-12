@@ -223,7 +223,7 @@ public:
 		cout << coolDown.getElapsedTime().asSeconds()<<"\n";
 		if(GlideCount <=10)
 		{
-			cout << "inside";
+			//cout << "inside";
 				if (direction == 1)
 			{
 				indexAnimation = BREAKR;
@@ -232,7 +232,7 @@ public:
 			{
 				indexAnimation = BREAKL;
 			}
-			cout << "BreakCalled";
+			//cout << "BreakCalled";
 			Break(lvl,14,width);
 			if (audio && GlideCount == 0) {
 				audio->playSound(audio->getSpecialWarp());
@@ -265,7 +265,7 @@ public:
 			}
 
 			lvl[tileY][tileX] = 's'; // Mark it as emptyspace pwnow
-			cout << "Collision Detected and Block Broken\n";
+			//cout << "Collision Detected and Block Broken\n";
 		}
 		checkY = y - 5;
 		tileY = checkY / 64;
@@ -277,7 +277,7 @@ public:
 			}
 
 			lvl[tileY][tileX] = 's'; // Mark it as emptyspace pwnow
-			cout << "Collision Detected and Block Broken\n";
+			//cout << "Collision Detected and Block Broken\n";
 		}
 		// Glide movement
 		if (indexAnimation == BREAKR)

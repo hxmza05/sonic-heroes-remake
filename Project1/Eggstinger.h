@@ -52,7 +52,7 @@ public:
 
 	Eggstinger() : stingerHeight(98), stingerWidth(120) {
 		isDying = false;
-		this->hp = 1;
+		this->hp = 20;
 		this->speed = 3.0;
 		Alive = true;
         right = false;
@@ -156,7 +156,7 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
     if (handleDeathAnimation() || !Alive)
         return;
 
-    cout << "Eggstinger update running!" << endl;
+    //cout << "Eggstinger update running!" << endl;
 
     movement(player.getx(), player.gety(), player.getPwidth(), lvl, cell_size);
 

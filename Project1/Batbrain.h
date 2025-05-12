@@ -386,7 +386,7 @@ bool Batbrain::getBatbrainCoordinates(char** lvl, int height, int width, int& i_
 
 				setPosition(bat_x, bat_y, patrolStart, patrolEnd);
 
-				cout << "Placed Batbrain at (" << bat_x << ", " << bat_y << ")\n";
+				//cout << "Placed Batbrain at (" << bat_x << ", " << bat_y << ")\n";
 
 				lvl[i][j] = 's';  
 				i_start = i;      

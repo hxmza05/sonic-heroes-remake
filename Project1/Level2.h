@@ -60,7 +60,7 @@ public:
         {
             cerr << "\n\n\nFailed to load\n\n\n";
         }
-        else cout << "\n\nsuccess in 1\n\n";
+        //else cout << "\n\nsuccess in 1\n\n";
         wallText1.loadFromFile("Data/wall31.png");
         wallText2.loadFromFile("Data/wall31.png");
         wallText3.loadFromFile("Data/wall31.png");
@@ -74,7 +74,7 @@ public:
         }
         friction = 0.2;
         cell_size = 64;
-        cout << "LEVEL 2 COnstructor being loaded : " << endl;
+        //cout << "LEVEL 2 COnstructor being loaded : " << endl;
 		height = 14;
 		width = 250;
 		lvl = new char* [height];

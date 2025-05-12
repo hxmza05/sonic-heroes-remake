@@ -172,7 +172,6 @@
     <ClInclude Include="Batbrain.h" />
     <ClInclude Include="Beebot.h" />
     <ClInclude Include="Crabmeat.h" />
-    <ClInclude Include="Display.h" />
     <ClInclude Include="Eggstinger.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Input.h" />
@@ -181,12 +180,10 @@
     <ClInclude Include="Leaderboard.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Motobug.h" />
-    <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Sonic.h" />
     <ClInclude Include="TailedFox.h" />
-    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

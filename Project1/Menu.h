@@ -12,7 +12,7 @@ using namespace std;
 
 class Menu
 {
-
+    int level ;
 private:
 
 
@@ -156,6 +156,7 @@ private:
 public:
     Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : leaderboard(lb)
     {
+        level = 0;
         gameLoaded = false;
         selectedOption = 0;
         currentMenuLevel = 0;
@@ -675,7 +676,7 @@ public:
                 {
                     if (!arrowDown)
                     {
-                        selectedLevelIndex = (selectedLevelIndex + 1) % totalLevels;
+                        level = (selectedLevelIndex + 1) % totalLevels;
                         arrowDown = true;
                         audio->playSound(audio->getMenuButton());
                     }
@@ -691,6 +692,7 @@ public:
                     {
                         audio->playSound(audio->getSelect());
                         // Use selectedLevelIndex for game->startLevel(selectedLevelIndex);
+						game->setLevel(selectedLevelIndex);
                         currentSubMenuPage = 0;
                         currentMenuLevel = 0;
                         enter = true;
@@ -1055,5 +1057,9 @@ public:
             draw(window);
         }
     }
+	int getLevel()
+	{
+		return level;
+	}
 
 };

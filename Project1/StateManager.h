@@ -51,7 +51,7 @@ public:
 		screen_x = 1200;
 		screen_y = 900;
 		
-		stateIndex = 1;
+		stateIndex = 0;
 		//menu = new Menu(screen_x, screen_y, &leaderboard);
 		menu = new Menu(screen_x, screen_y, leaderboard);
 		menu->setAudio(&audio);

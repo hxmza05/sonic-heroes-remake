@@ -1,17 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Src.cpp" />
+    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GlobalFunctions.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Src.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Audio.h" />
+    <ClInclude Include="BossLevel.h" />
+    <ClInclude Include="Extralives.h" />
+    <ClInclude Include="FallingPlatform.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GlobalFunctions.h" />
+    <ClInclude Include="HUD.h" />
+    <ClInclude Include="Level1.h" />
+    <ClInclude Include="Level2.h" />
+    <ClInclude Include="Level3.h" />
+    <ClInclude Include="MoveablePlatform.h" />
+    <ClInclude Include="Rings.h" />
+    <ClInclude Include="SpecialBoost.h" />
+    <ClInclude Include="StateManager.h" />
+    <ClInclude Include="Team.h" />
+    <ClInclude Include="Collectibles.h" />
     <ClInclude Include="Batbrain.h" />
     <ClInclude Include="Beebot.h" />
     <ClInclude Include="Crabmeat.h" />
-    <ClInclude Include="Display.h" />
     <ClInclude Include="Eggstinger.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Input.h" />
@@ -20,30 +36,9 @@
     <ClInclude Include="Leaderboard.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Motobug.h" />
-    <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Sonic.h" />
     <ClInclude Include="TailedFox.h" />
-    <ClInclude Include="Window.h" />
-    <ClInclude Include="BossLevel.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="GlobalFunctions.h" />
-    <ClInclude Include="Level1.h" />
-    <ClInclude Include="Level2.h" />
-    <ClInclude Include="Level3.h" />
-    <ClInclude Include="MoveablePlatform.h" />
-    <ClInclude Include="Rings.h" />
-    <ClInclude Include="StateManager.h" />
-    <ClInclude Include="Team.h" />
-    <ClInclude Include="Collectibles.h" />
-    <ClInclude Include="FallingPlatform.h" />
-    <ClInclude Include="HUD.h" />
-<<<<<<< HEAD
-    <ClInclude Include="Extralives.h" />
-    <ClInclude Include="SpecialBoost.h" />
-=======
-    <ClInclude Include="ExtraLife.h" />
->>>>>>> 68398f8ab59e7d15a73ab40bcb8e321ab944e5fd
   </ItemGroup>
 </Project>

@@ -103,7 +103,7 @@ public:
         level[2]->setAudio(audio);
         level[3] = new BossLevel(audio);
         level[3]->setAudio(audio);
-        levelIndex = 3;
+        levelIndex = l;
         if (levelIndex == 2)
         {
             for (int i = 0;i < 3;i++)
@@ -198,17 +198,19 @@ public:
         {
             return;
         }
-
         levelIndex++;
         level[levelIndex]->setAudio(audio);
         if (levelIndex != 3)
             level[levelIndex]->loadAndPlaceCollectibles();
-		for (int i = 0;i < 3;i++)
-		{
-            team.getPlayer()[i]->getx() = 450;
-            team.getPlayer()[i]->gety() = 400;
-            team.getPlayer()[i]->getVelocityY() = 15;
-            team.getPlayer()[i]->setGravity(1);
+        if(levelIndex == 3)
+        {
+            for (int i = 0;i < 3;i++)
+            {
+                team.getPlayer()[i]->getx() = 450;
+                team.getPlayer()[i]->gety() = 400;
+                team.getPlayer()[i]->getVelocityY() = 15;
+                team.getPlayer()[i]->setGravity(1);
+            }
         }
         team.getPlayer()[team.getPlayerIndex()]->getOnGround() = true;
         if (levelIndex == 2)
@@ -225,7 +227,7 @@ public:
         levelTimer.restart();
         if (levelIndex == 3)
         {
-            cout << "LEVEL $ it is  \n ";
+            //cout << "LEVEL $ it is  \n ";
         }
     }
     HUD& getHUD()
@@ -584,7 +586,7 @@ public:
         }
         if (checkTimer())
         {
-			cout << "IN check timer\n";
+			//cout << "IN check timer\n";
             gameOver = true;
             if (!gameOverRestarted)
             {
@@ -592,7 +594,7 @@ public:
                 gameOverRestarted = true;
             }
         }
-        cout << "LIVE ARE " << hud.getLives() << endl;
+        //cout << "LIVE ARE " << hud.getLives() << endl;
         if (!gameOver)
             team.animate();
         if (levelIndex != 3)
@@ -611,7 +613,7 @@ public:
             }
         if (levelIndex == 3)
         {
-			cout << "egg stinger in game = " << level[levelIndex]->getStinger()->alive() << "\n";
+			//cout << "egg stinger in game = " << level[levelIndex]->getStinger()->alive() << "\n";
         }
         level[levelIndex]->drawEnemies(window, offset_x);
         if (level[levelIndex]->hasLevelEnded(team.getPlayer()[team.getPlayerIndex()]->getx()) || hud.getRings() > 75)
@@ -622,9 +624,9 @@ public:
         {
             if (levelIndex == 3)
             {
-                cout << "game over hugai h level 3 k bad ";
+               /* cout << "game over hugai h level 3 k bad ";
                 cout << "GameOver " << gameOver;
-				cout << hud.getLives() << endl;
+				cout << hud.getLives() << endl;*/
             }
             gameOver = true;
             if (!gameOverRestarted)
@@ -661,6 +663,40 @@ public:
 			window.draw(youWin);
 		}
         return false;
-       
     }
+    void setLevel(int l)
+    {
+		levelIndex = l;
+        level[levelIndex]->setAudio(audio);
+        if (levelIndex != 3)
+            level[levelIndex]->loadAndPlaceCollectibles();
+        if(levelIndex == 3)
+        {
+            for (int i = 0;i < 3;i++)
+            {
+                team.getPlayer()[i]->getx() = 450;
+                team.getPlayer()[i]->gety() = 400;
+                team.getPlayer()[i]->getVelocityY() = 15;
+                team.getPlayer()[i]->setGravity(1);
+            }
+        }
+        team.getPlayer()[team.getPlayerIndex()]->getOnGround() = true;
+        if (levelIndex == 2)
+        {
+            for (int i = 0;i < 3;i++)
+            {
+                team.getPlayer()[i]->setGravity(0.6);
+            }
+        }
+        buffer_start = 4 * 64;
+        buffer_end = 9 * 64;
+        offset_x = 0;
+        hud.resetTimer();
+        levelTimer.restart();
+        if (levelIndex == 3)
+        {
+            cout << "LEVEL $ it is  \n ";
+        }
+    }
+    
 };
