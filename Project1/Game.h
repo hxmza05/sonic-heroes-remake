@@ -21,6 +21,9 @@
 class Game
 {
     // some score and other stuff
+    Text youWin;
+    Clock youWinClk;
+    bool youwinrestarted;
     Text gameover;
     Font font;
     HUD hud;
@@ -75,7 +78,17 @@ public:
         gameover.setPosition(320, 350);
         gameover.setFillColor(Color::Red);
 
+
+
+        youwinrestarted = false;
+		youWin.setFont(font);
+		youWin.setString("YOU WIN");
+		youWin.setScale(4.3, 4.3);
+		youWin.setPosition(320, 350);
+		youWin.setFillColor(Color::Yellow);
         team.setAudio(audio);
+
+
 
         gameOver = false;
         cell_size = 64;
@@ -86,6 +99,7 @@ public:
         level[0]->setAudio(audio);
         level[1] = new Level2(audio);
         level[1]->setAudio(audio);
+        level[2] = new Level3(audio);
         level[2]->setAudio(audio);
         level[3] = new BossLevel(audio);
         level[3]->setAudio(audio);
@@ -595,19 +609,21 @@ public:
                     level[levelIndex]->getFalling()[i]->fall();
                 }
             }
-
+        if (levelIndex == 3)
+        {
+			cout << "egg stinger in game = " << level[levelIndex]->getStinger()->alive() << "\n";
+        }
         level[levelIndex]->drawEnemies(window, offset_x);
         if (level[levelIndex]->hasLevelEnded(team.getPlayer()[team.getPlayerIndex()]->getx()) || hud.getRings() > 75)
         {
             updateLevel();
         }
-
         if (hud.getLives() <= 0 || gameOver)
         {
             if (levelIndex == 3)
             {
-               /* cout << "game over hugai h level 3 k bad ";
-                cout << "GameOver " << gameOver;*/
+                cout << "game over hugai h level 3 k bad ";
+                cout << "GameOver " << gameOver;
 				cout << hud.getLives() << endl;
             }
             gameOver = true;
@@ -622,6 +638,28 @@ public:
         draw_buffer(window, bufferSpriteEnd, buffer_end - offset_x);*/
         if (gameOver && gameOverClock.getElapsedTime().asMilliseconds() > 3000)
             return true;
+        if (levelIndex == 3)
+        {
+            cout<<"death of egg stinger done ? "<<level[3]->getStinger()->deathDone();
+            cout << endl;
+        }
+        if (levelIndex == 3 && level[3]->getStinger()->deathDone())
+        {
+            if (!youwinrestarted)
+            {
+				youWinClk.restart();
+				youwinrestarted = true;
+            }
+        }
+		cout << "youwinrestarted = " << youwinrestarted << endl;
+        if (youwinrestarted && youWinClk.getElapsedTime().asMilliseconds() > 5000)
+        {
+            return true;
+        }
+		if (youwinrestarted && youWinClk.getElapsedTime().asMilliseconds() < 5000)
+		{
+			window.draw(youWin);
+		}
         return false;
        
     }

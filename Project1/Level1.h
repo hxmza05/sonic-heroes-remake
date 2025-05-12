@@ -235,10 +235,9 @@ public:
     int getCrabCount() const { return crabCount; }
     int getBeeCount() const { return beeCount; }
     int getMotobugCount() const { return motobugCount; }
-    //int getBatbrainCount() const { return batbrainCount; }
     int getEnemyCount() const { return enemyCount; }
     int getTotalEnemyCount() const { return TotalEnemyCount; }
-    
+    Eggstinger* getStinger() { return nullptr; }
 
 
  

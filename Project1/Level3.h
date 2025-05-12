@@ -247,5 +247,6 @@ public:
 	{
 		return true;
 	}
+	Eggstinger* getStinger() { return nullptr; }
 
 };

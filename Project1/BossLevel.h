@@ -82,8 +82,6 @@ public:
 		stinger->setAudio(audio);
 		stinger->setPosition(12 * cell_size, 2 * cell_size, 0, 0);
 	    enemies[enemyCount++] = stinger;
-		
-
 	}
 
 	char  getMapValues(int val)
@@ -167,6 +165,10 @@ public:
 			//enemies[i]->drawHitBox(window, offset_x);
 
 		}
+	}
+	Eggstinger* getStinger()
+	{
+		return stinger;
 	}
 
 	bool hasLevelEnded(float x) { return true; }

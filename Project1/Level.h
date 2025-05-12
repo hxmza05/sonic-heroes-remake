@@ -132,6 +132,7 @@ public:
 	{
 		return nullptr;
 	}
+	virtual Eggstinger* getStinger() = 0;
 	float& getFriction()
 	{
 		return friction;

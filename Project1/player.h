@@ -160,6 +160,7 @@ public:
 	{
 		return flyingTime;
 	}
+	//virtual void getStinger() = 0;
 	void setFlyingTime(double b)
 	{
 		flyingTime = b;
