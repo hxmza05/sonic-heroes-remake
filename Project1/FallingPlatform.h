@@ -57,8 +57,24 @@ public:
 		if(y < 900)
 			y += 5;
 	}
-	void draw(RenderWindow& window,float offset_x)
+	void draw(RenderWindow& window,float offset_x,int levelIndex)
 	{
+		switch (levelIndex)
+		{
+		case 0:
+			fallingTexture.loadFromFile("Data/brick2.png");
+			fallingSprite.setScale(1.03, 1.03);
+
+			break;
+		case 1:
+			fallingTexture.loadFromFile("Data/snowTiles.jpg");
+			fallingSprite.setScale(1.5, 1.5);
+			break;
+		case 2:
+			fallingTexture.loadFromFile("Data/wallvl31.png");
+			fallingSprite.setScale(2, 2);
+			break;
+		}
 		fallingSprite.setPosition(x-offset_x, y);
 		window.draw(fallingSprite);
 	}

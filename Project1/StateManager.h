@@ -36,10 +36,12 @@ class StateManager
 	int screen_x ;
 	int screen_y ;
 	bool showLeaderBoard;
-
-
-
+	Clock segaclock;
 	//bool showLeaderBoard;
+	Music menuMusic;
+	bool menuBeingPlayed;
+	Texture leaderBoard;
+	Sprite leaderBoardSp;
 
 public:
 	StateManager(Leaderboard* leaderboard, RenderWindow& w) :window(w)
@@ -51,17 +53,19 @@ public:
 		screen_x = 1200;
 		screen_y = 900;
 		
-		stateIndex = 0;
+		stateIndex = 1;
 		//menu = new Menu(screen_x, screen_y, &leaderboard);
 		menu = new Menu(screen_x, screen_y, leaderboard);
 		menu->setAudio(&audio);
 		game = new Game(&audio);
-
-
-
-
-              
-
+		menuMusic.openFromFile("Audio/sonicMenuSong.ogg");
+		menuBeingPlayed = false;
+		leaderBoard.loadFromFile("Data/levelTransition.png");
+		leaderBoardSp.setTexture(leaderBoard);
+		leaderBoardSp.setPosition(0, 0);
+		int scX = (float)1200 / leaderBoard.getSize().x;
+		int scY = (float)900 / leaderBoard.getSize().y;
+		leaderBoardSp.setScale(scX, 3.75);
 	}
 	int getStateIndex()
 	{
@@ -89,25 +93,43 @@ public:
 				{
 					menu->update(window, event);
 				}
-				else break;
+				 if (stateIndex == 1)
+				{
+					game->handleInput(event);
+				}
 			}
 			window.clear();
 			if (!stateIndex)
 			{
-				if (audio.getCurrentlyPlayingMusic() != audio.getBossMusic()) {
-					audio.playLevelMusicByIndex(audio.getBossMusic());
-				}
-
+		
 				menu->work(window,event,game);
+				//if (audio.getCurrentlyPlayingMusic() != audio.getBossMusic() && segaclock.getElapsedTime().asSeconds() > 10/*&& menu->getSegaMusicPlayed()*/)
+				//{
+					//audio.playLevelMusicByIndex(audio.getBossMusic());
+				//}
+				if (menu->isMenuFullyReady() && !menuBeingPlayed)
+				{
+					cout << "HERE";
+					menuMusic.play();
+					menuMusic.setLoop(true);
+					menuMusic.setVolume(audio.getMusicVolume());
+					menuBeingPlayed = true;
+				}
+				if (menuBeingPlayed)
+				{
+					menuMusic.setVolume(audio.getMusicVolume());
+				}
 				if (menu->isGameStateActive())
 				{
 					stateIndex = 1;
-					audio.playLevelMusicByIndex(game->getLevelIndex());
+					//audio.playLevelMusicByIndex(game->getLevelIndex());
 				}
 			}
 			//cout << "State Index : " << stateIndex << endl;
 			if (stateIndex == 1)
 			{
+				menuBeingPlayed = false;
+				menuMusic.stop();
 				if (game->play(window))
 				{
 					if (game->WantToReturnToMenu())
@@ -115,7 +137,7 @@ public:
 						stateIndex = 0;
 						menu->returnToMenuFromGame();
 						menu->setAudio(&audio);
-						audio.playLevelMusicByIndex(audio.getBossMusic());
+						//audio.playLevelMusicByIndex(audio.getBossMusic());
 						game->resetReturnToMenuFlag(); 
 						continue;
 					}
@@ -129,11 +151,14 @@ public:
 				}
 
 			}
-
 			if (stateIndex == 2)
+			{
+				menuBeingPlayed = false;
 				if (leaderBoardClk.getElapsedTime().asMilliseconds() < 7000)
 				{
+					window.draw(leaderBoardSp);
 					leaderboard->draw(window);
+					
 				}
 				else
 				{
@@ -141,9 +166,9 @@ public:
 					game->saveGame(menu->getRefToPlayerName());
 					window.close();
 				}
+			}
 			window.display();
 		}
-
 	}
 	/*
 	~StateManager()

@@ -166,6 +166,7 @@
     <ClInclude Include="MoveablePlatform.h" />
     <ClInclude Include="Rings.h" />
     <ClInclude Include="SpecialBoost.h" />
+    <ClInclude Include="SpecialCharacter.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="Team.h" />
     <ClInclude Include="Collectibles.h" />

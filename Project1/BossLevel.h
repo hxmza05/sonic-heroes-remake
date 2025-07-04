@@ -29,10 +29,11 @@ public:
 	{
 		levelTimer = 160;
 		this->audio = ad;
-		backGround.loadFromFile("Data/lvl3Bg.jpeg");
+		backGround.loadFromFile("Data/bossBg.png");
 		backGroundSprite.setTexture(backGround);
-		unsigned int bgWidth = 626;
-		unsigned int bgHeight = 357;
+		unsigned int bgWidth = 1257;
+		unsigned int bgHeight = 715
+			;
 		scX = (float)1200 / bgWidth;
 		scY = (float)900 / bgHeight;
 		backGroundSprite.setScale(scX, scY);
@@ -43,9 +44,9 @@ public:
 			//cerr << "\n\n\nFailed to load\n\n\n";
 		}
 		//else cout << "\n\nsuccess in 1\n\n";
-		wallText1.loadFromFile("Data/wallvl32.png");
-		wallText2.loadFromFile("Data/wallvl33.png");
-		wallText3.loadFromFile("Data/wall31.png");
+		wallText1.loadFromFile("Data/bossTile1.png");
+		wallText2.loadFromFile("Data/bossTile2.png");
+		wallText3.loadFromFile("Data/bossTile3.png");
 		walls[0].setTexture(wallText1);
 		walls[1].setTexture(wallText2);
 		walls[2].setTexture(wallText3);
@@ -53,6 +54,7 @@ public:
 		for (int i = 0;i < 3;i++)
 		{
 			walls[i].setScale(2, 2);
+			walls[i].setColor(sf::Color(128, 128, 128));
 		}
 
 
@@ -81,6 +83,9 @@ public:
 		stinger->setAudio(audio);
 		stinger->setPosition(12 * cell_size, 2 * cell_size, 0, 0);
 	    enemies[enemyCount++] = stinger;
+
+		levelEnd = 9999;
+		levelEndY = 9999;
 	}
 
 	char  getMapValues(int val)
@@ -120,9 +125,10 @@ public:
 		}
 		file.close();
 	}
-	void setAudio(Audio* a) override {
+	void setAudio(Audio* a) override
+	{
 		audio = a;
-		audio->playLevelMusicByIndex(audio->getBossMusic());
+		//audio->playLevelMusicByIndex(audio->getBossMusic());
 	}
 
 	virtual FallingPlatform** getFalling()

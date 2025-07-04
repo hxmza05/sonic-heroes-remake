@@ -39,8 +39,6 @@ void draw_buffer(RenderWindow& window, Sprite& bufferSprite, int buffer_coord);
 bool checkCollision(char** lvl,int x,int y);
 bool collisionCheckWithSpikes(char** lvl, int offset_y, int hit_box_factor_y, int hit_box_factor_x, int Pheight, int Pwidth, int x, int y, int cell_size, int velocityY);
 
-
-
 int main()
 {
     //trying new main

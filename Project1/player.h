@@ -29,6 +29,8 @@ using namespace sf;
 
 class Player
 {
+
+	
 	int callCount;
 	bool hasCollided;
 	bool hasKnockedBack;
@@ -59,6 +61,8 @@ class Player
 	Sprite HitBoxSprite;
 
 protected:
+	bool isSpecial;
+	bool spinDashed;
 	Clock coolDown;
 	bool specialAbilityUsed;
 	Clock specialAbiltyClock;
@@ -76,6 +80,10 @@ protected:
 	float scale_x = 2.5;
 	float scale_y = 2.5;
 	Animation** states;
+
+
+
+
 
 	int indexAnimation;
 	int totalAnimations;
@@ -96,6 +104,7 @@ protected:
 public:
 	Player()
 	{
+		spinDashed = false;
 		invincible = false;
 		callCount = 0;
 		tempOnground = true;
@@ -108,7 +117,8 @@ public:
 		dummyGravity = 0.8;
 		isEven = 0;
 		x = 150;
-		y = 150;
+		y = 150
+			;
 		hitBox_x = x;
 		hitBox_y = y;
 		hasCollided = false;
@@ -143,6 +153,11 @@ public:
 		hitBoxTex.loadFromFile("Data/hitBox.png");
 		hitBoxTexJump.loadFromFile("Data/hitBoxJump.png");
 		HitBoxSprite.setScale(2.5, 2.5);
+	}
+	void setCoords(float _X,float _Y)
+	{
+		x = _X;
+		y = _Y;
 	}
 	void setGravity(float g)
 	{
@@ -218,6 +233,10 @@ public:
 	{
 		return scale_x;
 	}
+	bool getSpinDashed()
+	{
+		return spinDashed;
+	}
 	float& getScaleY()
 	{
 		return scale_y;
@@ -269,6 +288,10 @@ public:
 	int& getAnimationIndex()
 	{
 		return indexAnimation;
+	}
+	void setAnimationIndex(int n)
+	{
+		indexAnimation = n;
 	}
 	int &getDelayinFollow()
 	{
@@ -410,4 +433,5 @@ public:
 	{
 		//cout << "LVL wala spindash\n";
 	}
+	void updateCoords(float x, float y);
 };

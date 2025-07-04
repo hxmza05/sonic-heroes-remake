@@ -11,7 +11,8 @@ void Audio::playLevelMusicByIndex(int index) {
     if (index < 0 || index >= TOTAL_MUSIC)
         return;
 
-    if (currentlyPlayingMusic != index) {
+    if (currentlyPlayingMusic != index)
+    {
 
         levelMusic.stop();
 
@@ -84,13 +85,13 @@ void Audio::stopSound(int index) {
 
 void Audio::loadAllSounds() {
 
-    string paths[23] = {
+    string paths[24] = {
         "Audio/MenuButton.wav", "Audio/Select.wav", "Audio/BackButton.wav", "Audio/Jump.wav",
         "Audio/Flying.wav", "Audio/Skidding.wav", "Audio/Hurt.wav", "Audio/1Up.wav",
         "Audio/Ring.wav", "Audio/Tired.wav", "Audio/Destroy.wav", "Audio/Explosion.wav",
         "Audio/Shot.wav", "Audio/BossHit.wav", "Audio/Spikes.wav", "Audio/SignPost.wav",
         "Audio/TimeWarp.wav", "Audio/ScoreAdd.wav", "Audio/ScoreTotal.wav", "Audio/Achievement.wav",
-        "Audio/SpecialWarp.wav", "Audio/GlassSmash.wav", "Audio/Crumble.wav"
+        "Audio/SpecialWarp.wav", "Audio/GlassSmash.wav", "Audio/Crumble.wav","Audio/goalPostSpin.wav"
     };
 
     for (int i = 0; i < TOTAL_SFX; i++) {

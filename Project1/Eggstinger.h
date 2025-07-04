@@ -53,8 +53,8 @@ public:
 	Eggstinger() : stingerHeight(98), stingerWidth(120) {
 
 		isDying = false;
-		this->hp = 20;
-		this->speed = 3.0;
+		this->hp = 5;
+        this->speed = 4.0;
 		Alive = true;
         right = false;
 		this->x = 0;
@@ -66,8 +66,8 @@ public:
 		hoverHeight = 2 * 64;
 		targetY = 8 * 64/* - 97.6f + 5.f*/;
         targetX = 0;
-		targetSpeed = 4.0f;
-		raiseSpeed = 2.5f;
+		targetSpeed = 6.0f;
+		raiseSpeed = 4;
 		rangeStartX = 3 * 64;
 		rangeEndX = 12 * 64;
 
@@ -268,7 +268,7 @@ void Eggstinger::movement(float player_x, float player_y, float player_width, ch
     const float platformY = 8 * cell_size;
     const int platformRow = 8;
 
-    if (!isDiving && !isRising && !isTrackingBeforeDive && diveClock.getElapsedTime().asSeconds() >= 10.0f)
+    if (!isDiving && !isRising && !isTrackingBeforeDive && diveClock.getElapsedTime().asSeconds() >= 5.0f)
     {
         diveClock.restart();
         isTrackingBeforeDive = true;

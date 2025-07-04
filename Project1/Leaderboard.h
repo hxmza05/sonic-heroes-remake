@@ -26,9 +26,11 @@ public:
         font.loadFromFile("Fonts/scoreFont.ttf");
         title.setFont(font);
         title.setString("High Scores");
-        title.setCharacterSize(64);
-        title.setFillColor(Color::Yellow);
-        title.setPosition(300, 50);
+        title.setCharacterSize(74);
+        title.setFillColor(Color::Blue);
+        title.setOutlineColor(Color::Black);
+        title.setOutlineThickness(5);
+        title.setPosition(430, 40);
 
         readScores();
         prepareEntries();
@@ -109,11 +111,18 @@ public:
             names[i].setCharacterSize(32);
             scores[i].setCharacterSize(32);
 
-            names[i].setFillColor(Color::White);
-            scores[i].setFillColor(Color::White);
+            names[i].setFillColor(Color::Black);
+            scores[i].setFillColor(Color::Black);
 
-            names[i].setPosition(300, 150 + i * 50);
-            scores[i].setPosition(700, 150 + i * 50);
+            names[i].setOutlineColor(Color::Blue);
+            scores[i].setOutlineColor(Color::Blue);
+            names[i].setOutlineThickness(2);
+            scores[i].setOutlineThickness(2);
+
+
+
+            names[i].setPosition(400, 200 + i * 65);
+            scores[i].setPosition(800, 200 + i * 65);
         }
     }
 

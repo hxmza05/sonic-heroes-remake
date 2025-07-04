@@ -191,6 +191,8 @@ public:
 		invincible = false;
 		coolDown.restart();
 		delayInFollow = 30;
+		isSpecial = false;
+		spinDashed = false;
 	}
 
 	virtual void followLeader(const int const** pathToFollow)
@@ -220,7 +222,7 @@ public:
 	}
 	void useSpecialAbilty(char**lvl,int height,int width)
 	{
-		cout << coolDown.getElapsedTime().asSeconds()<<"\n";
+		//cout << coolDown.getElapsedTime().asSeconds()<<"\n";
 		if(GlideCount <=10)
 		{
 			//cout << "inside";

@@ -318,8 +318,12 @@ void Player::decelerate(char** lvl, int width,float friction)
     }
     else
     {
-        //cout << "Collisoin Detected ";
-        velocityX = 0;
+        if(!isSpecial || !spinDashed)
+        {
+            cout << "\ncollision detected here in decelration \n";
+
+            velocityX = 0;
+        }
     }
     //cout << "VeloctiyX  after frictio = " << velocityX << endl << endl;
 }
@@ -360,6 +364,7 @@ void Player::decelerateRight(char** lvl, int width, float friction)
     else
     {
         //cout << "Collisoin Detected ";
+        if(!isSpecial || !spinDashed)
         velocityX = 0;
     }
     //cout << "VeloctiyX  after frictio = " << velocityX << endl << endl;
@@ -411,12 +416,19 @@ void Player::moveRight(char** lvl, int width,float friction)
 		decelerateRight(lvl, width, friction);
 		return;
     }
-    if (!checkCollision(lvl, proposed_x + hit_box_factor_x, y + hit_box_factor_y, 14, width) && !checkCollision(lvl, proposed_x + hit_box_factor_x, y + hit_box_factor_y + Pheight - 1, 14, width) )
+    if(!spinDashed || !isSpecial)
     {
-        //cout << "Collsion Detecetd (RIGHT) : \n";
+        if (!checkCollision(lvl, proposed_x + hit_box_factor_x, y + hit_box_factor_y, 14, width) && !checkCollision(lvl, proposed_x + hit_box_factor_x, y + hit_box_factor_y + Pheight - 1, 14, width))
+        {
+            //cout << "Collsion Detecetd (RIGHT) : \n";
 
-        velocityX = 0;  
-        return;
+            velocityX = 0;
+            return;
+        }
+    }
+    else if (isSpecial && spinDashed)
+    {
+        //cout << "--------------special has dashed!!!!!!!!!!!!!!!!!";
     }
     x = proposed_x;
     if (velocityX + acceleration < max_speed)
@@ -437,6 +449,7 @@ void Player::moveRight(char** lvl, int width,float friction)
     {
         indexAnimation = EDGEL;
     }
+    //cout << "\nVelocityX = " << velocityX << "\n";
     direction = 1;
 }
 void Player::autoMove(int x_coord, int y_coord, char** lvl,int height,int width)
@@ -632,4 +645,44 @@ bool Player::teleportToTailed()
         return true;
     }
     return false;
+}
+void Player::updateCoords(float leader_x, float leader_y)
+{
+    if (x < leader_x)
+    {
+        if (x + 5 <= leader_x)
+            x += 5;
+        else
+            x = leader_x;
+    }
+    else if (x > leader_x)
+    {
+        if (x - 5 >= leader_x)
+            x -= 5;
+        else
+            x = leader_x;
+    }
+    if (y < leader_y)
+    {
+        if (y + 5 <= leader_y)
+            y += 5;
+        else
+            y = leader_y;
+    }
+    else if (y > leader_y)
+    {
+        if (y - 5 >= leader_y)
+            y -= 5;
+        else
+            y = leader_y;
+    }
+    if (x == leader_x && y == leader_y)
+    {
+        /*leader_x = -999;
+        leader_y = -999;*/
+        //indexAnimation = STILL;
+        //return true;
+    }
+    //return false;
+
 }

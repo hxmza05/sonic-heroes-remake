@@ -45,10 +45,10 @@ public:
 	{
 		this->audio = ad;
 		cell_size = 64;
-		backGround.loadFromFile("Data/lvl3Bg.jpeg");
+		backGround.loadFromFile("Data/sonicSpace.png");
 		backGroundSprite.setTexture(backGround);
-		unsigned int bgWidth = 626;
-		unsigned int bgHeight = 357;
+		unsigned int bgWidth = 2560;
+		unsigned int bgHeight = 1440;
 		scX = (float)1200 / bgWidth;
 		scY = (float)900 / bgHeight;
 		backGroundSprite.setScale(scX, scY);
@@ -95,8 +95,6 @@ public:
 				enemies[enemyCount++] = crab;
 			}
 		}
-
-
 		j_start = 7;
 		bee_start = 5;
 		bee_end = 8;
@@ -154,9 +152,10 @@ public:
 		falling = new FallingPlatform * [fallingCount = 15];
 		for (int i = 0, f = 64; i < fallingCount; i++, f++)
 			falling[i] = new FallingPlatform(64 * f, 350);
-		moveable = new MoveablePlatform(0, 0, 0, 0);
-		levelEnd = (295 - 5) * 64;
-		levelTimer = 150;
+		moveable = new MoveablePlatform(35 * 64, 7 * 64, 35 * 64, 44 * 64);
+		levelEnd = (285) * 64;
+		levelEndY = 686;
+		levelTimer = 1500;
 	}
 	char getMapValues(int val)
 	{
@@ -219,7 +218,7 @@ public:
 	}
 	void setAudio(Audio* a) override {
 		audio = a;
-		audio->playLevelMusicByIndex(audio->getLevel3Music());
+		//audio->playLevelMusicByIndex(audio->getLevel3Music());
 	}
 
 	void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool& gameOver) override

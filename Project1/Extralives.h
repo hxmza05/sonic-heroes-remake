@@ -10,7 +10,7 @@ public:
     ExtraLife(int x, int y, Texture* tex) : Collectibles(x, y, false) {
         this->texture = tex;
         sprite.setTexture(*tex);
-        sprite.setScale(2.f, 2.f);
+        sprite.setScale(0.2, 0.216);
     }
 
     void collect() override {

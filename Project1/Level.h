@@ -18,10 +18,12 @@ using namespace sf;
 class Level
 {
 protected:
+	
 	double levelTimer;
 	int fallingCount;
 	FallingPlatform** falling;
 	float levelEnd;
+	float levelEndY;
 	//Collectible*** collectibles;
 	//Obstacle** obstacles;
 
@@ -118,6 +120,12 @@ public:
 	char** getLvl()
 	{
 		return lvl;
+	}
+	float getLevelEndY()
+	{
+		return levelEndY;
+
+		
 	}
 	int getHeight()
 	{
@@ -319,7 +327,11 @@ public:
 	}
 
 	*/
+	int getLevelEnd()
 
+	{
+		return levelEnd;
+	}
 };
 
 
@@ -332,7 +344,7 @@ void Level::loadAndPlaceCollectibles() {
 
 	ringTex->loadFromFile("Sprites/rings.png");
 	ringEffect->loadFromFile("Sprites/after_ring.png");
-	lifeTex->loadFromFile("Sprites/life.png");
+	lifeTex->loadFromFile("Data/life.png");
 	boostTex->loadFromFile("Sprites/boost.png");
 
 	placeRingsFromMap(ringTex, ringEffect);

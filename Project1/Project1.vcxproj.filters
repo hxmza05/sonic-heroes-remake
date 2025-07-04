@@ -40,5 +40,6 @@
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Sonic.h" />
     <ClInclude Include="TailedFox.h" />
+    <ClInclude Include="SpecialCharacter.h" />
   </ItemGroup>
 </Project>

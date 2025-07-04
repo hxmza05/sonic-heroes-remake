@@ -42,11 +42,11 @@ class Level2 : public Level
 public:
 	Level2(Audio* ad) 
 	{
-        levelTimer = 120;
+        levelTimer = 1200;
         this->audio = ad;
         this->audio = ad;
         levelTimer = 120;
-        backGround.loadFromFile("Data/bgLvl2O.jpg");
+        backGround.loadFromFile("Data/sonicbg5.png");
         backGroundSprite.setTexture(backGround);
         unsigned int bgWidth = backGround.getSize().x;
         unsigned int bgHeight = backGround.getSize().y;
@@ -61,16 +61,18 @@ public:
             cerr << "\n\n\nFailed to load\n\n\n";
         }
         //else cout << "\n\nsuccess in 1\n\n";
-        wallText1.loadFromFile("Data/wall31.png");
-        wallText2.loadFromFile("Data/wall31.png");
-        wallText3.loadFromFile("Data/wall31.png");
+        wallText1.loadFromFile("Data/snowTiles.jpg");
+        wallText2.loadFromFile("Data/snowTiles.jpg");
+        wallText3.loadFromFile("Data/snowTiles.jpg");
+        float scx = (float)64 / wallText1.getSize().x;
+        float scy = (float)64 / wallText1.getSize().y;
         walls[0].setTexture(wallText1);
         walls[1].setTexture(wallText2);
         walls[2].setTexture(wallText3);
         walls[3].setTexture(wallText4);
         for (int i = 0;i < 3;i++)
         {
-            walls[i].setScale(1.03, 1.03);
+            walls[i].setScale(scx, scy);
         }
         friction = 0.2;
         cell_size = 64;
@@ -103,7 +105,6 @@ public:
                 enemies[enemyCount++] = crab;
             }
         }
-
 
         j_start = 7;
         bee_start = 5;
@@ -162,7 +163,9 @@ public:
         for (int i = 0, f = 64; i < fallingCount; i++, f++)
             falling[i] = new FallingPlatform(64 * f, 350);
 		moveable = new MoveablePlatform(35*64,7*64,35*64,44*64);
-        levelEnd = 245 * 64;
+        levelEnd = 243 * 64;
+        levelEndY = 689;
+
 	}
     char getMapValues(int val)
     {
@@ -227,7 +230,7 @@ public:
 	}
     void setAudio(Audio* a) override {
         audio = a;
-        audio->playLevelMusicByIndex(audio->getLevel2Music());
+        //audio->playLevelMusicByIndex(audio->getLevel2Music());
     }
 
     void handleEnemies(RenderWindow& window, float& x, float& y, int& Pwidth, int& Pheight, bool& hasKnockedBack, float& tempVelocity, bool& onGround, int& indexAnimation, float& offset_x, Player& player, HUD& hud, bool& gameOver) override

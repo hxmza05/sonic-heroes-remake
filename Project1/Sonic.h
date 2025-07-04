@@ -19,6 +19,12 @@ using namespace sf;
 #define STILL 12
 #define GLIDEL 13
 #define GLIDER 14
+
+
+#define BREAKR 15
+#define BREAKL 16
+#define GLIDEL 13
+#define GLIDER 14
 #define AJUMP 0
 
 class Sonic :public Player
@@ -181,16 +187,12 @@ public:
 			states[GLIDER]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49, 50));
 			states[GLIDER]->getSprites()[i].setScale(2, 2);
 		}
-		
-
-
-
-
-
 		delayInFollow = 25;
 		max_speed = 15;
 		specialAbilityUsed = false;
 		restarted = false;
+		isSpecial = false;
+		spinDashed = false;
 	}
 
 	virtual void followLeader(const int const **pathToFollow)
@@ -210,6 +212,7 @@ public:
 		if(!specialAbilityUsed && coolDown.getElapsedTime().asSeconds() > 3)
 		{
 			specialAbilityUsed = true;
+			spinDashed = true;
 			specialAbiltyClock.restart();
 			directionSpecial = direction;
 			if (direction)
@@ -229,6 +232,7 @@ public:
 				coolDown.restart();
 				restarted = true;
 			}
+			spinDashed = false;
 			specialAbilityUsed = false;
 			acceleration = 0.2;
 			velocityX = 0;

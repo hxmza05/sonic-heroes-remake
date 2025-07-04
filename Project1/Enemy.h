@@ -49,7 +49,8 @@ protected:
 
 public:
 
-	Enemy() {
+	Enemy() 
+	{
 
 		x = 0, y = 0, speed = 0;
 		hp = 0;

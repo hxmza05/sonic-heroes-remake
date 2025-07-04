@@ -7,12 +7,15 @@
 #include "Sonic.h"
 #include "TailedFox.h"
 #include "Knuckles.h"
+#include"SpecialCharacter.h"
 #include "time.h"
 #include "Audio.h"
 
 class Team
 {
     Player** team;
+    bool merged;
+	int mergedCount;
     int playerIndex;
     // stores x and y coordinates of the leader
     int** leadersPath;
@@ -24,19 +27,25 @@ class Team
     bool isFlying;
     int isNotFlyingCount;
 
+
+    
     Audio* audio;
 
 public:
     Team()
     {
+		audio = nullptr;
+		mergedCount = 0;
+        merged = false;
         isNotFlyingCount = 0;
         // haveBeenPutDown.restart();
         isFlying = false;
-        team = new Player * [3];
+        team = new Player * [4];
         team[0] = new Sonic();
         team[1] = new TailedFox();
         team[2] = new Knuckles();
-        playerIndex = 2;
+        team[3] = new SpecialCharacter();
+        playerIndex = 0;
         leadersPath = new int* [100];
         leadersVelocityY = new float[100];
         for (int i = 0; i < 100; i++)
@@ -91,6 +100,15 @@ public:
     {
         return team;
     }
+    int getmergedCount()
+    {
+		return mergedCount;
+    }
+    void setmergedCount(int m)
+    {
+        mergedCount = m;
+	}
+
     int& getIsnotFlyingcount()
     {
         return isNotFlyingCount;
@@ -115,6 +133,14 @@ public:
     {
         return spaceCount;
     }
+    bool getMerged()
+    {
+        return merged;
+	}
+    void setMerged(bool m)
+    {
+        merged = m;
+	}
     void setAudio(Audio* a) 
     { 
         audio = a; 
@@ -122,9 +148,9 @@ public:
             team[i]->setAudio(a);
         }
     }
-
     void autoMoveFollowers(char** lvl, float offsetx, int width)
     {
+        team[3]->setCoords(team[playerIndex]->getx(), team[playerIndex]->gety());
         for (int i = 0; i < 3; i++)
         {
             if (i == playerIndex)
@@ -139,13 +165,12 @@ public:
                 //    JUMPR is for flying here
                 if (playerIndex == 1 && (team[1]->getAnimationIndex() == JUMPR || (team[1]->getAnimationIndex() == JUMPL)))
                 {
-                    // taile
                     isFlying = true;
                     pathIndex = 0;
                     float dummy = 0;
                     float dummy2 = 0;
                     bool dummybool = true;
-                    for (int j = 0, h = team[1]->getPheight(); j < 3; j += 2, h += 64)
+                    for (int j = 0, h = team[1]->getPheight(); j < 3; j+=2, h += 64)
                     {
                         if (team[j]->getAnimationIndex() == JUMPL || team[j]->getAnimationIndex() == JUMPR || team[j]->getAnimationIndex() == GLIDEL || team[j]->getAnimationIndex() == GLIDER)
                         {
@@ -153,7 +178,6 @@ public:
                             {
                                 if (canFollowerGlide(team[j]->getx(), team[j]->gety(), team[j]->getPwidth(), team[1]->getx(), team[1]->gety(), team[1]->getPheight(), team[1]->getPwidth()))
                                 {
-
                                     makeThemGlide(j, h);
                                 }
                                 else
@@ -295,6 +319,10 @@ public:
         }
         team[playerIndex][0].draw_player(window, team[playerIndex][0].getStates()[team[playerIndex][0].getAnimationIndex()][0].getSprites()[team[playerIndex][0].getStates()[team[playerIndex][0].getAnimationIndex()][0].getIndex()], offsetx);
     }
+    void drawSpecial(RenderWindow& window, int offsetx)
+    {
+        team[3]->draw_player(window, team[3]->getStates()[team[3]->getAnimationIndex()]->getSprites()[team[3]->getStates()[team[3]->getAnimationIndex()]->getIndex()], offsetx);
+    }
     void storePath()
     {
         leadersPath[pathIndex][0] = team[playerIndex]->getx();
@@ -314,16 +342,14 @@ public:
     }
     void useSpecial(char** lvl, int height, int width)
     {
-        if (playerIndex == 2)
+        if(playerIndex != 1)
         {
-            team[2]->useSpecialAbilty(lvl, height, width);
+            team[playerIndex]->useSpecialAbilty(lvl, height, width);
         }
-        if (playerIndex == 0)
-            team[0]->useSpecialAbilty(lvl, height, width);
     }
     void animate()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4; i++)
         {
             team[i]->getStates()[team[i]->getAnimationIndex()]->RunAnimation();
         }
@@ -376,14 +402,54 @@ public:
         {
             team[2]->setInvincible(false);
         }
-
     }
-    ~Team()
+    void merge(char**lvl)
+    {
+        for (int i = 0;i < 3;i++)
+        {
+            if(i == playerIndex)
+				continue;
+            if (!checkIfMergedAlready(team[i]->getx(), team[i]->gety(), team[playerIndex]->getx(), team[playerIndex]->gety()))
+            {
+                team[i]->getAnimationIndex() = STILL;
+                team[i]->updateCoords(team[playerIndex]->getx(), team[playerIndex]->gety());
+                if (checkIfMergedAlready(team[i]->getx(), team[i]->gety(), team[playerIndex]->getx(), team[playerIndex]->gety()))
+                    mergedCount++;
+            }
+            if (mergedCount == 2)
+                merged = true;
+
+           /* if()
+            {
+
+            }*/
+			//team[i]->getAnimationIndex() = GLIDEL; // Assuming GLIDEL is the animation for merging
+        }
+    }
+    void teleportToleader()
+    {
+        for (int i = 0;i < 3;i++)
+        {
+            if (i == playerIndex)
+                continue;
+            team[i]->updateCoords(team[playerIndex]->getx(),team[playerIndex]->gety());
+        }
+    }
+    bool checkIfMergedAlready(float x, float y, float lx, float ly)
+    {
+        if (x == lx && y == ly)
+            return true;
+        return false;
+    }
+    
+
+    
+  /*  ~Team()
     {
         for (int i = 0; i < 3; i++)
         {
             delete team[i];
         }
         delete[] team;
-    }
+    }*/
 };

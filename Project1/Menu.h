@@ -16,14 +16,15 @@ class Menu
 private:
 
     int level;
+    bool nameHasAlreadyBeenEntered;
 
     static const int totalMenuOptions = 6;
-    const char* menuOptions[totalMenuOptions] = { "New Game", "Load Game", "Continue", "Options", "Leader Board", "Exit" };
+    const char* menuOptions[totalMenuOptions] = { "New Game", "Load Game", "Continue", "Options", "LeaderBoard", "Exit" };
     Text text[totalMenuOptions];
     float mainLabelX[totalMenuOptions] = { 426, 422.5, 447, 464.5, 393, 508 };
     float mainLabelY[totalMenuOptions] = { 377, 452, 527, 602, 677, 752 };
-    float mainLabelScaleX[totalMenuOptions] = { 1.78f, 1.815f, 1.56f, 1.395f, 2.11f, 0.96f };
-    float mainLabelScaleY[totalMenuOptions] = { 1.52f, 1.52f, 1.52f, 1.7f, 1.52f, 1.52f };
+    float mainLabelScaleX[totalMenuOptions] = { 1, 1, 1, 1, 1, 1 };
+    float mainLabelScaleY[totalMenuOptions] = { 1, 1, 1, 1, 1, 1 };
 
 
     static const int totalMenuOptions2 = 6;
@@ -67,12 +68,13 @@ private:
     string playerName;
     Text promptText;
     Text nameInputText;
+    Text Sonic;
 
     Clock mouseCursor;
     bool showCursor;
     RectangleShape nameBox;
 
-    Animation** states;
+    //Animation** states;
     Sprite selector;
     Texture ringTexture;
     Clock selectorClock;
@@ -104,6 +106,7 @@ private:
     float segaSoundDelay; 
     bool segaStarted;
 
+    Font subMenuFont;
     Texture* islandTextures;
     Sprite islandSprite;
 
@@ -148,8 +151,9 @@ private:
     float selectorY_sub[6] = { 395, 470, 545, 620, 695, 770 };
 
     Audio* audio;
-
-
+    bool segaSoundEnded;
+	Texture* menuTextures;
+    Sprite* menuSprites;
 
 
 
@@ -157,6 +161,26 @@ private:
 public:
     Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : leaderboard(lb)
     {
+        subMenuFont.loadFromFile("Fonts/scoreFont.ttf");
+        segaSoundEnded = false;
+
+		menuTextures = new Texture[totalMenuOptions];
+		menuSprites = new Sprite[totalMenuOptions];
+		menuTextures[0].loadFromFile("Menu/saveSelect.jpg");
+		menuTextures[1].loadFromFile("Menu/gameModes.jpg");
+		menuTextures[2].loadFromFile("Menu/options.jpg");
+		menuTextures[3].loadFromFile("Menu/extras.jpg");
+		menuTextures[4].loadFromFile("Menu/Mods.jpg");
+		menuTextures[5].loadFromFile("Menu/exit.jpg");
+        for(int i = 0; i < totalMenuOptions; ++i)
+        {
+            menuSprites[i].setTexture(menuTextures[i]);
+            menuSprites[i].setPosition(0, 0);
+            float scX = float(screenWidth) / menuTextures[i].getSize().x;
+            float scY = float(screenHeigth) / menuTextures[i].getSize().y;
+            menuSprites[i].setScale(scX, scY);
+		}
+        nameHasAlreadyBeenEntered = false;
         level = 0;
         gameLoaded = false;
         selectedOption = 0;
@@ -164,8 +188,8 @@ public:
         currentMenuOption = 0;
         selectedLevelIndex = 0;
         currentSubMenuPage = 0;
-        sfxVolume = 20;
-        musicVolume = 5;
+        sfxVolume = 60;
+        musicVolume = 60;
         lastSelectedOption = selectedOption;
         lastCurrentMenuOption = currentMenuOption;
         horizontal_x = screenWidth;
@@ -180,7 +204,7 @@ public:
         gameON = false;
 
         segaFrameDuration = 0.08;
-        segaSoundDelay = 2.4f; 
+        segaSoundDelay = 1.1f; 
         islandFrameDuration = 10.8f / 284.0f;
         currentIslandFrame = 0;
         islandStartDelay = 0.5f;
@@ -200,8 +224,12 @@ public:
         transitionClock.restart();
 
 
-        backgroundTexture.loadFromFile("Menu/MenuBg.jpg");
+        backgroundTexture.loadFromFile("Data/levelTransition.png");
+
         backgroundSprite.setTexture(backgroundTexture);
+		float scX = float(screenWidth) / backgroundTexture.getSize().x;
+		float scY = float(screenHeigth) / backgroundTexture.getSize().y;
+		backgroundSprite.setScale(scX, scY);
 
 
         segaTexture.loadFromFile("Menu/Sega/sega_intro.png");
@@ -221,54 +249,43 @@ public:
             islandTextures[i].loadFromFile(filename);
         }
 
-        font.loadFromFile("Fonts/scoreFont.ttf");
+        font.loadFromFile("Fonts/NiseSegaSonic.ttf");
+        Sonic.setString("SONIC \n HEROES");
+        Sonic.setFont(font);
+        Sonic.setPosition(350, 75);
+        Sonic.setFillColor(sf::Color::Blue);
+        Sonic.setOutlineColor(sf::Color::Black);
+        Sonic.setOutlineThickness(4);
+        Sonic.setCharacterSize(92);
+        //Sonic.setScale(3.3, 3.3);
 
         promptText.setFont(font);
         promptText.setString("Enter your Name:");
         promptText.setCharacterSize(48);
-        promptText.setFillColor(Color::Yellow);
-        promptText.setPosition(300, 300);
+        promptText.setFillColor(Color::Blue);
+        promptText.setPosition(405, 330);
 
         nameInputText.setFont(font);
         nameInputText.setCharacterSize(42);
-        nameInputText.setFillColor(Color::Yellow);
-        nameInputText.setPosition(300, 400);
+        nameInputText.setFillColor(Color::Blue);
+        nameInputText.setPosition(440, 447);
 
-        nameBox.setSize(Vector2f(400, 60));
-        nameBox.setFillColor(Color(0, 0, 0, 150));
-        nameBox.setOutlineColor(Color::Yellow);
-        nameBox.setOutlineThickness(2);
-        nameBox.setPosition(325, 395);
+        nameBox.setSize(Vector2f(420, 70));
+        nameBox.setFillColor(Color::Black);
+        nameBox.setOutlineColor(Color::Blue);
+        nameBox.setOutlineThickness(5);
+        nameBox.setPosition(430, 440);
 
-        ringTexture.loadFromFile("Sprites/rings.png");
+        ringTexture.loadFromFile("Sprites/rgs.png");
         selectorClock.restart();
         indexAnimation = 0;
         totalAnimations = 1;
 
-        states = new Animation * [totalAnimations];
-        states[0] = new Animation(4);
-
-        states[0]->getSprites()[0].setTexture(ringTexture);
-        states[0]->getSprites()[0].setTextureRect(IntRect(0, 0, 66, 66));
-        states[0]->getSprites()[0].setScale(0.5f, 0.5f);
-
-        states[0]->getSprites()[1].setTexture(ringTexture);
-        states[0]->getSprites()[1].setTextureRect(IntRect(66, 0, 56, 66));
-        states[0]->getSprites()[1].setScale(0.5f, 0.5f);
-
-        states[0]->getSprites()[2].setTexture(ringTexture);
-        states[0]->getSprites()[2].setTextureRect(IntRect(122, 0, 32, 66));
-        states[0]->getSprites()[2].setScale(0.5f, 0.5f);
-
-        states[0]->getSprites()[3].setTexture(ringTexture);
-        states[0]->getSprites()[3].setTextureRect(IntRect(154, 0, 53, 66));
-        states[0]->getSprites()[3].setScale(0.5f, 0.5f);
-
-        selector = states[0]->getSprites()[0];
+       
 
         indexAnimation = 0;
 
-        float xMainOptions[] = { 472, 468.5, 494, 510.5, 439, 554 };
+        float xMainOptions[] = { 760, 760, 760, 760, 760, 760 };
 
         for (int i = 0; i < totalMenuOptions; i++)
         {
@@ -279,11 +296,14 @@ public:
 
             temp.setPosition(x, y);
             text[i] = temp;
-            text[i].setFillColor(i == selectedOption ? Color::White : Color::Red);
+            text[i].setFillColor(i == selectedOption ? Color::Blue : Color::Red);
+            text[i].setOutlineColor(sf::Color::Black);
+            text[i].setOutlineThickness(3.5);
+            text[i].setCharacterSize(34);
         }
 
-        float xSubmenu[] = { 467, 518, 517.5, 600, 600, 531 };
-        float ySubmenu[] = { 375, 450, 525, 600, 675, 750 };
+        float xSubmenu[] = { 460, 460, 460, 460, 460, 460 };
+        float ySubmenu[] = { 55, 130, 205, 280, 355, 430 };
         for (int i = 0; i < totalMenuOptions2; i++)
         {
             string label = menuOptions2[i];
@@ -292,8 +312,13 @@ public:
             float y = ySubmenu[i];
             temp.setPosition(x, y);
             text2[i] = temp;
-            text2[i].setFillColor(i == currentMenuOption ? Color::White : Color::Red);
+            text2[i].setFillColor(i == currentMenuOption ? Color::Blue : Color::Red);
+            text2[i].setOutlineColor(sf::Color::Black);
+            text2[i].setOutlineThickness(3.5);
+            text2[i].setCharacterSize(34);
+
         }
+     
 
         levelSelectBg.loadFromFile("Menu/chooselevel.jpg");
         levelSelectSp.setTexture(levelSelectBg);
@@ -303,11 +328,11 @@ public:
         float yLevels[] = { 225, 295, 365, 435 };
         for (int i = 0; i < totalLevels; i++) 
         {
-            levelTexts[i].setFont(font);
+            levelTexts[i].setFont(subMenuFont);
             levelTexts[i].setString(levelOptions[i]);
             levelTexts[i].setCharacterSize(40);
             levelTexts[i].setFillColor(Color::Blue);
-            levelTexts[i].setOutlineColor(Color::White);
+            levelTexts[i].setOutlineColor(Color::Black);
             levelTexts[i].setOutlineThickness(3.f);
 
             float x = xLevels[i];
@@ -315,8 +340,8 @@ public:
             levelTexts[i].setPosition(x, y);
         }
 
-        menuOptions2[3] = "SFX: 50";
-        menuOptions2[4] = "Music: 50";
+        menuOptions2[3] = "SFX: ";
+        menuOptions2[4] = "Music: ";
 
         labelBgTexture.loadFromFile("Menu/textbackground.png");
         labelBgSprite.setTexture(labelBgTexture);
@@ -365,18 +390,36 @@ public:
     {
         return font;
     }
-
+    bool getSegaMusicPlayed()
+    {
+		return segaSoundEnded;
+    }
+    bool getSegaIntroState()
+    {
+        return showSegaIntro;
+	}
+    bool getShowIslandIntro()
+    {
+        return showIslandIntro;
+	}
     void startGame()
     {
         enteringName = false;
         gameState = true;
     }
+    bool isMenuFullyReady()
+    {
+        bool a = (showIslandIntro || menuState)&& !showSegaIntro;
+        //cout << a;
+        return  a;
+    }
+
     void setAudio(Audio* a)
     {
         audio = a;
         audio->setSFXVolume((float)sfxVolume);
         audio->setMusicVolume((float)musicVolume);
-        audio->playLevelMusicByIndex(audio->getLevel2Music());
+        //audio->playLevelMusicByIndex(audio->getLevel2Music());
     }
     void returnToMenuFromGame()
     {
@@ -387,6 +430,7 @@ public:
 
     void update(RenderWindow& window,Game*game)
     {
+        //window.draw(Sonic);
 
         if (showSegaIntro)
         {
@@ -396,6 +440,7 @@ public:
             {
                 segaSound.play();
                 segaSoundPlayed = true;
+
             }
 
             if (elapsed >= segaFrameCount * segaFrameDuration)
@@ -411,7 +456,7 @@ public:
 
         if (showBlackScreen)
         {
-            if (transitionClock.getElapsedTime().asSeconds() >= 0.5f)
+            if (transitionClock.getElapsedTime().asSeconds() >= 0.125f)
             {
                 showBlackScreen = false;
                 showIslandIntro = true;
@@ -420,19 +465,20 @@ public:
             return;
         }
 
-        if (showIslandIntro && Keyboard::isKeyPressed(Keyboard::RShift))
+        if (showIslandIntro && Keyboard::isKeyPressed(Keyboard::Enter))
         {
+            segaSoundEnded = true;
             showIslandIntro = false;
             menuState = true;
             return;
         }
 
-        if (selectorClock.getElapsedTime().asSeconds() > 0.125f)
+       /* if (selectorClock.getElapsedTime().asSeconds() > 0.125f)
         {
             states[0]->RunAnimation();
             selector = states[0]->getSprites()[states[0]->getIndex()];
             selectorClock.restart();
-        }
+        }*/
 
 
         if (menuState && currentMenuLevel == 0)
@@ -476,7 +522,16 @@ public:
 
                     if (selectedOption == 0)
                     {
-                        enteringName = true;
+                        if(!nameHasAlreadyBeenEntered)
+                        {
+                            enteringName = true;
+                            nameHasAlreadyBeenEntered = true;
+                        }
+                        else
+                        {
+                            menuState = 0;
+                            gameState = 1;
+                        }
                         gameON = true;
                     }
                     else if (selectedOption == 1)
@@ -521,7 +576,7 @@ public:
 
             for (int i = 0; i < totalMenuOptions; i++)
             {
-                text[i].setFillColor(i == selectedOption ? Color::White : Color::Yellow);
+                text[i].setFillColor(i == selectedOption ? Color::Blue : Color::Yellow);
             }
 
             selector.setPosition(selectorX_main[selectedOption], selectorY_main[selectedOption]);          
@@ -536,7 +591,7 @@ public:
 
                 if (currentSubMenuPage > 0)
                 {
-                    currentSubMenuPage = 0;
+                    currentSubMenuPage--;
                 }
                 else 
                 {
@@ -582,12 +637,12 @@ public:
 
                 if (Keyboard::isKeyPressed(Keyboard::Right))
                 {
-                    if (currentMenuOption == 3 && sfxVolume < 50)
+                    if (currentMenuOption == 3 && sfxVolume < 100)
                     {
                         sfxVolume++;
                         audio->setSFXVolume((float)sfxVolume);
                     }
-                    else if (currentMenuOption == 4 && musicVolume < 50)
+                    else if (currentMenuOption == 4 && musicVolume < 100)
                     {
                         musicVolume++;
                         audio->setMusicVolume((float)musicVolume);
@@ -641,16 +696,15 @@ public:
                     audio->playSound(audio->getMenuButton());
                     lastCurrentMenuOption = currentMenuOption;
                 }
-
                 text2[3].setString("SFX: " + std::to_string(sfxVolume));
                 text2[4].setString("Music: " + std::to_string(musicVolume));
 
-                text2[3].setPosition(530.f, 600.f);   
-                text2[4].setPosition(519.5f, 675.f);
+                text2[3].setPosition(460, 280);   
+                text2[4].setPosition(460, 375);
 
                 for (int i = 0; i < totalMenuOptions2; i++)
                 {
-                    text2[i].setFillColor(i == currentMenuOption ? Color::White : Color::Yellow);
+                    text2[i].setFillColor(i == currentMenuOption ? Color::Blue : Color::Yellow);
                 }
 
                 selector.setPosition(selectorX_sub[currentMenuOption], selectorY_sub[currentMenuOption]);
@@ -677,7 +731,7 @@ public:
                 {
                     if (!arrowDown)
                     {
-                        level = (selectedLevelIndex + 1) % totalLevels;
+                        selectedLevelIndex = (selectedLevelIndex + 1) % totalLevels;
                         arrowDown = true;
                         audio->playSound(audio->getMenuButton());
                     }
@@ -703,8 +757,8 @@ public:
 
                 for (int i = 0; i < totalLevels; i++)
                 {
-                    levelTexts[i].setFillColor(i == selectedLevelIndex ? Color::White : Color::Blue);
-                    levelTexts[i].setOutlineColor(i == selectedLevelIndex ? Color::Blue : Color::White);
+                    levelTexts[i].setFillColor(i == selectedLevelIndex ? Color::Blue : Color::Blue);
+                    levelTexts[i].setOutlineColor(i == selectedLevelIndex ? Color::Black : Color::Black);
                 }
             }
         }
@@ -724,7 +778,6 @@ public:
 
         if (enteringName)
         {
-
             if (mouseCursor.getElapsedTime().asSeconds() >= 0.5f)
             {
                 showCursor = !showCursor;
@@ -735,11 +788,19 @@ public:
             if (showCursor && playerName.length() < 15)
                 displayName += "_";
             nameInputText.setString(displayName);
+            if (Keyboard::isKeyPressed(Keyboard::M) || Keyboard::isKeyPressed(Keyboard::Escape))
+            {
+                audio->playSound(audio->getBackButton());
+                enteringName = false;
+                menuState = true;
+            }
         }
     }
 
     void update(RenderWindow& window, Event& event)
     {
+        window.draw(Sonic);
+
         if (enteringName)
         {
             if (event.type == Event::TextEntered)
@@ -755,7 +816,7 @@ public:
                     {
                         playerName += entered;
                     }
-                    // Don't set nameInputText here — done in display logic
+                    // Don't set nameInputText here — done in display lsfxic
                 }
             }
 
@@ -768,7 +829,7 @@ public:
 
                 if (!playerName.empty())
                 {
-
+                    nameHasAlreadyBeenEntered = true;
                     enteringName = false;
                     gameState = true;
                     menuState = false;
@@ -835,15 +896,17 @@ public:
             window.draw(backgroundSprite);
             window.draw(selector);
 
-            for (int i = 0; i < totalMenuOptions; i++) {
-
-                if (i == selectedOption) {
-                    labelBgSprite.setScale(mainLabelScaleX[i], mainLabelScaleY[i]);
-                    labelBgSprite.setPosition(mainLabelX[i], mainLabelY[i]);
-                    window.draw(labelBgSprite);
+            for (int i = 0; i < totalMenuOptions; i++) 
+            {
+                string label = menuOptions[i];
+                if (i == selectedOption)
+                {
+                    label = "> "  + label  + " <";
+                   
                 }
-
+                text[i].setString(label);
                 window.draw(text[i]);
+
             }
 
         }
@@ -856,13 +919,24 @@ public:
 
                 for (int i = 0; i < totalMenuOptions2; i++)
                 {
+                    string label = menuOptions2[i];
+                    if (i == 3)
+                    {
+                        text2[3].setPosition(460, 280);
+                        label = label + to_string(sfxVolume);
+                    }
+                    if (i == 4)
+                    {
+                        text2[4].setPosition(460, 355);
+
+                        label = label + to_string(musicVolume);
+                    }
                     if (i == currentMenuOption)
                     {
-                        labelBgSprite.setScale(subLabelScaleX[i], subLabelScaleY[i]);
-                        labelBgSprite.setPosition(subLabelX[i], subLabelY[i]);
-                        window.draw(labelBgSprite);
-                    }
+                        label = "> " + label + " <";
 
+                    }
+                    text2[i].setString(label);
                     window.draw(text2[i]);
                 }
 
@@ -873,7 +947,7 @@ public:
             {
                 window.draw(tutorialSp);  
 
-                Text heading("Tutorial - HOW TO WIN THE GAME", font, 52);
+                Text heading("Tutorial - HOW TO WIN THE GAME", subMenuFont, 52);
                 heading.setFillColor(Color::Blue);
                 heading.setStyle(Text::Bold | Text::Underlined);
                 heading.setPosition(horizontal_x * 0.35f, vertical_y * 0.14f);
@@ -896,8 +970,8 @@ public:
 
                 for (int i = 0; i < lineCount; i++)
                 {
-                    Text tip(lines[i], font, 36);
-                    tip.setFillColor(Color::White);
+                    Text tip(lines[i], subMenuFont, 36);
+                    tip.setFillColor(Color::Black);
                     tip.setOutlineColor(Color::Blue);
                     tip.setOutlineThickness(2.f);
                     tip.setStyle(Text::Bold);
@@ -912,7 +986,7 @@ public:
             {
                 window.draw(controlsSp);
 
-                Text heading("CONTROLS", font, 64);
+                Text heading("CONTROLS", subMenuFont, 64);
                 heading.setFillColor(Color::Blue);
                 heading.setStyle(Text::Bold | Text::Underlined);
                 heading.setPosition(horizontal_x * 0.07f, vertical_y * 0.15f);
@@ -933,7 +1007,7 @@ public:
 
                 for (int i = 0; i < controlCount; i++)
                 {
-                    Text control(controlLines[i], font, 42);
+                    Text control(controlLines[i], subMenuFont, 42);
                     control.setFillColor(Color::White);
                     control.setOutlineColor(Color::Blue);
                     control.setOutlineThickness(2.f);
@@ -950,7 +1024,7 @@ public:
             {
                 window.draw(creditsSp);
 
-                Text heading("CREDITS", font, 64);
+                Text heading("CREDITS", subMenuFont, 64);
                 heading.setFillColor(Color::Blue);
                 heading.setStyle(Text::Bold | Text::Underlined);
                 heading.setPosition(horizontal_x * 0.52f, vertical_y * 0.15f);
@@ -972,7 +1046,7 @@ public:
 
                 for (int i = 0; i < creditCount; i++)
                 {
-                    Text credit(creditLines[i], font, 42);
+                    Text credit(creditLines[i], subMenuFont, 42);
                     credit.setFillColor(Color::White);
                     credit.setOutlineColor(Color::Blue);
                     credit.setOutlineThickness(2.f);
@@ -988,7 +1062,7 @@ public:
             {
                 window.draw(levelSelectSp); 
 
-                Text heading("CHOOSE LEVEL", font, 52);
+                Text heading("CHOOSE LEVEL", subMenuFont, 52);
                 heading.setFillColor(Color::Blue);
                 heading.setOutlineColor(Color::White);
                 heading.setOutlineThickness(2.f);
@@ -1016,6 +1090,11 @@ public:
         {
             window.draw(backgroundSprite);
             leaderboard->draw(window);
+        }
+        if(!currentMenuLevel && !enteringName && !leaderboardState)
+        {
+            window.draw(Sonic);
+            window.draw(menuSprites[selectedOption]);
         }
 
     }

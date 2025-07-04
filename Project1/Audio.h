@@ -6,7 +6,8 @@ using namespace sf;
 using namespace std;
 
 
-class Audio {
+class Audio 
+{
 
 private:
 
@@ -41,7 +42,7 @@ private:
     int GLASS_SMASH;
     int CRUMBLE;
     int TOTAL_SFX;
-
+    int goalPostSpin;
     int LEVEL1_MUSIC;
     int LEVEL2_MUSIC;
     int LEVEL3_MUSIC;
@@ -55,7 +56,8 @@ private:
 
 public:
 
-    Audio() {
+    Audio() 
+    {
 
         currentlyPlayingMusic = -1;
 
@@ -68,7 +70,7 @@ public:
         musicPaths[LEVEL1_MUSIC] = "Audio/Level1.ogg";
         musicPaths[LEVEL2_MUSIC] = "Audio/Level2.ogg";
         musicPaths[LEVEL3_MUSIC] = "Audio/Level3.ogg";
-        musicPaths[BOSS_MUSIC] = "Audio/BossLevel.ogg";
+        musicPaths[BOSS_MUSIC] = "Audio/sonicMenuSong.ogg";
 
 
         MENU_BUTTON = 0;
@@ -94,10 +96,11 @@ public:
         SPECIAL_WARP = 20;
         GLASS_SMASH = 21;
         CRUMBLE = 22;
-        TOTAL_SFX = 23;
+        goalPostSpin = 23;
+        TOTAL_SFX = 24;
 
-        sfxVolume = 100;
-        musicVolume = 0;
+        sfxVolume = 60;
+        musicVolume = 60;
 
         sfx = new Sound[TOTAL_SFX];
         sfxBuffers = new SoundBuffer[TOTAL_SFX];
@@ -216,10 +219,17 @@ public:
     int getBossMusic() {
         return BOSS_MUSIC;
     }
-
+    int getGoalPostSpin()
+    {
+        return goalPostSpin;
+    }
     int getCurrentlyPlayingMusic()  
     { 
         return currentlyPlayingMusic; 
+    }
+    void setCurrentlyPlayingMusic(int n)
+    {
+         currentlyPlayingMusic = n;
     }
 
 
@@ -229,11 +239,29 @@ public:
     void setSFXVolume(float volume);
     void setMusicVolume(float volume);
     void playLevelMusicByIndex(int index);
+    void playMusic()
+    {
+        if (levelMusic.openFromFile(musicPaths[currentlyPlayingMusic]))
+        {
+            levelMusic.setLoop(true);
+            levelMusic.setVolume(musicVolume);
+            levelMusic.play();
+        }
+    }
     bool isSoundPlaying(int index)const ;
     void stopSound(int index);
+    void stopMusic()
+    {
+        levelMusic.stop();
+    }
+    float getMusicVolume()
+    {
+        return musicVolume;
+    }
 
 
-    ~Audio() {
+    ~Audio() 
+    {
         delete[] sfx;
         delete[] sfxBuffers;
     }
