@@ -200,7 +200,7 @@ public:
         SpecialBoostText.setOutlineColor(sf::Color::Black);
         SpecialBoostText.setOutlineThickness(4);
 
-        specialBoost.setPosition(800, 30);
+        specialBoost.setPosition(800, 20);
         specialBoost.setCharacterSize(45);
 
         ExtraLife.setFont(boostFont);
@@ -445,13 +445,8 @@ public:
         getline(in, name);
         playerName = name;
 
-        in >> levelIndex >> hp >> playerIdx >> x >> y >> hud.getRings() /*>> enemiesDefeated*/ >> sc;
-        /*   for (int i = 0;i < level[levelIndex]->getTotalEnemyCount();i++)
-           {
-               bool b;
-               in >> b;
-               level[levelIndex]->getEnemies()[i]->setAlive(b);
-           }*/
+        in >> levelIndex >> hp >> playerIdx >> x >> y >> hud.getRings() >> sc;
+
         team.setPlayerIndex(playerIdx);
         hud.setLives(hp);
 

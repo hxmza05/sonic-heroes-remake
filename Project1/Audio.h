@@ -70,7 +70,7 @@ public:
         musicPaths[LEVEL1_MUSIC] = "Audio/Level1.ogg";
         musicPaths[LEVEL2_MUSIC] = "Audio/Level2.ogg";
         musicPaths[LEVEL3_MUSIC] = "Audio/Level3.ogg";
-        musicPaths[BOSS_MUSIC] = "Audio/sonicMenuSong.ogg";
+        musicPaths[BOSS_MUSIC] = "Audio/bos.ogg";
 
 
         MENU_BUTTON = 0;

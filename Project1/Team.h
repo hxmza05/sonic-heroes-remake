@@ -195,39 +195,25 @@ public:
                                 team[j]->getStates()[STILL][0].RunAnimation();
                                 team[j]->getHaveBeenPutDown().restart();
                             }
-                            // team[i]->glideAndFollowTails();
                         }
                         else
                         {
 
-                            /*cout << "\n\nIn else if they are not jumping\n";
-                            if (j == 0)
-                            {
-                                cout << "Sonic";
-                            }
-                            else cout << "Knuckles";
-                            cout << " is figuring it out\n\n\n";*/
-                            // if (team[j]->getAnimationIndex() != STILL)
+                            
                             if (team[j]->getHaveBeenPutDown().getElapsedTime().asSeconds() > 1)
                             {
                                 team[j]->figureItOutYourself(team[playerIndex]->getx(), lvl, offsetx, width);
                             }
                         }
-                        //if (!j)
-                            //cout << "Sonic's coords when tails is flying = (" << team[0]->getx() << " , " << team[0]->gety() << ")\n";
                     }
                
                 }
                 else
                 
                 {
-                    // cout << "\n\n\n\n\n\nIts not Flying NOW\n\n\n\n";
-                    // bool wo
                     if (playerIndex == 1 && isNotFlyingCount == 0 && isFlying && /*team[1]->getAnimationIndex() != UPR && team[1]->getAnimationIndex() != JUMPR &&*/ team[1]->getOnGround()/*&& team[1]->getAnimationIndex() == STILL*/)
                     {
-                        /*cout << "tailed on ground after flying\n";
-                        cout << " and tailed coords  are : " << team[1]->getx() << " , " << team[1]->gety()<<" )\n";
-                        cout << "Sonic's coords at that moemnt = (" << team[0]->getx() << " , " << team[0]->gety() << ")\n";*/
+                        
                         team[0]->setTailedCoords(team[1]->getx() - 5, team[1]->gety() + 10);
                         team[2]->setTailedCoords(team[1]->getx() - 5, team[1]->gety() + 10);
                         team[2]->getAnimationIndex() = BREAKR;
@@ -249,8 +235,6 @@ public:
                         {
                             isFlying = false;
                             isNotFlyingCount = 0;
-                           /* team[0]->setTailedCoords(team[1]->getx() - 5, team[1]->gety());
-                            team[2]->setTailedCoords(team[1]->getx() - 5, team[1]->gety());*/
                             team[0]->getDelayinFollow() = 15;
                             team[2]->getDelayinFollow() = 20;
                             team[0]->setHasStartedFollowing(false);
@@ -264,14 +248,8 @@ public:
                         team[i][0].autoMove(leadersPath[team[i][0].getDelayinFollow()][0] - 16, leadersPath[team[i][0].getDelayinFollow()][1], lvl, 14, width);
                         team[i][0].getVelocityY() = -19;
                     }
-                    /* if (team[playerIndex]->getAnimationIndex() == STILL)
-                     {
-                         team[i]->getAnimationIndex() = STILL;
-                     }*/
-                     // if()
-                     // cout << "\n\n\\nVelcotuy when automvoing  = " << team[i][0].getVelocityY() << "\n\n\n";
+                    
                 }
-                // cout << "Path index LEader's = " << pathIndex << "----- tailed fox's = " << team[1][0].getDelayinFollow() << "----- knuckel's = " << team[2][0].getDelayinFollow() << "\n";
             }
         }
     }

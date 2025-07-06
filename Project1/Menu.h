@@ -21,7 +21,7 @@ private:
     static const int totalMenuOptions = 6;
     const char* menuOptions[totalMenuOptions] = { "New Game", "Load Game", "Continue", "Options", "LeaderBoard", "Exit" };
     Text text[totalMenuOptions];
-    float mainLabelX[totalMenuOptions] = { 426, 422.5, 447, 464.5, 393, 508 };
+    float mainLabelX[totalMenuOptions] = { 726, 722.5, 747, 764.5, 793, 708 };
     float mainLabelY[totalMenuOptions] = { 377, 452, 527, 602, 677, 752 };
     float mainLabelScaleX[totalMenuOptions] = { 1, 1, 1, 1, 1, 1 };
     float mainLabelScaleY[totalMenuOptions] = { 1, 1, 1, 1, 1, 1 };
@@ -155,8 +155,13 @@ private:
 	Texture* menuTextures;
     Sprite* menuSprites;
 
-
-
+    Text loadGameText;
+    Text continueText;
+    Clock continueClk;
+    Clock loadScreenClk;
+    bool showLoadedScreen;
+    bool showContinueScreen;
+    string continueStrings[2] = { "You Have'nt Loaded The Game Yet !!!", "Continuing From The Saved State!!!"};
 
 public:
     Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : leaderboard(lb)
@@ -166,12 +171,12 @@ public:
 
 		menuTextures = new Texture[totalMenuOptions];
 		menuSprites = new Sprite[totalMenuOptions];
-		menuTextures[0].loadFromFile("Menu/saveSelect.jpg");
-		menuTextures[1].loadFromFile("Menu/gameModes.jpg");
-		menuTextures[2].loadFromFile("Menu/options.jpg");
-		menuTextures[3].loadFromFile("Menu/extras.jpg");
-		menuTextures[4].loadFromFile("Menu/Mods.jpg");
-		menuTextures[5].loadFromFile("Menu/exit.jpg");
+		menuTextures[0].loadFromFile("Menu/1.png");
+		menuTextures[1].loadFromFile("Menu/2.png");
+		menuTextures[2].loadFromFile("Menu/3.png");
+		menuTextures[3].loadFromFile("Menu/4.png");
+		menuTextures[4].loadFromFile("Menu/5.png");
+		menuTextures[5].loadFromFile("Menu/6.png");
         for(int i = 0; i < totalMenuOptions; ++i)
         {
             menuSprites[i].setTexture(menuTextures[i]);
@@ -276,6 +281,23 @@ public:
         nameBox.setOutlineThickness(5);
         nameBox.setPosition(430, 440);
 
+        loadGameText.setString("Game Loaded Successfully!!!");
+        //continueText.s
+        continueText.setString(continueStrings[0]);
+        loadGameText.setFont(subMenuFont);
+        loadGameText.setCharacterSize(70);
+        loadGameText.setFillColor(Color::Yellow);
+        loadGameText.setPosition(265, 377);
+        loadGameText.setOutlineColor(sf::Color::Black);
+        loadGameText.setOutlineThickness(4);
+
+        continueText.setFont(subMenuFont);
+        continueText.setCharacterSize(60);
+        continueText.setFillColor(Color::Yellow);
+        continueText.setPosition(205, 377);
+        continueText.setOutlineColor(sf::Color::Black);
+        continueText.setOutlineThickness(6);
+        
         ringTexture.loadFromFile("Sprites/rgs.png");
         selectorClock.restart();
         indexAnimation = 0;
@@ -285,13 +307,13 @@ public:
 
         indexAnimation = 0;
 
-        float xMainOptions[] = { 760, 760, 760, 760, 760, 760 };
+        float xMainOptions[] = { 760, 790, 870, 905, 920, 1000 };
 
         for (int i = 0; i < totalMenuOptions; i++)
         {
             Text temp(menuOptions[i], font, 60);
-            float startY = float(screenHeigth / 2.4f);
-            float y = startY + float(i * screenHeigth / 12);
+            float startY = float(screenHeigth / 5.4f);
+            float y = startY + float(i * screenHeigth / 7.7f);
             float x = xMainOptions[i];
 
             temp.setPosition(x, y);
@@ -299,7 +321,9 @@ public:
             text[i].setFillColor(i == selectedOption ? Color::Blue : Color::Red);
             text[i].setOutlineColor(sf::Color::Black);
             text[i].setOutlineThickness(3.5);
-            text[i].setCharacterSize(34);
+            text[i].setCharacterSize(36);
+            if (i == 4)
+                text[i].setCharacterSize(24);
         }
 
         float xSubmenu[] = { 460, 460, 460, 460, 460, 460 };
@@ -537,14 +561,16 @@ public:
                     else if (selectedOption == 1)
                     {
                         gameLoaded = game->loadGame(playerName);
+                        showLoadedScreen = true;
+                        loadScreenClk.restart();
                     }
                     else if (selectedOption == 2)
                     {
-                        if (gameLoaded)
-                        {
-                            gameState = 1;
-                            return;
-                        }
+                            continueClk.restart();
+                            showContinueScreen = true;
+                            continueClk.restart();
+                            /*gameState = 1;
+                            return;*/
                     }
                     else if (selectedOption == 3)
                     {
@@ -905,7 +931,7 @@ public:
                    
                 }
                 text[i].setString(label);
-                window.draw(text[i]);
+                //window.draw(text[i]);
 
             }
 
@@ -1091,10 +1117,44 @@ public:
             window.draw(backgroundSprite);
             leaderboard->draw(window);
         }
-        if(!currentMenuLevel && !enteringName && !leaderboardState)
+        if(!currentMenuLevel && !enteringName && !leaderboardState && !showLoadedScreen && !showContinueScreen)
         {
             window.draw(Sonic);
             window.draw(menuSprites[selectedOption]);
+            for (int i = 0; i < totalMenuOptions; i++)
+            {
+                string label = menuOptions[i];
+                if (i == selectedOption)
+                {
+                    label = "> " + label + " <";
+
+                }
+                text[i].setString(label);
+                window.draw(text[i]);
+
+            }
+        }
+        if (showLoadedScreen && loadScreenClk.getElapsedTime().asMilliseconds() < 2000)
+        {
+            //window.draw(level)
+            window.draw(loadGameText);
+            
+        }
+        else if (loadScreenClk.getElapsedTime().asMilliseconds() > 2000)
+            showLoadedScreen = false;
+        if (showContinueScreen && continueClk.getElapsedTime().asMilliseconds() < 2000)
+        {
+            continueText.setString(continueStrings[gameLoaded]);
+            window.draw(continueText);
+        }
+        else if (continueClk.getElapsedTime().asMilliseconds() > 2000 && showContinueScreen)
+        {
+            showContinueScreen = false;
+            if (gameLoaded)
+            {
+                gameState = 1;
+                return;
+            }
         }
 
     }

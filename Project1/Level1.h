@@ -36,11 +36,11 @@ public:
     Level1(Audio* ad) 
     {
         this->audio = ad;
-        backGround.loadFromFile("Data/sonicbg4.png");
+        backGround.loadFromFile("Data/sonicbg6.png");
         backGroundSprite.setTexture(backGround);
         //hardcoded
-        unsigned int bgWidth = 794;
-        unsigned int bgHeight = 467;
+        unsigned int bgWidth = 1280;
+        unsigned int bgHeight = 720;
         scX = (float)1200 / bgWidth;
         scY = (float)900 / bgHeight;
         backGroundSprite.setScale(scX, scY);

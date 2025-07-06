@@ -320,7 +320,7 @@ void Player::decelerate(char** lvl, int width,float friction)
     {
         if(!isSpecial || !spinDashed)
         {
-            cout << "\ncollision detected here in decelration \n";
+            //cout << "\ncollision detected here in decelration \n";
 
             velocityX = 0;
         }
