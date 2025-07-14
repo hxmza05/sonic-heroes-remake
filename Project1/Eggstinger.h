@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
 #include "Player.h"
 #include "HUD.h"
@@ -11,7 +11,10 @@ using namespace std;
 class Eggstinger : public Enemy {
 
 private:
-
+    sf::RectangleShape hpBack;  
+    sf::RectangleShape hpFill;   
+    int maxHP;
+    
 	float hoverHeight;
 	float targetY;
     float targetX;
@@ -43,17 +46,18 @@ private:
     Clock spikeHoldClock;
     float spikeHoldDuration; 
     bool spikeHold;
-
+    bool speedIncreased;
 
     Clock animationClock;
 
-
+    Text finalFormText;
+    Font font;
 public:
 
 	Eggstinger() : stingerHeight(98), stingerWidth(120) {
-
+        speedIncreased = 0;
 		isDying = false;
-		this->hp = 5;
+		this->hp = 10;
         this->speed = 4.0;
 		Alive = true;
         right = false;
@@ -116,7 +120,25 @@ public:
 
         loadDeathAnimation("Sprites/stingerdeath.png", 41, 42, 3.f, 3.f);
         deathFinished = false;
+        maxHP = hp;                                // store initial (max) health
+        float barW = 140.f;                        // width of outer bar (pixels)
+        float barH = 8.f;                          // height of bar
+        hpBack.setSize({ barW, barH });
+        hpBack.setFillColor(sf::Color::Black);
+        hpBack.setOrigin(barW / 2.f, barH / 2.f);  // centre‑origin
 
+        hpFill.setSize({ barW, barH });
+        hpFill.setFillColor(sf::Color::Red);
+        hpFill.setOrigin(barW / 2.f, barH / 2.f);
+        finalFormText.setString("EggStinger Has Unleashed His Final Fury !!!");
+        finalFormText.setScale(2, 2);
+        font.loadFromFile("Fonts/scoreFont.ttf");
+        finalFormText.setFont(font);
+        finalFormText.setOutlineColor(sf::Color::Black);
+        finalFormText.setOutlineThickness(3);
+        finalFormText.setFillColor(sf::Color::Yellow);
+        finalFormText.setPosition(400, 10);
+        finalFormText.setCharacterSize(18);
 	}
 
 
@@ -155,11 +177,19 @@ public:
 void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnockedBack, float& tempVelocityY, bool& onGround, int indexAnimation, HUD& hud, bool& gameOver)
 {
 
-    if (handleDeathAnimation())
+    if (handleBossDeathAnimation())
         return;
 
     //cout << "Eggstinger update running!" << endl;
-
+    if (hp == 3 && !speedIncreased)
+    {
+        speed *= 2.5;
+        raiseSpeed *= 2.5;
+        spikeGrowSpeed *= 2.5;
+        targetSpeed *= 2.5;
+        hpFill.setFillColor(sf::Color::Yellow);
+        speedIncreased = true;
+    }
     movement(player.getx(), player.gety(), player.getPwidth(), lvl, cell_size);
 
     if (!hasKnockedBack && playerSpikeCollision(player.getx(), player.gety(), player.getPwidth(), player.getPheight()))
@@ -184,17 +214,18 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
     {
         if (indexAnimation == UPR || indexAnimation == UPL)
         {
+            hp--;
+
             if (hp == 0) {
                 setAlive(false);
                 if (audio) {
-                    audio->playSound(audio->getDestroy());
+                    audio->playSound(audio->getBossDestroy());
                 }
                 isDying = true;
                 deathClock.restart();
                 deathFrameClock.restart();
             }
             else {
-                hp--;
                 if (hp > 0 && audio) {
                     audio->playSound(audio->getBossHit());
                 }
@@ -226,8 +257,27 @@ void Eggstinger::update(char** lvl, Player& player, int cell_size, bool& hasKnoc
 }
 
 
-void Eggstinger::drawExtra(RenderWindow& window, float offset_x) {
+void Eggstinger::drawExtra(sf::RenderWindow& window, float offset_x)
+{
     drawSpike(window, offset_x);
+
+    float barX = x - offset_x + 50;                 // left edge aligns with sprite’s x
+    float barY = y - 18.f;                     // 18 px above boss
+
+    hpBack.setPosition(barX, barY);
+    hpFill.setPosition(barX, barY);
+
+    float ratio = static_cast<float>(hp) / static_cast<float>(maxHP);
+    hpFill.setSize({ 140.f * ratio, hpFill.getSize().y });  // shrink only width
+    if(alive())
+    {
+        window.draw(hpBack);
+        window.draw(hpFill);
+        if (hp <= 3)
+        {
+            window.draw(finalFormText);
+        }
+    }
 }
 
 
@@ -392,7 +442,8 @@ void Eggstinger::movement(float player_x, float player_y, float player_width, ch
         }
     }
 
-    if (isDiving || isRising) {
+    if (isDiving || isRising || hp <=3 )
+    {
         sprite = states[indexAnimation]->getSprites()[5];
     }
 

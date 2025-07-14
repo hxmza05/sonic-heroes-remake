@@ -593,10 +593,10 @@ void Player::figureItOutYourself(float leader_x, char** lvl, float offset_x,int 
     {
         spacePressed = true;
         onGround = false;
-        velocityY = -18;
+        velocityY = -20;
     }
     indexAnimation = JUMPR;
-    states[JUMPR][0].RunAnimation();
+    //states[JUMPR][0].RunAnimation();
     float o_y = 0;
     player_dummy_gravity(lvl, o_y, offset_x, 64, spacePressed,14,width);
 }

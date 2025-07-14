@@ -87,7 +87,7 @@ public:
 		for (int i = 0, width = 0;i < 1;i++, width += 40)
 		{
 			states[UPL]->getSprites()[i].setTexture(upLeft);
-			states[UPL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[UPL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 40));
 			states[UPL]->getSprites()[i].setScale(4, 4);
 
 		}
@@ -96,7 +96,7 @@ public:
 		for (int i = 0, width = 0;i < 1;i++, width += 40)
 		{
 			states[UPR]->getSprites()[i].setTexture(upRight);
-			states[UPR]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
+			states[UPR]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 40));
 			states[UPR]->getSprites()[i].setScale(4, 4);
 
 		}
@@ -132,7 +132,7 @@ public:
 		for (int i = 0, width = 0;i < 3;i++, width += 14.3)
 		{
 			states[RIGHTRUN]->getSprites()[i].setTexture(jogRight);
-			states[RIGHTRUN]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 14.3, 50));
+			states[RIGHTRUN]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 14.3, 40));
 			states[RIGHTRUN]->getSprites()[i].setScale(3.9, 3.9);
 		}
 		pushLeft.loadFromFile("Data/marioStillO.png");
@@ -183,23 +183,24 @@ public:
 			states[STILL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 14.33333, 50));
 			states[STILL]->getSprites()[i].setScale(3.7, 3.7);
 		}
-		glideLeft.loadFromFile("Data/0edgeL.png");
-		states[GLIDEL] = new Animation(7);
-		for (int i = 0, width = 0;i < 7;i++, width += 40)
+		glideLeft.loadFromFile("Data/marioFlyL.png");
+		states[GLIDEL] = new Animation(6);
+		for (int i = 0, width = 0;i < 6;i++, width += 18.166)
 		{
 			states[GLIDEL]->getSprites()[i].setTexture(glideLeft);
-			states[GLIDEL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 40, 50));
-			states[GLIDEL]->getSprites()[i].setScale(2, 2);
+			states[GLIDEL]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 18.1666, 50));
+			states[GLIDEL]->getSprites()[i].setScale(3.4, 3.2);
 		}
-		glideRight.loadFromFile("Data/sonic_hang.png");
-		states[GLIDER] = new Animation(8);
-		for (int i = 0, width = 0;i < 8;i++, width += 49)
+		glideRight.loadFromFile("Data/marioFlyR.png");
+		states[GLIDER] = new Animation(6);
+		for (int i = 0, width = 0;i < 6;i++, width += 18.1666666)
 		{
-			states[GLIDER]->getSprites()[i].setTexture(glideRight);
-			states[GLIDER]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49, 50));
-			states[GLIDER]->getSprites()[i].setScale(2, 2);
+			states[GLIDER]->getSprites()[i].setTexture(jumpRight);
+			states[GLIDER]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 18.1666666, 50));
+			states[GLIDER]->getSprites()[i].setScale(3.4, 3.2);
+
 		}
-		delayInFollow = 0;
+		delayInFollow = 60;
 		max_speed = 15;
 		specialAbilityUsed = false;
 		restarted = false;

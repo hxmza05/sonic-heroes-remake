@@ -46,13 +46,13 @@ public:
         team[2] = new Knuckles();
         team[3] = new SpecialCharacter();
         playerIndex = 0;
-        leadersPath = new int* [100];
-        leadersVelocityY = new float[100];
-        for (int i = 0; i < 100; i++)
+        leadersPath = new int* [1000000];
+        leadersVelocityY = new float[1000000];
+        for (int i = 0; i < 1000000; i++)
         {
             leadersPath[i] = new int[2];
         }
-        pathIndex = 1;
+        pathIndex = 0;
         spacePressed = false;
         spacePressedTwice = false;
         spaceCount = 0;
@@ -108,7 +108,10 @@ public:
     {
         mergedCount = m;
 	}
-
+    bool getIsFlying()
+    {
+        return isFlying;
+    }
     int& getIsnotFlyingcount()
     {
         return isNotFlyingCount;
@@ -144,12 +147,30 @@ public:
     void setAudio(Audio* a) 
     { 
         audio = a; 
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i) 
+        {
             team[i]->setAudio(a);
         }
     }
     void autoMoveFollowers(char** lvl, float offsetx, int width)
     {
+        if (playerIndex == 3)
+        {
+            pathIndex = 0;
+            team[0]->getDelayinFollow() = 15;
+            team[2]->getDelayinFollow() = 45;
+            team[1]->getDelayinFollow() = 29;
+            team[0]->setHasStartedFollowing(false);
+            team[2]->setHasStartedFollowing(false);
+            team[1]->setHasStartedFollowing(false);
+
+
+            for (int i = 0;i < 3;i++)
+            {
+                team[i]->setCoords(team[3]->getx(), team[3]->gety());
+            }
+            return;
+        }
         team[3]->setCoords(team[playerIndex]->getx(), team[playerIndex]->gety());
         for (int i = 0; i < 3; i++)
         {
@@ -192,7 +213,8 @@ public:
                             if (team[j]->checkFeet(lvl, 14, width) && team[j]->getAnimationIndex() != STILL)
                             {
                                 team[j]->getAnimationIndex() = STILL;
-                                team[j]->getStates()[STILL][0].RunAnimation();
+                                //cout << "Made Still here ";
+                                //team[j]->getStates()[STILL][0].RunAnimation();
                                 team[j]->getHaveBeenPutDown().restart();
                             }
                         }
@@ -220,7 +242,7 @@ public:
                         pathIndex = 0;
                         isNotFlyingCount++;
                     }
-                    if (playerIndex == 1 && isFlying && playerIndex == 1 && isNotFlyingCount == 1)
+                    if (playerIndex == 1 && isFlying && isNotFlyingCount == 1)
                     {
                         int tempCount = 0;
                         if (team[0]->teleportToTailed())
@@ -236,7 +258,7 @@ public:
                             isFlying = false;
                             isNotFlyingCount = 0;
                             team[0]->getDelayinFollow() = 15;
-                            team[2]->getDelayinFollow() = 20;
+                            team[2]->getDelayinFollow() = 45;
                             team[0]->setHasStartedFollowing(false);
                             team[2]->setHasStartedFollowing(false);
                             break;
@@ -245,8 +267,8 @@ public:
                     }
                     if (!(playerIndex == 1 && isFlying))
                     {
-                        team[i][0].autoMove(leadersPath[team[i][0].getDelayinFollow()][0] - 16, leadersPath[team[i][0].getDelayinFollow()][1], lvl, 14, width);
-                        team[i][0].getVelocityY() = -19;
+                        team[i][0].autoMove(leadersPath[team[i][0].getDelayinFollow()][0], leadersPath[team[i][0].getDelayinFollow()][1], lvl, 14, width);
+                        team[i][0].getVelocityY() = -22;
                     }
                     
                 }
@@ -292,10 +314,11 @@ public:
         {
             if (i == playerIndex)
                 continue;
-            team[i][0].draw_player(window, team[i][0].getStates()[team[i][0].getAnimationIndex()][0].getSprites()[team[i][0].getStates()[team[i][0].getAnimationIndex()][0].getIndex()], offsetx);
+            team[i]->draw_player(window, team[i][0].getStates()[team[i][0].getAnimationIndex()][0].getSprites()[team[i][0].getStates()[team[i][0].getAnimationIndex()][0].getIndex()], offsetx);
             // team.getPlayer()[team.getPlayerIndex()][0].draw_player(window, team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()][0].getSprites()[team.getPlayer()[team.getPlayerIndex()][0].getStates()[team.getPlayer()[team.getPlayerIndex()][0].getAnimationIndex()]->getIndex()],offset_x);
         }
-        team[playerIndex][0].draw_player(window, team[playerIndex][0].getStates()[team[playerIndex][0].getAnimationIndex()][0].getSprites()[team[playerIndex][0].getStates()[team[playerIndex][0].getAnimationIndex()][0].getIndex()], offsetx);
+        if(playerIndex != 3)
+            team[playerIndex]->draw_player(window, team[playerIndex][0].getStates()[team[playerIndex][0].getAnimationIndex()][0].getSprites()[team[playerIndex][0].getStates()[team[playerIndex][0].getAnimationIndex()][0].getIndex()], offsetx);
     }
     void drawSpecial(RenderWindow& window, int offsetx)
     {
@@ -307,7 +330,7 @@ public:
         leadersPath[pathIndex][1] = team[playerIndex]->gety();
         leadersVelocityY[pathIndex] = team[playerIndex]->getVelocityY();
         pathIndex++;
-        if (pathIndex == 100)
+        if (pathIndex == 1000000)
         {
             pathIndex = 0;
         }

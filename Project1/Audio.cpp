@@ -85,13 +85,13 @@ void Audio::stopSound(int index) {
 
 void Audio::loadAllSounds() {
 
-    string paths[24] = {
+    string paths[27] = {
         "Audio/MenuButton.wav", "Audio/Select.wav", "Audio/BackButton.wav", "Audio/Jump.wav",
         "Audio/Flying.wav", "Audio/Skidding.wav", "Audio/Hurt.wav", "Audio/1Up.wav",
         "Audio/Ring.wav", "Audio/Tired.wav", "Audio/Destroy.wav", "Audio/Explosion.wav",
         "Audio/Shot.wav", "Audio/BossHit.wav", "Audio/Spikes.wav", "Audio/SignPost.wav",
         "Audio/TimeWarp.wav", "Audio/ScoreAdd.wav", "Audio/ScoreTotal.wav", "Audio/Achievement.wav",
-        "Audio/SpecialWarp.wav", "Audio/GlassSmash.wav", "Audio/Crumble.wav","Audio/goalPostSpin.wav"
+        "Audio/SpecialWarp.wav", "Audio/GlassSmash.wav", "Audio/Crumble.wav","Audio/goalPostSpin.wav","Audio/bossDestroy.ogg","Audio/Release.wav","Audio/Switch.wav"
     };
 
     for (int i = 0; i < TOTAL_SFX; i++) {

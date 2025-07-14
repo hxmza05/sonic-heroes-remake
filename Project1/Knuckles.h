@@ -190,7 +190,7 @@ public:
 
 		invincible = false;
 		coolDown.restart();
-		delayInFollow = 30;
+		delayInFollow = 45;
 		isSpecial = false;
 		spinDashed = false;
 	}

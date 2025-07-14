@@ -31,6 +31,8 @@ class Level1 : public Level
     int j_start;
     int cell_size;
 
+    //MoveablePlatform* moveable;
+
 
 public:
     Level1(Audio* ad) 
@@ -134,10 +136,10 @@ public:
         
 
         levelTimer = 900;
-        falling = new FallingPlatform * [8];
-        for (int i = 0, f = 32; i < 8; i++, f++)
-            falling[i] = new FallingPlatform(64 * f, 500);
-        moveable = new MoveablePlatform(1000, 450, 850, 1500);
+        falling = new FallingPlatform * [fallingCount = 11];
+        for (int i = 0, f = 81; i < fallingCount; i++, f++)
+            falling[i] = new FallingPlatform(64 * f, 350);
+        moveable = new MoveablePlatform(33 * 64, 7 * 64, 33 * 64, 42 * 64);
         levelEnd = 195 * 64;
         levelEndY = 433;
 

@@ -175,6 +175,30 @@ public:
 		}
 	}
 	*/
+	bool handleBossDeathAnimation()
+	{
+
+		if (!Alive && isDying)
+		{
+			//cout << "in deathanimation : \n";
+			indexAnimation = totalAnimations - 1;
+
+			if (deathFrameClock.getElapsedTime().asMilliseconds() >= 600)
+			{
+				states[indexAnimation]->RunAnimation();
+				deathFrameClock.restart();
+			}
+
+			sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
+
+			if (deathClock.getElapsedTime().asMilliseconds() >= 2400)
+			{
+				deathFinished = true;
+			}
+			return true;
+		}
+		return false;
+	}
 
 };
 
@@ -203,7 +227,7 @@ bool Enemy::handleDeathAnimation()
 		//cout << "in deathanimation : \n";
 		indexAnimation = totalAnimations - 1;
 
-		if (deathFrameClock.getElapsedTime().asMilliseconds() >= 50) 
+		if (deathFrameClock.getElapsedTime().asMilliseconds() >= 100) 
 		{
 			states[indexAnimation]->RunAnimation();
 			deathFrameClock.restart();
@@ -211,7 +235,7 @@ bool Enemy::handleDeathAnimation()
 
 		sprite = states[indexAnimation]->getSprites()[states[indexAnimation]->getIndex()];
 
-		if (deathClock.getElapsedTime().asMilliseconds() >= 200) 
+		if (deathClock.getElapsedTime().asMilliseconds() >= 400) 
 		{
 			deathFinished = true;
 		}

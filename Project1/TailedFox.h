@@ -149,8 +149,8 @@ public:
 			states[STILL]->getSprites()[i].setScale(2, 2);
 		}
 		restarted = false;
-		flyingTime = 7;
-		delayInFollow = 30;
+		flyingTime = 15;
+		delayInFollow = 29;
 	}
 	virtual void followLeader(const int const** pathToFollow)
 	{
@@ -165,7 +165,8 @@ public:
 		if (spaceCount > 9 && ((!restarted) || (restarted && fliyingClock.getElapsedTime().asSeconds() < flyingTime)) )
 		{
 
-			if (audio) {
+			if (audio)
+			{
 
 				if (audio->isSoundPlaying(audio->getJump())) {
 					audio->stopSound(audio->getJump());
@@ -194,7 +195,8 @@ public:
 		}
 		else if (fliyingClock.getElapsedTime().asSeconds() >= flyingTime && restarted && spaceCount > 9)
 		{
-			if (audio) {
+			if (audio) 
+			{
 				audio->playSound(audio->getTired());
 			}
 

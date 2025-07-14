@@ -98,12 +98,13 @@ protected:
 	bool invincible;
 	double flyingTime;
 	int idxPl;
-
+	bool playerHung;
 	Audio* audio;
 
 public:
 	Player()
 	{
+		playerHung = false;
 		spinDashed = false;
 		invincible = false;
 		callCount = 0;
@@ -293,6 +294,14 @@ public:
 	{
 		indexAnimation = n;
 	}
+	bool getPlayerHung()
+	{
+		return playerHung;
+	}
+	void setPlayerHung(bool b)
+	{
+		playerHung = b;
+	}
 	int &getDelayinFollow()
 	{
 		return delayInFollow;
@@ -337,7 +346,7 @@ public:
 	{
 		delayInFollow++;
 
-		if (delayInFollow == 100)
+		if (delayInFollow == 1000000)
 		{
 			delayInFollow = 0;
 			return;

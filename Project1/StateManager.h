@@ -42,10 +42,13 @@ class StateManager
 	bool menuBeingPlayed;
 	Texture leaderBoard;
 	Sprite leaderBoardSp;
-
+	Text windowClose;
+	Font font;
+	bool nameAdded;
 public:
 	StateManager(Leaderboard* leaderboard, RenderWindow& w) :window(w)
 	{
+		nameAdded =0;
 		showLeaderBoard = false;
 		this->leaderboard = leaderboard;
 		audio.loadAllSounds();
@@ -66,6 +69,18 @@ public:
 		int scX = (float)1200 / leaderBoard.getSize().x;
 		int scY = (float)900 / leaderBoard.getSize().y;
 		leaderBoardSp.setScale(scX, 3.75);
+		font.loadFromFile("Fonts/NiseSegaSonic.ttf");
+
+		windowClose.setFont(font);
+		windowClose.setString("Window Closing in : ");
+		windowClose.setCharacterSize(24);
+		windowClose.setFillColor(Color::Blue);
+		windowClose.setPosition(700, 15);
+		windowClose.setOutlineColor(sf::Color::Black);
+		windowClose.setOutlineThickness(4);
+
+
+
 	}
 	int getStateIndex()
 	{
@@ -153,16 +168,23 @@ public:
 			}
 			if (stateIndex == 2)
 			{
-				menuBeingPlayed = false;
-				if (leaderBoardClk.getElapsedTime().asMilliseconds() < 7000)
+				if(!nameAdded)
 				{
+					leaderboard->addNewScore(menu->getPlayerName(), game->getHUD().getScore());
+					nameAdded = 1;
+				}
+				menuBeingPlayed = false;
+				if (leaderBoardClk.getElapsedTime().asMilliseconds() < 9000)
+				{
+					int rem = 9 - leaderBoardClk.getElapsedTime().asSeconds();
+					windowClose.setString("Window Closing in : " + to_string(rem));
 					window.draw(leaderBoardSp);
+					window.draw(windowClose);
 					leaderboard->draw(window);
 					
 				}
 				else
 				{
-					leaderboard->addNewScore(menu->getPlayerName(), game->getHUD().getScore());
 					game->saveGame(menu->getRefToPlayerName());
 					window.close();
 				}

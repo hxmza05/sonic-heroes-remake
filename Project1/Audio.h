@@ -17,7 +17,7 @@ private:
 
     float sfxVolume;
     float musicVolume;
-
+    int release;
     int MENU_BUTTON;
     int SELECT;
     int BACK_BUTTON;
@@ -41,18 +41,22 @@ private:
     int SPECIAL_WARP;
     int GLASS_SMASH;
     int CRUMBLE;
+    int Switch;
     int TOTAL_SFX;
     int goalPostSpin;
     int LEVEL1_MUSIC;
     int LEVEL2_MUSIC;
     int LEVEL3_MUSIC;
     int BOSS_MUSIC;
+    int Cheat_Code;
+    int gameOver;
+    int victory;
     int TOTAL_MUSIC;
-    string musicPaths[4];
+    string musicPaths[7];
 
     int currentlyPlayingMusic;
 
-
+    int bossDestroy;
 
 public:
 
@@ -65,12 +69,19 @@ public:
         LEVEL2_MUSIC = 1;
         LEVEL3_MUSIC = 2;
         BOSS_MUSIC = 3;
-        TOTAL_MUSIC = 4;
+        Cheat_Code = 4;
+        gameOver = 5;
+        victory = 6;
+        TOTAL_MUSIC = 7;
 
         musicPaths[LEVEL1_MUSIC] = "Audio/Level1.ogg";
         musicPaths[LEVEL2_MUSIC] = "Audio/Level2.ogg";
         musicPaths[LEVEL3_MUSIC] = "Audio/Level3.ogg";
-        musicPaths[BOSS_MUSIC] = "Audio/bos.ogg";
+        musicPaths[BOSS_MUSIC] = "Audio/boss.ogg";
+        musicPaths[Cheat_Code] = "Audio/cheatCodeSong.ogg";
+        musicPaths[gameOver] = "Audio/GameOver.ogg";
+        musicPaths[victory] = "Audio/Victory.ogg";
+
 
 
         MENU_BUTTON = 0;
@@ -97,7 +108,10 @@ public:
         GLASS_SMASH = 21;
         CRUMBLE = 22;
         goalPostSpin = 23;
-        TOTAL_SFX = 24;
+        bossDestroy = 24;
+        release = 25;
+        Switch = 26;
+        TOTAL_SFX = 27;
 
         sfxVolume = 60;
         musicVolume = 60;
@@ -123,11 +137,17 @@ public:
     int getJump() {
         return JUMP;
     }
-
+    int getRelease()
+    {
+        return release;
+    }
     int getFlying() {
         return FLYING;
     }
-
+    int getGameOver()
+    {
+        return gameOver;
+    }
     int getSkidding() {
         return SKIDDING;
     }
@@ -143,11 +163,21 @@ public:
     int getRing() {
         return RING;
     }
-
+    int getBossDestroy()
+    {
+        return bossDestroy;
+    }
+    int getSwitch()
+    {
+        return Switch;
+    }
     int getTired() {
         return TIRED;
     }
-
+    int getVictory()
+    {
+        return victory;
+    }
     int getDestroy() {
         return DESTROY;
     }
@@ -218,6 +248,10 @@ public:
 
     int getBossMusic() {
         return BOSS_MUSIC;
+    }
+    int getCheatCodeMusic()
+    {
+        return Cheat_Code;
     }
     int getGoalPostSpin()
     {

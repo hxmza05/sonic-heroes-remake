@@ -21,7 +21,7 @@ using namespace sf;
 #define GLIDER 14
 
 
-#define BREAKR 15
+#define SPIND 15
 #define BREAKL 16
 #define GLIDEL 13
 #define GLIDER 14
@@ -47,13 +47,13 @@ class Sonic :public Player
 	Texture still;
 	Texture glideLeft;
 	Texture glideRight;
-
+	Texture spinDsh;
 public:
 	Sonic()
 	{
 		idxPl = 0;
 		//isGliding = false;
-		states = new Animation*[15];
+		states = new Animation*[16];
 		indexAnimation = 0;
 		totalAnimations = 15;
 		jogLeft.loadFromFile("Data/0jog_left.png");
@@ -187,7 +187,15 @@ public:
 			states[GLIDER]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 49, 50));
 			states[GLIDER]->getSprites()[i].setScale(2, 2);
 		}
-		delayInFollow = 25;
+		spinDsh.loadFromFile("Data/spinDash.png");
+		states[SPIND] = new Animation(6);
+		for (int i = 0, width = 0;i < 6;i++, width += 36.33)
+		{
+			states[SPIND]->getSprites()[i].setTexture(spinDsh);
+			states[SPIND]->getSprites()[i].setTextureRect(sf::IntRect(width, 0, 36.33, 50));
+			states[SPIND]->getSprites()[i].setScale(2.5, 2.5);
+		}
+		delayInFollow = 15;
 		max_speed = 15;
 		specialAbilityUsed = false;
 		restarted = false;
@@ -247,5 +255,6 @@ public:
 		{
 			moveLeft(lvl, width, 0.1);
 		}
+		indexAnimation = SPIND;
 	}
 };

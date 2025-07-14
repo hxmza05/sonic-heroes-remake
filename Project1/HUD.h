@@ -46,7 +46,7 @@ public:
 	{
 		playIdx = 0;
 		invincibleRestarted = false;;
-
+		//score = 2180;/
 		score = 0;
 		ringsCollected = 0;
 

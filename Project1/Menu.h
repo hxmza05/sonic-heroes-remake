@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -162,10 +162,14 @@ private:
     bool showLoadedScreen;
     bool showContinueScreen;
     string continueStrings[2] = { "You Have'nt Loaded The Game Yet !!!", "Continuing From The Saved State!!!"};
-
+    Text backTomainMenu;
+    string backtoMenuStr;
+    bool mKeyHeld;
 public:
     Menu(int screenWidth, int screenHeigth, Leaderboard* lb) : leaderboard(lb)
     {
+        mKeyHeld = false;
+        
         subMenuFont.loadFromFile("Fonts/scoreFont.ttf");
         segaSoundEnded = false;
 
@@ -193,8 +197,8 @@ public:
         currentMenuOption = 0;
         selectedLevelIndex = 0;
         currentSubMenuPage = 0;
-        sfxVolume = 60;
-        musicVolume = 60;
+        sfxVolume = 100;
+        musicVolume = 100;
         lastSelectedOption = selectedOption;
         lastCurrentMenuOption = currentMenuOption;
         horizontal_x = screenWidth;
@@ -298,6 +302,14 @@ public:
         continueText.setOutlineColor(sf::Color::Black);
         continueText.setOutlineThickness(6);
         
+        backTomainMenu.setFont(font);
+        backTomainMenu.setCharacterSize(36);
+        backTomainMenu.setFillColor(Color::Blue);
+        backTomainMenu.setPosition(275, 240);
+        backTomainMenu.setOutlineColor(sf::Color::Black);
+        backTomainMenu.setOutlineThickness(4);
+        //backtoMenuStr.set
+
         ringTexture.loadFromFile("Sprites/rgs.png");
         selectorClock.restart();
         indexAnimation = 0;
@@ -609,21 +621,25 @@ public:
 
         }
 
-        else if (menuState && currentMenuLevel == 1)
-        {
-            if (Keyboard::isKeyPressed(Keyboard::Escape) || Keyboard::isKeyPressed(Keyboard::M))
-            {
-                audio->playSound(audio->getBackButton());
+      else if (menuState && currentMenuLevel == 1)
+      {
+              bool mDown = Keyboard::isKeyPressed(Keyboard::Escape) ||
+                  Keyboard::isKeyPressed(Keyboard::M);
 
-                if (currentSubMenuPage > 0)
-                {
-                    currentSubMenuPage--;
-                }
-                else 
-                {
-                    currentMenuLevel = 0;
-                }
-            }
+              if (mDown && !mKeyHeld)        // key just went down
+              {
+                  mKeyHeld = true;           // latch
+                  audio->playSound(audio->getBackButton());
+
+                  if (currentSubMenuPage > 0)
+                      currentSubMenuPage = 0;
+                  else
+                      currentMenuLevel = 0;
+              }
+              else if (!mDown)
+              {
+                  mKeyHeld = false;          // key released → ready for next press
+              }
 
             if (currentSubMenuPage == 0)
             {
@@ -842,7 +858,7 @@ public:
                     {
                         playerName += entered;
                     }
-                    // Don't set nameInputText here � done in display lsfxic
+                    // Don't set nameInputText here — done in display lsfxic
                 }
             }
 
@@ -1136,6 +1152,9 @@ public:
         }
         if (showLoadedScreen && loadScreenClk.getElapsedTime().asMilliseconds() < 2000)
         {
+            int rem = 2 - loadScreenClk.getElapsedTime().asSeconds();
+            backTomainMenu.setString("Back  To  Main  Menu  in  (  " + to_string(rem) + "  )");
+            window.draw(backTomainMenu);
             //window.draw(level)
             window.draw(loadGameText);
             
@@ -1144,11 +1163,19 @@ public:
             showLoadedScreen = false;
         if (showContinueScreen && continueClk.getElapsedTime().asMilliseconds() < 2000)
         {
+            if(!gameLoaded)
+            {
+                int rem = 2 - continueClk.getElapsedTime().asSeconds();
+                backTomainMenu.setString("Back  To  Main  Menu  in  (  " + to_string(rem) + "  )");
+                window.draw(backTomainMenu);
+            }
             continueText.setString(continueStrings[gameLoaded]);
             window.draw(continueText);
+
         }
         else if (continueClk.getElapsedTime().asMilliseconds() > 2000 && showContinueScreen)
         {
+
             showContinueScreen = false;
             if (gameLoaded)
             {

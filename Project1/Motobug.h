@@ -259,9 +259,9 @@ void Motobug::update(char** lvl, Player& player, int cell_size, bool& hasKnocked
 					deathClock.restart();
 					deathFrameClock.restart();
 					hud.getScore() += 100;
-					if (audio) {
+					/*if (audio) {
 						audio->playSound(audio->getScoreAdd());
-					}
+					}*/
 				}
 			}
 			else

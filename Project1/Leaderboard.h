@@ -27,13 +27,16 @@ public:
         title.setFont(font);
         title.setString("High Scores");
         title.setCharacterSize(74);
-        title.setFillColor(Color::Blue);
+        title.setFillColor(Color::Yellow);
         title.setOutlineColor(Color::Black);
         title.setOutlineThickness(5);
         title.setPosition(430, 40);
 
         readScores();
+     
         prepareEntries();
+      /*   sortScores();
+      writeScores();*/
     }
 
     void readScores()
