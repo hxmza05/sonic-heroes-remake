@@ -14,6 +14,11 @@ This project brings the classic team-based gameplay of *Sonic Heroes* to life wi
 - [@hamza-sultann](https://github.com/hamza-sultann)
 
 ---
+## 🎥 Game Display
+
+![Game Screenshot](./SonicHeroesGlimpse.png)
+
+---
 ## ✨ Key Features
 
 - ⚡ **Sonic**: Fast and agile — the default speedster
@@ -23,7 +28,7 @@ This project brings the classic team-based gameplay of *Sonic Heroes* to life wi
 - 👾 **5 Enemy types** with increasing challenge
 - 🎵 Custom menu system, music, animated game-over screen
 - 🧠 **AI mechanics**: Characters follow and assist the leader intelligently
-
+![Character Screenshot](./sonic.png)
 ---
 
 ## 🌍 Level Design
