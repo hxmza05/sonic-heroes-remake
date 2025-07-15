@@ -61,6 +61,7 @@ This project brings the classic team-based gameplay of *Sonic Heroes* to life wi
 
 ## 💾 How to Run
 
-1. Clone this repo:
-   ```bash
-   git clone https://github.com/hxmza05/mere-10-abs.git
+To get a local copy of the project up and running:
+
+```bash
+git clone https://github.com/hxmza05/sonic-heroes-remake.git
